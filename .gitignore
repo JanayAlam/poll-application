@@ -1,0 +1,16 @@
+node_modules/
+
+.env
+
+
+public/images/uploads/choicePhotos/*.jpg
+public/images/uploads/choicePhotos/*.png
+public/images/uploads/choicePhotos/*.jpeg
+
+public/images/uploads/pollCoverPhoto/*.jpg
+public/images/uploads/pollCoverPhoto/*.png
+public/images/uploads/pollCoverPhoto/*.jpeg
+
+public/images/uploads/profilePhotos/*.jpg
+public/images/uploads/profilePhotos/*.png
+public/images/uploads/profilePhotos/*.jpeg
