@@ -8,7 +8,6 @@ If you want to run this application in your machine then you need to go through 
 - Latest NodeJS installed in the machine.
 - Npm and Yarn installed in the machine.
 - A database in MongoDB Atlas with username and password to manage it.
-<br>
 ### Installation:
 <b>1. NodeJS and Package Manager</b><br>
 If you do not have nodejs and yarn installed in your machine then you must download the nodejs from [there](https://nodejs.org/en/) and install it. 'Npm' comes with the nodejs. So now you need to install 'Yarn' globally. Run `npm install -g yarn`, it will install the yarn package manager globally.
