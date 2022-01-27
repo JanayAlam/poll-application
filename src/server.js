@@ -12,6 +12,9 @@ require('./api/middlewares/basicMiddlewares')(app);
 // Setting up the routes
 require('./api/routes/route')(app);
 
+// Some dependencies
+const log = require('./utils/logger')
+
 /** Connecting the database and running the application. */
 main = async () => {
     try {
@@ -21,7 +24,7 @@ main = async () => {
         const PORT = process.env.PORT || 8080;
         // Runngin the application
         app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
+            log(`Server running on port ${PORT}`, 'success');
         });
     } catch (error) {
         console.error('Error: ' + error.message);

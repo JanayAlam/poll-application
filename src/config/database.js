@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const log = require('../utils/logger');
 
 /** Returns true if the connection is established otherwise false. */
 module.exports = async () => {
@@ -9,11 +10,11 @@ module.exports = async () => {
         await mongoose.connect(
             URI, { useNewUrlParser: true, useUnifiedTopology: true }
         );
-        console.log('Database connected! App will be ruinng soon...');
+        log('Database connected! App will be ruinng soon...', 'success');
     } catch (error) {
-        console.error('Error: ' + error.message);
-        console.log('Could not connect with the database! Try again.');
-        console.log('Exiting the application...');
+        log(`Database connection error: ${error.message}`, 'error');
+        log('Could not connect with the database! Try again.', 'info');
+        log('Exiting the application...', 'info');
         process.exit(1);
     }
 };
