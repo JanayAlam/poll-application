@@ -13,7 +13,7 @@ require('./src/api/middlewares/basicMiddlewares')(app);
 require('./src/api/routes/route')(app);
 
 /** Connecting the database and running the application. */
-run = async () => {
+main = async () => {
     try {
         // Connecting the database
         await require('./src/config/database')()
@@ -30,4 +30,4 @@ run = async () => {
     }
 };
 
-run() // Invoking the function which will start running the application
+main() // Invoking the function which will start running the application
