@@ -10,13 +10,12 @@ const routes = [
     },
 ];
 
-
 module.exports = (app) => {
     routes.forEach((route) => {
-        if (route.path === '/api') {
+        if (route.path === '/api/v1') {
             app.get(route.path, route.router);
         } else {
-            app.use('/api' + route.path, route.router);
+            app.use('/api/v1' + route.path, route.router);
         }
     });
 };
