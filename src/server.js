@@ -7,16 +7,16 @@ require('dotenv').config();
 const app = express();
 
 // Setting up the middlewares
-require('./src/api/middlewares/basicMiddlewares')(app);
+require('./api/middlewares/basicMiddlewares')(app);
 
 // Setting up the routes
-require('./src/api/routes/route')(app);
+require('./api/routes/route')(app);
 
 /** Connecting the database and running the application. */
 main = async () => {
     try {
         // Connecting the database
-        await require('./src/config/database')()
+        await require('./config/database')()
         // The port for the application
         const PORT = process.env.PORT || 8080;
         // Runngin the application

@@ -1,11 +1,11 @@
 {
     "name": "janay-poll",
     "version": "1.0.0",
-    "main": "server.js",
+    "main": "./src/server.js",
     "license": "MIT",
     "scripts": {
-        "start": "node server",
-        "dev": "nodemon server"
+        "start": "node ./src/server",
+        "dev": "nodemon ./src/server"
     },
     "dependencies": {
         "cors": "^2.8.5",
