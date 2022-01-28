@@ -12,6 +12,13 @@ require('./api/middlewares/basicMiddlewares')(app);
 // Setting up the routes
 require('./api/routes/route')(app);
 
+// Documentation dependencies
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./utils/swagger');
+
+// Some dependencies
+const log = require('./utils/logger')
+
 /** Connecting the database and running the application. */
 main = async () => {
     try {
@@ -19,13 +26,19 @@ main = async () => {
         await require('./config/database')()
         // The port for the application
         const PORT = process.env.PORT || 8080;
+        const DOMAIN = process.env.DOMAIN_NAME || 'localhost'
         // Runngin the application
         app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
+            // Success message
+            log(`Server running on port ${PORT}`, 'success');
+            // Documentation route setup
+            app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+            log(`Documentaion available at http://${DOMAIN}:${PORT}/api/v1/api-docs`, 'info')
         });
     } catch (error) {
-        console.error('Error: ' + error.message);
-        console.log('Exiting the application...');
+        // Error occured
+        log(`Error: ${error.message}`, 'error')
+        log('Exiting the application...', 'info')
         process.exit(1);
     }
 };
