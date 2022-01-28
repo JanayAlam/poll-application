@@ -1,6 +1,5 @@
 // https://stackoverflow.com/a/70748594
 const chalk = require('chalk')
-
 const moment = require('moment')
 
 const log = console.log
