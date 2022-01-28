@@ -4,8 +4,8 @@
     "main": "./src/server.js",
     "license": "MIT",
     "scripts": {
-        "start": "node ./src/server",
-        "dev": "nodemon ./src/server"
+        "start": "node",
+        "dev": "nodemon"
     },
     "dependencies": {
         "chalk": "2.4.1",
