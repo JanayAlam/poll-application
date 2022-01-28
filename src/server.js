@@ -23,7 +23,7 @@ const log = require('./utils/logger')
 main = async () => {
     try {
         // Connecting the database
-        await require('./config/database')()
+        await require('./config/databaseConnection')()
         // The port for the application
         const PORT = process.env.PORT || 8080;
         const DOMAIN = process.env.DOMAIN_NAME || 'localhost'
