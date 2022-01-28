@@ -3,7 +3,7 @@ const chalk = require('chalk')
 
 const moment = require('moment')
 
-log = console.log
+const log = console.log
 
 module.exports = (msg, logCategory = 'info') => {
     logCategory = logCategory.toLowerCase();
