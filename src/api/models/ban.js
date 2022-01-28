@@ -1,25 +1,26 @@
 const { Schema, model } = require('mongoose');
 
-const replySchema = new Schema(
+const banSchema = new Schema(
     {
-        replyText: {
+        reason: {
             type: String,
             trim: true,
-            maxlength: 250,
+            maxlength: 200,
             required: true,
+        },
+        isUnbanned: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
         profile: {
             type: Schema.Types.ObjectId,
             ref: 'Profile',
-        },
-        comment: {
-            type: Schema.Types.ObjectId,
-            ref: 'Comment',
         }
     },
     { timestamps: true }
 );
 
-const Reply = model('Reply', replySchema);
+const Ban = model('Ban', banSchema);
 
-module.exports = Reply;
+module.exports = Ban;

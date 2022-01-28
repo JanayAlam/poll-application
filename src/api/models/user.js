@@ -14,8 +14,9 @@ const userSchema = new Schema(
             trim: true,
             required: true,
         },
-        is_superuser: {
+        isSuperuser: {
             type: Boolean,
+            required: true,
             default: false,
         },
         email: {

@@ -1,32 +1,30 @@
 const { Schema, model } = require('mongoose');
 
-const emailSchema = new Schema(
+const muteSchema = new Schema(
     {
-        address: {
+        reason: {
             type: String,
             trim: true,
-            maxlength: 150,
-            minlength: 5,
+            maxlength: 200,
             required: true,
         },
-        isVerified: {
+        isUnmuted: {
             type: Boolean,
             required: true,
             default: false,
         },
-        verificationCode: {
-            type: String,
-            trim: true,
+        durationDays: {
+            type: Number,
             required: true,
         },
-        user: {
+        profile: {
             type: Schema.Types.ObjectId,
-            ref: 'User',
-        },
+            ref: 'Profile',
+        }
     },
     { timestamps: true }
 );
 
-const Email = model('Email', emailSchema);
+const Mute = model('Mute', muteSchema);
 
-module.exports = Email;
+module.exports = Mute;
