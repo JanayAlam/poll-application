@@ -7,7 +7,7 @@ const corsOptions = {
     origin: `http://${process.env.CROS_ORIGIN_HOST || 'localhost'}`
         + `:${process.env.CROS_ORIGIN_PORT || 3000}/`,
     // Some legacy browsers (IE11, various SmartTVs) choke on 204.
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
 }
 
 // The middleware array
@@ -23,4 +23,4 @@ module.exports = (app) => {
     middlewares.forEach((middleware) => {
         app.use(middleware);
     });
-};
+}
