@@ -3,8 +3,8 @@ const router = express.Router();
 
 
 // Importing controllers
-const authController = require('../../controllers/AuthController');
+const authController = require('../../controllers/authController');
 
-router.get('/login', authController.login_user);
+router.post('/login', authController.login_user);
 
 module.exports = router;
