@@ -16,9 +16,8 @@ require('./api/routes/route')(app);
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./utils/swagger');
 
-// Error handle
-const errorHandler = require('./api/errors/apiErrorHandler');
-app.use(errorHandler);
+// Error handle middleware
+require('./api/errors/apiErrorHandler')(app);
 
 // Some dependencies
 const log = require('./utils/logger')
