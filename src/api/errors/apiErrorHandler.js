@@ -9,15 +9,18 @@ module.exports = (app) => {
     /**
      * When URL is not valid
      * 
-     * @param {Request} _
+     * @param {Request} request
      * @param {Response} response
      * @param {Function} __
      * @returns {JSON} The response as json object
      */
-    app.use((_, response, __) => {
-        return response.status(404).json({
-            message: 'Requested URL is not valid.',
-        });
+    app.use((request, response, next) => {
+        if (!request.url.includes('api-docs')) {
+            return response.status(404).json({
+                message: 'Requested URL is not valid.',
+            });
+        }
+        return next();
     });
 
     /**
