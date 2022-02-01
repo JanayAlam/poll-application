@@ -5,7 +5,7 @@
     "license": "MIT",
     "scripts": {
         "start": "node",
-        "dev": "nodemon"
+        "dev": "nodemon -L ./src/server.js"
     },
     "dependencies": {
         "chalk": "2.4.1",
