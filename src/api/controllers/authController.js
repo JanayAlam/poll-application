@@ -4,8 +4,8 @@ const userService = require('../services/userService');
 class AuthController {
     loginHandler= async (req, res, next) => {
         try {
-            // login handler
-            return res.status(201).json(user);
+            // Login handler.
+            return res.status(201);
         } catch (error) {
             return next(error);
         }
