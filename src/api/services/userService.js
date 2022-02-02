@@ -4,7 +4,7 @@ const { User } = require('../models/dataModels');
 class UserService {
     /**
      * Save a user into the database.
-     * @param {User} user the object that will be stored.
+     * @param {User} user The object that will be stored.
      * @returns {User} Created user object.
      */
     store = (user) => {
@@ -16,7 +16,7 @@ class UserService {
 
     /**
      * Get all the users from the database.
-     * @returns Array of user object.
+     * @returns Array of user objects.
      */
     getAll = () => {
         return [];
@@ -24,7 +24,7 @@ class UserService {
 
     /**
      * Get user by id.
-     * @param {int} id Id of the user .
+     * @param {int} id Id of the user.
      * @returns {User} The desire user object.
      */
     get = (id) => {
@@ -40,7 +40,7 @@ class UserService {
 
     /**
      * Delete user by id.
-     * @param {int} id Id of the user .
+     * @param {int} id Id of the user.
      * @returns {User} Deleted user object.
      */
     destroy = (id) => {};

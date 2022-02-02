@@ -1,11 +1,16 @@
-// Importing routes
+// Importing routes.
 const authRouter = require('./includes/authRouter');
+const userRouter = require('./includes/userRouter');
 
-// All the root routes
+// All the root routes.
 const routes = [
     {
         path: '/auth',
         router: authRouter,
+    },
+    {
+        path: '/users',
+        router: userRouter,
     },
 ];
 
