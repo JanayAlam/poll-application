@@ -1,16 +1,11 @@
-const ApiError = require("../errors/apiError");
+const { BadRequestError } = require('../errors/apiErrors');
+const userService = require('../services/userService');
 
 class AuthController {
-    login_user = async (req, res, next) => {
+    loginHandler= async (req, res, next) => {
         try {
-            const { username, password } = req.body;
-            if (!username && !password) {
-                return next(ApiError.badRequest('Username and password is required.'));
-            }
-            return res.status(201).json({
-                username,
-                password,
-            });
+            // login handler
+            return res.status(201).json(user);
         } catch (error) {
             return next(error);
         }

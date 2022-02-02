@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 
-
-// Importing controllers
+// Importing controller.
 const authController = require('../../controllers/authController');
 
-router.post('/login', authController.login_user);
+// Route: /api/v1/login.
+router.post('/login', authController.loginHandler);
 
+// Exporting the routes.
 module.exports = router;
