@@ -32,8 +32,15 @@ const choiceSchema = new Schema(
             required: true,
             default: 0,
         },
+        modifiedAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
+        createdAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
     },
-    { timestamps: true }
 );
 
 const Choice = model('Choice', choiceSchema);

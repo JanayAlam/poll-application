@@ -23,8 +23,15 @@ const emailSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User',
         },
+        modifiedAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
+        createdAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
     },
-    { timestamps: true }
 );
 
 const Email = model('Email', emailSchema);

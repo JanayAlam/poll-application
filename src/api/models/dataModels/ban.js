@@ -16,9 +16,16 @@ const banSchema = new Schema(
         profile: {
             type: Schema.Types.ObjectId,
             ref: 'Profile',
-        }
+        },
+        modifiedAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
+        createdAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
     },
-    { timestamps: true }
 );
 
 const Ban = model('Ban', banSchema);

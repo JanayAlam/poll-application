@@ -45,8 +45,15 @@ const pollSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Choice',
         }],
+        modifiedAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
+        createdAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
     },
-    { timestamps: true }
 );
 
 const Poll = model('Poll', pollSchema);

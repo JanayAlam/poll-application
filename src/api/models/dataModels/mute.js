@@ -20,9 +20,16 @@ const muteSchema = new Schema(
         profile: {
             type: Schema.Types.ObjectId,
             ref: 'Profile',
-        }
+        },
+        modifiedAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
+        createdAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
     },
-    { timestamps: true }
 );
 
 const Mute = model('Mute', muteSchema);
