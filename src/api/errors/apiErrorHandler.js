@@ -1,48 +1,51 @@
-const ApiError = require('./apiError');
+const express = require('express');
+const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
 
 /**
- * For handling the erros
+ * For handling the errors.
  * 
- * @param {Express} app The express application instance
+ * @param {express.Application} app The express application instance.
  */
 module.exports = (app) => {
     /**
-     * When URL is not valid
+     * When URL is not valid.
      * 
-     * @param {Request} request
-     * @param {Response} response
-     * @param {Function} __
-     * @returns {JSON} The response as json object
+     * @param {express.Request} req The request object from express.
+     * @param {express.Request} _ The response object from express.
+     * @param {Function} next The next middleware function.
+     * @returns {express.Response} The response as json object.
      */
-    app.use((request, response, next) => {
-        if (!request.url.includes('api-docs')) {
-            return response.status(404).json({
-                message: 'Requested URL is not valid.',
-            });
+    app.use((req, _, next) => {
+        try {
+            if (!req.url.includes('api-docs')) {
+                throw new NotFoundError('Requested URL is not valid.');
+            }
+        } catch (error) {
+            return next(error);
         }
-        return next();
     });
 
     /**
-     * Synchronous error handling
+     * Synchronous error handling.
      * 
-     * @param {Error} error
-     * @param {Request} _
-     * @param {Response} response
-     * @param {Function} __
-     * @returns {JSON} The response as json object
+     * @param {Error} err The instance of error class.
+     * @param {express.Request} _ The request object from express.
+     * @param {express.Response} res The next middleware function.
+     * @param {Function} __ The next middleware function.
+     * @returns {express.Response} The response as json object.
      */
-    app.use((error, _, response, __) => {
-        if (error instanceof ApiError) {
-            return response.status(error.status).json({ message: error.message });
-        }
-        if (error.message) {
-            return response.status(500).json({
-                message: error.message,
+    app.use((err, _, res, __) => {
+        if (err instanceof ApiError) {
+            return res.status(error.getCode()).json({
+                name: err.name,
+                message: err.message
             });
         }
-        return response.status(500).json({
-            message: 'Something went wrong.',
+        const internalServerError =
+            new InternalServerError(err.message || 'Something went wrong.');
+        return response.status(internalServerError.getCode()).json({
+            name: internalServerError.name,
+            message: internalServerError.message,
         });
     });
 }
