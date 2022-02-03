@@ -2,7 +2,7 @@
 const bcrypt = require('bcrypt');
 // Importing models.
 const { generateCode } = require('../../utils/generator');
-const { Email } = require('../models/dataModels');
+const { Email } = require('../schemas/models');
 
 class EmailService {
     /**

@@ -1,5 +1,5 @@
 // Importing models
-const { User } = require('../models/dataModels');
+const { User } = require('../schemas/models');
 
 class UserService {
     /**
@@ -9,8 +9,7 @@ class UserService {
      */
     store = (user) => {
         return {
-            username: user.username,
-            password: user.password,
+            ...user
         };
     };
 

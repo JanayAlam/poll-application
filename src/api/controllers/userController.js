@@ -4,7 +4,6 @@ const express = require('express');
 const { BadRequestError } = require('../errors/apiErrors');
 // Services.
 const userService = require('../services/userService');
-const emailService = require('../services/emailService');
 
 class UserController {
     /**
@@ -15,11 +14,8 @@ class UserController {
      */
     createHandler = async (req, res, next) => {
         try {
-            const { username, password } = req.body;
-            if (!username && !password) {
-                throw new BadRequestError('Username and password is required.');
-            }
-            const user = await userService.store({username, password});
+            const body = req.body;
+            const user = await userService.store(body);
             res.status(201).json(user);
         } catch (error) {
             next(error);
