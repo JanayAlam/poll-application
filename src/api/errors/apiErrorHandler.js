@@ -36,7 +36,7 @@ module.exports = (app) => {
      */
     app.use((err, _, res, __) => {
         if (err instanceof ApiError) {
-            return res.status(error.getCode()).json({
+            return res.status(err.getCode()).json({
                 name: err.name,
                 message: err.message
             });
