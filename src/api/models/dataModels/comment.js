@@ -20,8 +20,15 @@ const commentSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Reply',
         }],
+        modifiedAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
+        createdAt: {
+            type: Schema.Types.Date,
+            default: Date.now(),
+        },
     },
-    { timestamps: true }
 );
 
 const Comment = model('Comment', commentSchema);

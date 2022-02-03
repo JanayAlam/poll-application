@@ -1,15 +1,20 @@
-const express = require('express');
-
-// Importing routes
+// Importing routes.
 const authRouter = require('./includes/authRouter');
+const userRouter = require('./includes/userRouter');
 
+// All the root routes.
 const routes = [
     {
         path: '/auth',
         router: authRouter,
     },
+    {
+        path: '/users',
+        router: userRouter,
+    },
 ];
 
+// Exporting the routes with basic preflix.
 module.exports = (app) => {
     routes.forEach((route) => {
         if (route.path === '/api/v1') {
