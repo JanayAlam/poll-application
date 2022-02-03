@@ -8,10 +8,12 @@
         "dev": "nodemon -L ./src/server.js"
     },
     "dependencies": {
+        "bcrypt": "^5.0.1",
         "chalk": "2.4.1",
         "cors": "^2.8.5",
         "dotenv": "^14.3.2",
         "express": "^4.17.2",
+        "joi": "^17.6.0",
         "migrate-mongo": "^8.2.3",
         "moment": "^2.29.1",
         "mongoose": "^6.1.8",
