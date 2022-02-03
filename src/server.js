@@ -20,7 +20,7 @@ const swaggerSpec = require('./utils/swagger');
 require('./api/errors/apiErrorHandler')(app);
 
 // Some dependencies.
-const log = require('./utils/logger');
+const log = require('./utils/colorizeLog');
 
 /** Connecting the database and running the application. */
 main = async () => {
