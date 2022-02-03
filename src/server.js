@@ -30,16 +30,16 @@ main = async () => {
         // The port for the application.
         const PORT = process.env.PORT || 8080;
         const DOMAIN = process.env.DOMAIN_NAME || 'localhost'
-        // Runngin the application.
+        // Running the application.
         app.listen(PORT, () => {
             // Success message.
             log(`Server running on port ${PORT}`, 'success');
             // Documentation route setup.
             app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-            log(`Documentaion available at http://${DOMAIN}:${PORT}/api/v1/api-docs`, 'info')
+            log(`Documentation available at http://${DOMAIN}:${PORT}/api/v1/api-docs`, 'info')
         });
     } catch (error) {
-        // Error occured
+        // Error occurred.
         log(`Error: ${error.message}`, 'error')
         log('Exiting the application...', 'info')
         process.exit(1);
