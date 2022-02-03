@@ -9,8 +9,7 @@ class UserService {
      */
     store = (user) => {
         return {
-            username: user.username,
-            password: user.password,
+            ...user
         };
     };
 
