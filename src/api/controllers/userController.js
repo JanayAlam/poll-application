@@ -1,6 +1,10 @@
+// Dependencies.
 const express = require('express');
+// Errors.
 const { BadRequestError } = require('../errors/apiErrors');
+// Services.
 const userService = require('../services/userService');
+const emailService = require('../services/emailService');
 
 class UserController {
     /**

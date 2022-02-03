@@ -1,4 +1,7 @@
-// Importing models
+// Dependencies.
+const bcrypt = require('bcrypt');
+// Importing models.
+const { generateCode } = require('../../utils/generator');
 const { Email } = require('../models/dataModels');
 
 class EmailService {
@@ -8,10 +11,15 @@ class EmailService {
      * @returns {Email} Created email object.
      */
     store = async (email) => {
-        const emailModel = new Email(
-            address=email.address,
-            // @TODO Rest
-        )
+        const code = generateCode(6);
+        const bcrypt = require('bcrypt');
+        const hashCode = await bcrypt.hash(code, 10);
+        // Creating model.
+        const emailModel = new Email({
+            address: email.address,
+            verificationCode: hashCode,
+        });
+        if (email.userId) emailModel.user = email.userId;
         // Saving the model into the database.
         await emailModel.save();
         return emailModel;
@@ -35,18 +43,18 @@ class EmailService {
     };
 
     /**
-     * Get email by id.
-     * @param {Object} user Email object which will be saved.
+     * Update email by id.
+     * @param {int} id Email object which will be saved.
      * @returns {Email} Updated email object.
      */
-    update = (email) => { };
+    update = (id) => {};
 
     /**
      * Delete email by id.
      * @param {int} id Id of the email object.
      * @returns {Email} Deleted email object.
      */
-    destroy = (id) => { };
+    destroy = (id) => {};
 }
 
 // Exporting the user service's instance
