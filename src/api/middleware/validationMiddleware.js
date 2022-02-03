@@ -4,7 +4,7 @@ const { BadRequestError } = require('../errors/apiErrors');
 /**
  * 
  * @param {Function} validate Validate callback function.
- * @returns {Function} A middlware function.
+ * @returns {Function} A middleware function.
  */
 module.exports = (validate) => {
     return (req, _, next) => {

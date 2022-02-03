@@ -7,8 +7,8 @@ const userController = require('../../controllers/userController');
 // Validators.
 const { userSchemaValidator } = require('../../schemas/requestSchemaValidators');
 
-// Importing middlewares.
-const validate = require('../../middlewares/validationMiddleware');
+// Importing middleware.
+const validate = require('../../middleware/validationMiddleware');
 
 // Route: /api/v1/users.
 router.post('/', validate(userSchemaValidator), userController.createHandler);
