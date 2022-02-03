@@ -1,3 +1,4 @@
+// Importing express.
 const express = require('express');
 
 // Configuring the dot env file.
