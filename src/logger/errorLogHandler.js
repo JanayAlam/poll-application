@@ -20,6 +20,7 @@ const transportsFileConfig = {
 // A configuration for transport of log schema in the database.
 const transportsMongoDbConfig = {
     db: universalVariables.DATABASE_CONN_URI,
+    options: universalVariables.MONGODB_OPTIONS,
     metaKey: 'meta',
 }
 
