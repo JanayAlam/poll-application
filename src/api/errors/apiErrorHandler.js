@@ -1,4 +1,7 @@
 const express = require('express');
+
+// Modules.
+const { errorLogger } = require('../../logger');
 const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
 
 /**
@@ -7,9 +10,11 @@ const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
  * @param {express.Application} app The express application instance.
  */
 module.exports = (app) => {
+    // Error logger.
+    app.use(errorLogger);
+
     /**
      * When URL is not valid.
-     * 
      * @param {express.Request} req The request object from express.
      * @param {express.Request} _ The response object from express.
      * @param {Function} next The next middleware function.
@@ -27,7 +32,6 @@ module.exports = (app) => {
 
     /**
      * Synchronous error handling.
-     * 
      * @param {Error} err The instance of error class.
      * @param {express.Request} req The request object from express.
      * @param {express.Response} res The next middleware function.

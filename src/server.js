@@ -7,17 +7,14 @@ require('dotenv').config();
 // Creating the app instance.
 const app = express();
 
-// Setting up the middleware.
-require('./api/middleware/basicMiddleware')(app);
-
-// Setting up the routes.
-require('./api/routes/route')(app);
+// Setting up the middleware and routes.
+require('./api/middleware')(app);
 
 // Documentation dependencies.
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./utils/swagger');
 
-// Error handle middleware.
+// Error handle middleware and logger.
 require('./api/errors/apiErrorHandler')(app);
 
 // Some dependencies.

@@ -6,6 +6,9 @@ const cors = require('cors');
 // Other middleware.
 const setCorrelationIdMiddleware = require('./correlationMiddleware');
 
+// Loggers.
+const { infoLogger } = require('../../logger');
+
 // Some options for configure the cors
 const corsOptions = {
     origin: `http://${process.env.CROSS_ORIGIN_HOST || 'localhost'}`
@@ -16,6 +19,7 @@ const corsOptions = {
 
 // The middleware array
 const allMiddleware = [
+    infoLogger, // Info logger
     express.json(),
     setCorrelationIdMiddleware,
     morgan('dev'),
@@ -28,4 +32,6 @@ module.exports = (app) => {
     allMiddleware.forEach((middleware) => {
         app.use(middleware);
     });
+    // Setting up the routes.
+    require('../routes/route')(app);
 }
