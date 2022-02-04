@@ -1,5 +1,5 @@
 // Importing models
-const { User } = require('../schemas/models');
+const { User } = require('../models/data-models');
 
 class UserService {
     /**

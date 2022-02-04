@@ -1,4 +1,4 @@
-// The roouter instance.
+// The router instance.
 const router = require('express').Router();
 
 // Importing controller.

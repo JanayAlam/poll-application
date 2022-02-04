@@ -2,7 +2,7 @@
 const bcrypt = require('bcrypt');
 // Importing models.
 const { generateCode } = require('../../utils/generator');
-const { Email } = require('../schemas/models');
+const { Email } = require('../models/data-models');
 
 class EmailService {
     /**
@@ -12,7 +12,6 @@ class EmailService {
      */
     store = async (email) => {
         const code = generateCode(6);
-        const bcrypt = require('bcrypt');
         const hashCode = await bcrypt.hash(code, 10);
         // Creating model.
         const emailModel = new Email({

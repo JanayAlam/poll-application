@@ -5,7 +5,7 @@ const router = require('express').Router();
 const userController = require('../../controllers/userController');
 
 // Validators.
-const { userSchemaValidator } = require('../../schemas/requestSchemaValidators');
+const { userSchemaValidator } = require('../../models/request-models');
 
 // Importing middleware.
 const validate = require('../../middleware/validationMiddleware');
