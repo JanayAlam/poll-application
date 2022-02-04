@@ -29,23 +29,29 @@ module.exports = (app) => {
      * Synchronous error handling.
      * 
      * @param {Error} err The instance of error class.
-     * @param {express.Request} _ The request object from express.
+     * @param {express.Request} req The request object from express.
      * @param {express.Response} res The next middleware function.
-     * @param {Function} __ The next middleware function.
+     * @param {Function} _ The next middleware function.
      * @returns {express.Response} The response as json object.
      */
-    app.use((err, _, res, __) => {
+    app.use((err, req, res, _) => {
+        // A store for storing error code.
+        let code;
+        // Checking if the error is known or unknown.
         if (err instanceof ApiError) {
-            return res.status(err.getCode()).json({
-                name: err.name,
-                message: err.message
-            });
+            // Getting the actual error code.
+            code = err.getCode();
+        } else {
+            // Error is unhandled.
+            err = new InternalServerError(
+                err.message || 'Something went wrong.'
+            );
         }
-        const internalServerError =
-            new InternalServerError(err.message || 'Something went wrong.');
-        return response.status(internalServerError.getCode()).json({
-            name: internalServerError.name,
-            message: internalServerError.message,
+        // Returning the error message with correlation id.
+        return res.status(code).json({
+            name: err.name,
+            correlationId: req.headers['x-correlation-id'],
+            message: err.message,
         });
     });
 }
