@@ -6,7 +6,7 @@ require('winston-daily-rotate-file');
 const expressWinston = require('express-winston');
 
 // Modules.
-const universalVariables = require('../config/universalVariables');
+const universalVariables = require('../utils/universalVariables');
 
 /**
  * Get message for info logging.
@@ -34,6 +34,9 @@ const transportsFileConfig = {
 // Exporting the winston configured object.
 module.exports = expressWinston.logger({
     transports: [
+        // Writing on the console.
+        new winston.transports.Console(),
+        // Writing on the file.
         new winston.transports.DailyRotateFile(transportsFileConfig),
     ],
     format: winston

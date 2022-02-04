@@ -1,18 +1,33 @@
 const express = require('express');
 
 // Modules.
+const log = require('../../utils/colorizeLog');
 const { errorLogger } = require('../../logger');
 const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
 
 /**
+ * Get message for error logging.
+ * @param {Error} err The error object.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @returns {string} A stringify json object.
+ */
+ const getErrorLogMessage = (err, req, res) => {
+    // Message object.
+    let messageObj = {
+        correlationId: req.headers['x-correlation-id'],
+        error: err.message,
+    };
+    stringifyObj = JSON.stringify(messageObj);
+    // Stringify the object.
+    return `${err.getCode() || 500} ${req.url} `.concat(stringifyObj);
+}
+
+/**
  * For handling the errors.
- * 
  * @param {express.Application} app The express application instance.
  */
 module.exports = (app) => {
-    // Error logger.
-    app.use(errorLogger);
-
     /**
      * When URL is not valid.
      * @param {express.Request} req The request object from express.
@@ -51,8 +66,10 @@ module.exports = (app) => {
                 err.message || 'Something went wrong.'
             );
         }
+        // Logging in the console.
+        log(getErrorLogMessage(err, req, res), 'api_error', req.method);
         // Returning the error message with correlation id.
-        return res.status(code).json({
+        res.status(code).json({
             name: err.name,
             correlationId: req.headers['x-correlation-id'],
             message: err.message,

@@ -14,11 +14,12 @@ require('./api/middleware')(app);
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./utils/swagger');
 
-// Error handle middleware and logger.
+// Errors handling middleware.
 require('./api/errors/apiErrorHandler')(app);
 
-// Some dependencies.
+// Modules.
 const log = require('./utils/colorizeLog');
+const universalVariables = require('./utils/universalVariables');
 
 /** Connecting the database and running the application. */
 main = async () => {
@@ -31,15 +32,21 @@ main = async () => {
         // Running the application.
         app.listen(PORT, () => {
             // Success message.
-            log(`Server running on port ${PORT}`, 'success');
+            log(
+                `Server running on port ${PORT}`,
+                universalVariables.CONSOLE_LOG_CATEGORY.success
+            );
             // Documentation route setup.
             app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-            log(`Documentation available at http://${DOMAIN}:${PORT}/api/v1/api-docs`, 'info')
+            log(
+                `Documentation available at http://${DOMAIN}:${PORT}/api/v1/api-docs`,
+                universalVariables.CONSOLE_LOG_CATEGORY.info
+            )
         });
     } catch (error) {
         // Error occurred.
-        log(`Error: ${error.message}`, 'error')
-        log('Exiting the application...', 'info')
+        log(`Error: ${error.message}`, universalVariables.CONSOLE_LOG_CATEGORY.error)
+        log('Exiting the application...', universalVariables.CONSOLE_LOG_CATEGORY.info)
         process.exit(1);
     }
 };

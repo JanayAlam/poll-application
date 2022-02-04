@@ -1,13 +1,12 @@
 // Dependencies.
 const express = require('express');
-const morgan = require('morgan');
 const cors = require('cors');
 
 // Other middleware.
 const setCorrelationIdMiddleware = require('./correlationMiddleware');
 
 // Loggers.
-const { infoLogger } = require('../../logger');
+const { infoLogger, errorLogger } = require('../../logger');
 
 // Some options for configure the cors
 const corsOptions = {
@@ -22,7 +21,6 @@ const allMiddleware = [
     infoLogger, // Info logger
     express.json(),
     setCorrelationIdMiddleware,
-    morgan('dev'),
     express.static('public'),
     cors(corsOptions),
 ];
@@ -34,4 +32,6 @@ module.exports = (app) => {
     });
     // Setting up the routes.
     require('../routes/route')(app);
+    // Error logging.
+    app.use(errorLogger);
 }

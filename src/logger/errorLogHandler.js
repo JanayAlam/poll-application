@@ -8,28 +8,7 @@ require('winston-daily-rotate-file');
 const expressWinston = require('express-winston');
 
 // Modules.
-const universalVariables = require('../config/universalVariables');
-const log = require('../utils/colorizeLog');
-
-/**
- * Get message for error logging.
- * @param {Error} err The error object.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} _ The response object from express.
- * @returns {string} A stringify json object.
- */
-const getErrorMessage = (err, req, _) => {
-    // Message object.
-    let messageObj = {
-        correlationId: req.headers['x-correlation-id'],
-        error: err.message,
-    };
-    stringifyObj = JSON.stringify(messageObj);
-    // Logging in console.
-    log(stringifyObj, 'error');
-    // Stringify the object.
-    return stringifyObj;
-}
+const universalVariables = require('../utils/universalVariables');
 
 // A configuration for transport of log file.
 const transportsFileConfig = {
