@@ -4,7 +4,7 @@
     "main": "./src/server.js",
     "license": "MIT",
     "scripts": {
-        "start": "node ./src/server.js",
+        "start": "NODE_ENV=production node ./src/server.js",
         "dev": "nodemon -L ./src/server.js"
     },
     "dependencies": {
@@ -15,6 +15,7 @@
         "express": "^4.17.2",
         "express-winston": "^4.2.0",
         "joi": "^17.6.0",
+        "jsonwebtoken": "^8.5.1",
         "migrate-mongo": "^8.2.3",
         "moment": "^2.29.1",
         "mongoose": "^6.1.8",
