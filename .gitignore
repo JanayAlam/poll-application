@@ -2,6 +2,7 @@ node_modules/
 .vscode/
 .env
 
+/src/logger/log-files/
 
 public/images/uploads/choicePhotos/*.jpg
 public/images/uploads/choicePhotos/*.png
