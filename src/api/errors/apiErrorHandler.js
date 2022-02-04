@@ -26,7 +26,7 @@ module.exports = (app) => {
                 throw new NotFoundError('Requested URL is not valid.');
             }
         } catch (error) {
-            return next(error);
+            next(error);
         }
     });
 
@@ -39,8 +39,8 @@ module.exports = (app) => {
      * @returns {express.Response} The response as json object.
      */
     app.use((err, req, res, _) => {
-        // A store for storing error code.
-        let code;
+        // Assuming the error status code is 500.
+        let code = 500;
         // Checking if the error is known or unknown.
         if (err instanceof ApiError) {
             // Getting the actual error code.

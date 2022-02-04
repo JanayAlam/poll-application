@@ -45,7 +45,7 @@ const transportsMongoDbConfig = {
 }
 
 // Exporting the winston configured object.
-module.exports = expressWinston.logger({
+module.exports = expressWinston.errorLogger({
     transports: [
         // Local file.
         new winston.transports.DailyRotateFile(transportsFileConfig),
@@ -58,5 +58,5 @@ module.exports = expressWinston.logger({
             winston.format.json()
         ),
     meta: true,
-    msg: getErrorMessage,
+    msg: '{ "correlationId": {{req.headers["x-correlation-id"]}}, "error": "{{err.message}}" }',
 });
