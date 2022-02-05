@@ -1,4 +1,7 @@
-// Importing models
+// Dependencies.
+const bcrypt = require('bcrypt');
+
+// Importing models.
 const { User } = require('../models/data-models');
 
 class UserService {
@@ -7,10 +10,16 @@ class UserService {
      * @param {User} user The object that will be stored.
      * @returns {User} Created user object.
      */
-    store = (user) => {
-        return {
-            ...user
-        };
+    store = async (user) => {
+        // Hashing the password and saving into the variable.
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        user.password = hashedPassword;
+        // Creating the model.
+        const model = new User(user);
+        // Storing the model into the database.
+        const createdUser = await model.save();
+        // Returning the created user.
+        return createdUser;
     };
 
     /**
@@ -35,14 +44,14 @@ class UserService {
      * @param {User} user Updated user object.
      * @returns {User} Updated user object.
      */
-    update = (user) => {};
+    update = (user) => { };
 
     /**
      * Delete user by id.
      * @param {int} id Id of the user.
      * @returns {User} Deleted user object.
      */
-    destroy = (id) => {};
+    destroy = (id) => { };
 }
 
 // Exporting the user service's instance

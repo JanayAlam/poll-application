@@ -16,7 +16,6 @@ const userSchema = new Schema(
         },
         isSuperuser: {
             type: Boolean,
-            required: true,
             default: false,
         },
         email: {
