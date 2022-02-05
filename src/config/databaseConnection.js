@@ -17,6 +17,6 @@ module.exports = async () => {
         log(`Database connection error: ${error.message}`, 'error');
         log('Could not connect with the database! Try again.', 'info');
         log('Exiting the application...', 'info');
-        process.exit(1);
+        throw error;
     }
 };

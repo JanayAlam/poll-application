@@ -32,7 +32,7 @@ main = async () => {
         // Error occurred.
         log(`Error: ${error.message}`, universalVariables.CONSOLE_LOG_CATEGORY.error);
         log('Exiting the application...', universalVariables.CONSOLE_LOG_CATEGORY.info);
-        process.exit(1);
+        throw error;
     }
 };
 
