@@ -16,8 +16,10 @@ class UserController {
         try {
             const body = req.body;
             const user = await userService.store(body);
+            // Showing the user object to the client.
             res.status(201).json(user);
         } catch (error) {
+            // Error occurred.
             next(error);
         }
     }
