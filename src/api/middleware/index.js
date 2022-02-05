@@ -2,6 +2,10 @@
 const express = require('express');
 const cors = require('cors');
 
+// Documentation dependencies.
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('../../utils/swagger');
+
 // Other middleware.
 const setCorrelationIdMiddleware = require('./correlationMiddleware');
 
@@ -32,6 +36,8 @@ module.exports = (app) => {
     });
     // Setting up the routes.
     require('../routes/route')(app);
+    // Documentation route setup.
+    app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     // Error logging.
     app.use(errorLogger);
 }
