@@ -1,7 +1,9 @@
 // Dependencies.
 const express = require('express');
+
 // Errors.
 const { BadRequestError } = require('../errors/apiErrors');
+
 // Services.
 const userService = require('../services/userService');
 
@@ -34,7 +36,7 @@ class UserController {
         try {
             const users = await userService.getAll();
             // Showing the list of users to the client.
-            res.status(201).json(users);
+            res.status(200).json(users);
         } catch (error) {
             // Error occurred.
             next(error);
@@ -52,7 +54,7 @@ class UserController {
             const { id } = req.params;
             const user = await userService.get(id);
             // Showing the user to the client.
-            res.status(201).json(user);
+            res.status(200).json(user);
         } catch (error) {
             // Error occurred.
             next(error);
