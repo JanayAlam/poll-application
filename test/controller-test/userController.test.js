@@ -13,13 +13,31 @@ describe('User controller test suite', () => {
             })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(201)
             .end(function(err, res) {
                 // If error happen in testing.
                 if (err) return done(err);
                 // Testing.
+                expect(res.status).toBe(201);
                 expect(res.headers['x-correlation-id']).toBeTruthy();
                 expect(res.body.username).toBe('username01');
+                // Finished testing.
+                return done();
+            });
+    });
+    
+    // Getting all users test.
+    it('GET /users', function(done) {
+        request
+            .get('/api/v1/users')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .end(function(err, res) {
+                // If error happen in testing.
+                if (err) return done(err);
+                // Testing.
+                expect(res.status).toBe(200);
+                expect(res.body.length).not.toBeUndefined();
+                expect(res.body.length).toBeGreaterThanOrEqual(0);
                 // Finished testing.
                 return done();
             });

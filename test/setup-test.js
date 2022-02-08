@@ -42,6 +42,7 @@ module.exports = () => {
 
     /** This test function will run before all the test */
     beforeAll(async () => {
+        jest.setTimeout(10000);
         await mongoose.connect(URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
