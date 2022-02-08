@@ -66,8 +66,9 @@ module.exports = (app) => {
                 err.message || 'Something went wrong.'
             );
         }
-        // Logging in the console.
-        log(getErrorLogMessage(err, req, res), 'api_error', req.method);
+        // Logging in the console if the node environment is set to 'test'.
+        if (process.env.NODE_ENV !== 'test')
+            log(getErrorLogMessage(err, req, res), 'api_error', req.method);
         // Returning the error message with correlation id.
         res.status(code).json({
             name: err.name,
