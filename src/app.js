@@ -1,3 +1,6 @@
+// Configuring the dot env file.
+require('dotenv').config();
+
 // Importing express.
 const express = require('express');
 
