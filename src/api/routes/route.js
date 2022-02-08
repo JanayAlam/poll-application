@@ -14,7 +14,7 @@ const routes = [
     },
 ];
 
-// Exporting the routes with basic preflix.
+// Exporting the routes with basic prefix.
 module.exports = (app) => {
     routes.forEach((route) => {
         if (route.path === '/api/v1') {

@@ -22,7 +22,7 @@ const corsOptions = {
 
 // The middleware array
 const allMiddleware = [
-    infoLogger, // Info logger
+    infoLogger, // Info logger.
     express.json(),
     setCorrelationIdMiddleware,
     express.static('public'),

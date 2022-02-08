@@ -2,6 +2,9 @@
 const chalk = require('chalk');
 const moment = require('moment');
 
+// Modules.
+const universalVariables = require('./universalVariables');
+
 const log = console.log;
 
 /**
@@ -9,25 +12,25 @@ const log = console.log;
  * @param {string} msg Log message.
  * @param {string} logCategory Message category.
  */
-module.exports = (msg, logCategory = 'info', method='GET') => {
+module.exports = (msg, logCategory = universalVariables.CONSOLE_LOG_CATEGORY.info, method = 'GET') => {
     logCategory = logCategory.toLowerCase();
     switch (logCategory) {
-        case 'success':
+        case universalVariables.CONSOLE_LOG_CATEGORY.success:
             log(`${moment().format('MMMM Do YYYY, h:mm:ss a')}: `
                 + `${chalk.white.bgGreen.bold(' SUCCESS ')} `
                 + `${chalk.green(msg)}`);
             break;
-        case 'api_success':
+        case universalVariables.CONSOLE_LOG_CATEGORY.apiSuccess:
             log(`${moment().format('MMMM Do YYYY, h:mm:ss a')}: `
                 + `${chalk.white.bgGreen.bold(` ${method.toUpperCase()} `)} `
                 + `${chalk.green(msg)}`);
             break;
-        case 'error':
+        case universalVariables.CONSOLE_LOG_CATEGORY.error:
             log(`${moment().format('MMMM Do YYYY, h:mm:ss a')}: `
                 + `${chalk.white.bgRed.bold(' ERROR ')} `
                 + `${chalk.red(msg)}`);
             break;
-        case 'api_error':
+        case universalVariables.CONSOLE_LOG_CATEGORY.apiError:
             log(`${moment().format('MMMM Do YYYY, h:mm:ss a')}: `
                 + `${chalk.white.bgRed.bold(` ${method.toUpperCase()} `)} `
                 + `${chalk.red(msg)}`);
