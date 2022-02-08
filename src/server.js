@@ -1,6 +1,3 @@
-// Configuring the dot env file.
-require('dotenv').config();
-
 // Importing app.
 const app = require('./app');
 

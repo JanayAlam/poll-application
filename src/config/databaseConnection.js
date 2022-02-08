@@ -8,7 +8,7 @@ const log = require('../utils/colorizeLog');
 /** Returns true if the connection is established otherwise false. */
 module.exports = async () => {
     try {
-        const URI = require('../utils/universalVariables').DATABASE_CONN_URI
+        const URI = universalVariables.DATABASE_CONN_URI
         await mongoose.connect(
             URI, universalVariables.MONGODB_OPTIONS
         );

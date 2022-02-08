@@ -17,6 +17,8 @@ const universalVariables = require('../utils/universalVariables');
 const getInfoMessage = (req, _) => {
     // Message object.
     let messageObj = {
+        url: req.url,
+        method: req.method,
         correlationId: req.headers['x-correlation-id'],
         requestBody: req.body,
     };

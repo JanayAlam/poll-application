@@ -22,7 +22,6 @@ const corsOptions = {
 
 // The middleware array
 const allMiddleware = [
-    infoLogger, // Info logger
     express.json(),
     setCorrelationIdMiddleware,
     express.static('public'),
@@ -31,6 +30,9 @@ const allMiddleware = [
 
 /** Activating the middleware */
 module.exports = (app) => {
+    // Info logger if the node environment is set to 'test'.
+    if (process.env.NODE_ENV !== 'test') app.use(infoLogger);
+    // Other middleware.
     allMiddleware.forEach((middleware) => {
         app.use(middleware);
     });
@@ -38,6 +40,6 @@ module.exports = (app) => {
     require('../routes/route')(app);
     // Documentation route setup.
     app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    // Error logging.
-    app.use(errorLogger);
+    // Error logging if the node environment is set to 'test'.
+    if (process.env.NODE_ENV !== 'test') app.use(errorLogger);
 }
