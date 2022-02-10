@@ -1,25 +1,16 @@
 // Importing the request of supertest.
-const request = require('./setup-test.js')();
+const request = require('./test.config')();
 
 // The basic error testing.
 describe('Error test suite', () => {
     // 404 route test.
-    it('GET /unknown-url', function(done) {
-        request
-            .get('/unknown-url')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(404)
-            .end(function(err, res) {
-                // If error happen in testing.
-                if (err) return done(err);
-                // Testing.
-                expect(res.headers['x-correlation-id']).toBeTruthy();
-                expect(res.body.message).toBeTruthy();
-                expect(res.body.correlationId).toBeTruthy();
-                expect(res.body.name).toBe('NotFoundError');
-                // Finished testing.
-                return done();
-            });
+    it('GET /unknown-url', async () => {
+        const response = await request.get('/unknown-url');
+        // Testing.
+        expect(response.status).toBe(404);
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        expect(response.body.message).toBeTruthy();
+        expect(response.body.correlationId).toBeTruthy();
+        expect(response.body.name).toBe('NotFoundError');
     });
 });

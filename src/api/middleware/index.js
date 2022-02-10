@@ -31,7 +31,7 @@ const allMiddleware = [
 /** Activating the middleware */
 module.exports = (app) => {
     // Info logger if the node environment is set to 'test'.
-    if (process.env.NODE_ENV !== 'test') app.use(infoLogger);
+    if (process.env.ENVIRONMENT !== 'TEST') app.use(infoLogger);
     // Other middleware.
     allMiddleware.forEach((middleware) => {
         app.use(middleware);
@@ -41,5 +41,5 @@ module.exports = (app) => {
     // Documentation route setup.
     app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     // Error logging if the node environment is set to 'test'.
-    if (process.env.NODE_ENV !== 'test') app.use(errorLogger);
+    if (process.env.ENVIRONMENT !== 'TEST') app.use(errorLogger);
 }

@@ -1,45 +1,28 @@
 // Importing the request of supertest.
-const request = require('../setup-test')();
+const request = require('../test.config')();
+
+jest.setTimeout(10000);
 
 // Testing the user controller.
 describe('User controller test suite', () => {
     // Create user test.
-    it('POST /users', function(done) {
-        request
-            .post('/api/v1/users')
-            .send({
-                username: 'username01',
-                password: 'password01'
-            })
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .end(function(err, res) {
-                // If error happen in testing.
-                if (err) return done(err);
-                // Testing.
-                expect(res.status).toBe(201);
-                expect(res.headers['x-correlation-id']).toBeTruthy();
-                expect(res.body.username).toBe('username01');
-                // Finished testing.
-                return done();
-            });
+    test('POST /users', async () => {
+        const response = await request.post('/api/v1/users').send({
+            username: 'username01',
+            password: 'password01'
+        });
+        // Testing.
+        expect(response.status).toBe(201);
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        expect(response.body.username).toBe('username01');
     });
-    
+
     // Getting all users test.
-    it('GET /users', function(done) {
-        request
-            .get('/api/v1/users')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .end(function(err, res) {
-                // If error happen in testing.
-                if (err) return done(err);
-                // Testing.
-                expect(res.status).toBe(200);
-                expect(res.body.length).not.toBeUndefined();
-                expect(res.body.length).toBeGreaterThanOrEqual(0);
-                // Finished testing.
-                return done();
-            });
+    test('GET /users', async () => {
+        const response = await request.get('/api/v1/users');
+        // Testing.
+        expect(response.status).toBe(200);
+        expect(response.body.length).not.toBeUndefined();
+        expect(response.body.length).toBeGreaterThanOrEqual(0);
     });
 });

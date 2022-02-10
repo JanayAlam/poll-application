@@ -11,26 +11,26 @@ const universalVariable = require('../src/utils/universalVariables');
 
 // Some utility functions.
 async function removeAllCollections() {
-    const collections = Object.keys(mongoose.connection.collections)
+    const collections = Object.keys(mongoose.connection.collections);
     for (const collectionName of collections) {
-        const collection = mongoose.connection.collections[collectionName]
-        await collection.deleteMany()
+        const collection = mongoose.connection.collections[collectionName];
+        await collection.deleteMany();
     }
 }
 
 async function dropAllCollections() {
-    const collections = Object.keys(mongoose.connection.collections)
+    const collections = Object.keys(mongoose.connection.collections);
     for (const collectionName of collections) {
-        const collection = mongoose.connection.collections[collectionName]
+        const collection = mongoose.connection.collections[collectionName];
         try {
             await collection.drop()
         } catch (error) {
             // Sometimes this error happens, but you can safely ignore it
-            if (error.message === 'ns not found') return
+            if (error.message === 'ns not found') return;
             // This error occurs when you use it.todo. You can
             // safely ignore this error too
-            if (error.message.includes('a background operation is currently running')) return
-            console.log(error.message)
+            if (error.message.includes('a background operation is currently running')) return;
+            console.log(error.message);
         }
     }
 }
@@ -42,7 +42,6 @@ module.exports = () => {
 
     /** This test function will run before all the test */
     beforeAll(async () => {
-        jest.setTimeout(10000);
         await mongoose.connect(URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
