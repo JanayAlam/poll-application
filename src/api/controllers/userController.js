@@ -1,11 +1,8 @@
 // Dependencies.
-const express = require('express');
-
-// Errors.
-const { BadRequestError } = require('../errors/apiErrors');
+import express from 'express';
 
 // Services.
-const userService = require('../services/userService');
+import { store, get, getAll, update, destroy } from '../services/userService';
 
 class UserController {
     /**
@@ -17,7 +14,7 @@ class UserController {
     createHandler = async (req, res, next) => {
         try {
             const body = req.body;
-            const user = await userService.store(body);
+            const user = await store(body);
             // Showing the user object to the client.
             res.status(201).json(user);
         } catch (error) {
@@ -34,7 +31,7 @@ class UserController {
      */
     getAllHandler = async (req, res, next) => {
         try {
-            const users = await userService.getAll();
+            const users = await getAll();
             // Showing the list of users to the client.
             res.status(200).json(users);
         } catch (error) {
@@ -52,7 +49,7 @@ class UserController {
     getHandler = async (req, res, next) => {
         try {
             const { id } = req.params;
-            const user = await userService.get(id);
+            const user = await get(id);
             // Showing the user to the client.
             res.status(200).json(user);
         } catch (error) {
@@ -62,4 +59,5 @@ class UserController {
     }
 }
 
-module.exports = new UserController();
+// Exporting the user controller instance.
+export default new UserController();

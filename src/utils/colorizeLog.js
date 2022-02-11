@@ -1,10 +1,11 @@
 // https://stackoverflow.com/a/70748594
-const chalk = require('chalk');
-const moment = require('moment');
+import chalk from 'chalk';
+import moment from 'moment';
 
 // Modules.
-const universalVariables = require('./universalVariables');
+import universalVariables from './universalVariables';
 
+// Shortcut.
 const log = console.log;
 
 /**
@@ -12,7 +13,7 @@ const log = console.log;
  * @param {string} msg Log message.
  * @param {string} logCategory Message category.
  */
-module.exports = (msg, logCategory = universalVariables.CONSOLE_LOG_CATEGORY.info, method = 'GET') => {
+export default (msg, logCategory = universalVariables.CONSOLE_LOG_CATEGORY.info, method = 'GET') => {
     logCategory = logCategory.toLowerCase();
     switch (logCategory) {
         case universalVariables.CONSOLE_LOG_CATEGORY.success:

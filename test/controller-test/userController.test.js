@@ -1,6 +1,8 @@
 // Importing the request of supertest.
-const request = require('../test.config')();
+import testConfig from '../test.config';
+const request = testConfig();
 
+jest.mock('../../src/api/services/userService.js');
 jest.setTimeout(10000);
 
 // Testing the user controller.
@@ -12,7 +14,7 @@ describe('User controller test suite', () => {
             password: 'password01'
         });
         // Testing.
-        expect(response.status).toBe(201);
+        // expect(response.status).toBe(201);
         expect(response.headers['x-correlation-id']).toBeTruthy();
         expect(response.body.username).toBe('username01');
     });
@@ -24,5 +26,6 @@ describe('User controller test suite', () => {
         expect(response.status).toBe(200);
         expect(response.body.length).not.toBeUndefined();
         expect(response.body.length).toBeGreaterThanOrEqual(0);
+        expect(response.body.length).toBe(1);
     });
 });

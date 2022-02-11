@@ -2,16 +2,19 @@
 require('dotenv').config();
 
 // Importing express.
-const express = require('express');
+import express from 'express';
+// Errors handling middleware.
+import errorHandler from './api/errors/apiErrorHandler';
+// Setting up the middleware and routes.
+import setMiddleware from './api/middleware';
+
 
 // Creating the app instance.
 const app = express();
 
-// Setting up the middleware and routes.
-require('./api/middleware')(app);
+setMiddleware(app);
 
-// Errors handling middleware.
-require('./api/errors/apiErrorHandler')(app);
+errorHandler(app);
 
 // Exporting the app instance.
-module.exports = app;
+export default app;

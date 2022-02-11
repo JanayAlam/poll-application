@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { model, Schema } from 'mongoose';
 
 const muteSchema = new Schema(
     {
@@ -34,4 +34,4 @@ const muteSchema = new Schema(
 
 const Mute = model('Mute', muteSchema);
 
-module.exports = Mute;
+export default Mute;

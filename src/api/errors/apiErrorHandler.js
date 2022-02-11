@@ -1,18 +1,18 @@
-const express = require('express');
-
+// Dependencies.
+import express from 'express';
 // Modules.
-const log = require('../../utils/colorizeLog');
-const { errorLogger } = require('../../logger');
-const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
+import log from '../../utils/colorizeLog';
+import { ApiError, InternalServerError, NotFoundError } from './apiErrors';
+
 
 /**
  * Get message for error logging.
  * @param {Error} err The error object.
  * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
+ * @param {express.Response} _ The response object from express.
  * @returns {string} A stringify json object.
  */
- const getErrorLogMessage = (err, req, res) => {
+const getErrorLogMessage = (err, req, _) => {
     // Message object.
     let messageObj = {
         correlationId: req.headers['x-correlation-id'],
@@ -27,7 +27,7 @@ const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
  * For handling the errors.
  * @param {express.Application} app The express application instance.
  */
-module.exports = (app) => {
+export default app => {
     /**
      * When URL is not valid.
      * @param {express.Request} req The request object from express.

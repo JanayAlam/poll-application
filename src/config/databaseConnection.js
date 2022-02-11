@@ -1,14 +1,14 @@
 // Dependencies.
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 // Modules.
-const universalVariables = require('../utils/universalVariables');
-const log = require('../utils/colorizeLog');
+import log from '../utils/colorizeLog';
+import universalVariables from '../utils/universalVariables';
+
 
 /** Returns true if the connection is established otherwise false. */
-module.exports = async () => {
+export default async () => {
     try {
-        const URI = universalVariables.DATABASE_CONN_URI
+        const URI = `${universalVariables.DATABASE_BASE_URI}/${process.env.DB_NAME}`;
         await mongoose.connect(
             URI, universalVariables.MONGODB_OPTIONS
         );

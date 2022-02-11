@@ -3,7 +3,7 @@
  * @param {int} size Size of the code string.
  * @returns {string} The generated code.
  */
-const generateCode = (size) => {
+export const generateCode = (size) => {
     const KEYS = '1234567890QWERTYUIOPASDFGHJKLZXCVBNM';
     let code = '#';
     for (let i = 0; i < size; i++) {
@@ -12,5 +12,3 @@ const generateCode = (size) => {
     }
     return code;
 }
-
-module.exports = { generateCode };

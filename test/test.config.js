@@ -1,13 +1,13 @@
 // Dependencies.
-const supertest = require('supertest');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import supertest from 'supertest';
 
 // Configuring the mongoose.
 mongoose.promise = global.Promise;
 
 // Modules.
-const app = require('../src/app');
-const universalVariable = require('../src/utils/universalVariables');
+import app from '../src/app';
+import universalVariable from '../src/utils/universalVariables';
 
 // Some utility functions.
 async function removeAllCollections() {
@@ -36,28 +36,28 @@ async function dropAllCollections() {
 }
 
 // https://github.com/zellwk/endpoint-testing-example/blob/master/test-setup.js
-module.exports = () => {
+export default () => {
     const request = supertest(app);
     const URI = `${universalVariable.DATABASE_BASE_URI}/${process.env.TEST_DB_NAME || 'test-db'}`;
 
     /** This test function will run before all the test */
-    beforeAll(async () => {
-        await mongoose.connect(URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-    });
+    // beforeAll(async () => {
+    //     await mongoose.connect(URI, {
+    //         useNewUrlParser: true,
+    //         useUnifiedTopology: true,
+    //     });
+    // });
 
     /**  Cleans up database between each test */
-    afterEach(async () => {
-        await removeAllCollections();
-    })
+    // afterEach(async () => {
+    //     await removeAllCollections();
+    // })
 
     /** Disconnect Mongoose */
-    afterAll(async () => {
-        await dropAllCollections();
-        await mongoose.connection.close();
-    })
+    // afterAll(async () => {
+    //     await dropAllCollections();
+    //     await mongoose.connection.close();
+    // })
 
     // Returning the request instance.
     return request;

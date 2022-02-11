@@ -1,5 +1,6 @@
 // Importing the request of supertest.
-const request = require('./test.config')();
+import testConfig from './test.config';
+const request = testConfig();
 
 // The basic error testing.
 describe('Error test suite', () => {
