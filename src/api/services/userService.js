@@ -25,7 +25,7 @@ export const store = async user => {
 
 /**
  * Get all the users from the database.
- * @returns Array of user objects.
+ * @returns {Array} Array of user objects.
  */
 export const getAll = async () => {
     const User = models.User;
