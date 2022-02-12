@@ -18,9 +18,8 @@ const getErrorLogMessage = (err, req, _) => {
         correlationId: req.headers['x-correlation-id'],
         error: err.message,
     };
-    stringifyObj = JSON.stringify(messageObj);
-    // Stringify the object.
-    return `${err.getCode() || 500} ${req.url} `.concat(stringifyObj);
+    // Returning the error object.
+    return `${err.getCode() || 500} ${req.url} `.concat(messageObj);
 }
 
 /**
@@ -33,7 +32,6 @@ export default app => {
      * @param {express.Request} req The request object from express.
      * @param {express.Request} _ The response object from express.
      * @param {Function} next The next middleware function.
-     * @returns {express.Response} The response as json object.
      */
     app.use((req, _, next) => {
         try {
@@ -51,7 +49,6 @@ export default app => {
      * @param {express.Request} req The request object from express.
      * @param {express.Response} res The next middleware function.
      * @param {Function} _ The next middleware function.
-     * @returns {express.Response} The response as json object.
      */
     app.use((err, req, res, _) => {
         // Assuming the error status code is 500.
@@ -67,7 +64,7 @@ export default app => {
             );
         }
         // Logging in the console if the node environment is set to 'test'.
-        if (process.env.NODE_ENV !== 'test')
+        if (process.env.ENVIRONMENT !== 'test')
             log(getErrorLogMessage(err, req, res), 'api_error', req.method);
         // Returning the error message with correlation id.
         res.status(code).json({
