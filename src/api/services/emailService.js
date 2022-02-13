@@ -1,60 +1,58 @@
 // Dependencies.
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 // Importing models.
-const { generateCode } = require('../../utils/generator');
-const { Email } = require('../models/data-models');
+import { generateCode } from '../../utils/generator';
+import models from '../models/data-models';
 
-class EmailService {
-    /**
-     * Save a email object into the database.
-     * @param {Email} email The object that will be stored.
-     * @returns {Email} Created email object.
-     */
-    store = async (email) => {
-        const code = generateCode(6);
-        const hashCode = await bcrypt.hash(code, 10);
-        // Creating model.
-        const emailModel = new Email({
-            address: email.address,
-            verificationCode: hashCode,
-        });
-        if (email.userId) emailModel.user = email.userId;
-        // Saving the model into the database.
-        await emailModel.save();
-        return emailModel;
-    };
+// Shortcut.
+const Email = models.Email;
 
-    /**
-     * Get all the emails from the database.
-     * @returns Array of email objects.
-     */
-    getAll = () => {
-        return [];
-    };
+/**
+ * Save a email object into the database.
+ * @param {Email} email The object that will be stored.
+ * @returns {Email} Created email object.
+ */
+export const store = async (email) => {
+    const code = generateCode(6);
+    const hashCode = await bcrypt.hash(code, 10);
+    // Creating model.
+    const emailModel = new Email({
+        address: email.address,
+        verificationCode: hashCode,
+    });
+    if (email.userId) emailModel.user = email.userId;
+    // Saving the model into the database.
+    await emailModel.save();
+    return emailModel;
+};
 
-    /**
-     * Get email by id.
-     * @param {int} id Id of the email.
-     * @returns {Email} The desire email object.
-     */
-    get = (id) => {
-        return {};
-    };
+/**
+ * Get all the emails from the database.
+ * @returns Array of email objects.
+ */
+export const getAll = () => {
+    return [];
+};
 
-    /**
-     * Update email by id.
-     * @param {int} id Email object which will be saved.
-     * @returns {Email} Updated email object.
-     */
-    update = (id) => {};
+/**
+ * Get email by id.
+ * @param {int} id Id of the email.
+ * @returns {Email} The desire email object.
+ */
+export const get = (id) => {
+    return {};
+};
 
-    /**
-     * Delete email by id.
-     * @param {int} id Id of the email object.
-     * @returns {Email} Deleted email object.
-     */
-    destroy = (id) => {};
-}
+/**
+ * Update email by id.
+ * @param {int} id Email object which will be saved.
+ * @returns {Email} Updated email object.
+ */
+export const update = (id) => { };
 
-// Exporting the user service's instance
-module.exports = new EmailService();
+/**
+ * Delete email by id.
+ * @param {int} id Id of the email object.
+ * @returns {Email} Deleted email object.
+ */
+export const destroy = (id) => { };

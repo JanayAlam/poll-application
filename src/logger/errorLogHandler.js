@@ -1,14 +1,13 @@
 // Dependencies.
-const express = require('express');
-const winston = require('winston');
-// Requiring `winston-mongodb` will expose 'winston.transports.MongoDB'.
-require('winston-mongodb');
+import expressWinston from 'express-winston';
+import winston from 'winston';
 // Requiring `winston-mongodb` will expose 'winston.transports.DailyRotateFile'.
-require('winston-daily-rotate-file');
-const expressWinston = require('express-winston');
-
+import 'winston-daily-rotate-file';
+// Requiring `winston-mongodb` will expose 'winston.transports.MongoDB'.
+import 'winston-mongodb';
 // Modules.
-const universalVariables = require('../utils/universalVariables');
+import universalVariables from '../utils/universalVariables';
+
 
 // A configuration for transport of log file.
 const transportsFileConfig = {
@@ -19,13 +18,13 @@ const transportsFileConfig = {
 
 // A configuration for transport of log schema in the database.
 const transportsMongoDbConfig = {
-    db: universalVariables.DATABASE_CONN_URI,
+    db: `${universalVariables.DATABASE_BASE_URI}/${process.env.DB_NAME}`,
     options: universalVariables.MONGODB_OPTIONS,
     metaKey: 'meta',
 }
 
 // Exporting the winston configured object.
-module.exports = expressWinston.errorLogger({
+export default expressWinston.errorLogger({
     transports: [
         // Local file.
         new winston.transports.DailyRotateFile(transportsFileConfig),

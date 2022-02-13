@@ -1,5 +1,5 @@
 // Dependencies.
-const express = require('express');
+import express from 'express';
 
 /**
  * Set correlation id if not provided and bind the correlation id with response.
@@ -7,7 +7,7 @@ const express = require('express');
  * @param {express.Response} res The response object from express.
  * @param {Function} next The next middleware function.
  */
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
     try {
         let correlationId = req.headers['x-correlation-id'];
         if (!correlationId) {

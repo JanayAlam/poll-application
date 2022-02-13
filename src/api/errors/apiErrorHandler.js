@@ -1,39 +1,37 @@
-const express = require('express');
-
+// Dependencies.
+import express from 'express';
 // Modules.
-const log = require('../../utils/colorizeLog');
-const { errorLogger } = require('../../logger');
-const { ApiError, NotFoundError, InternalServerError } = require('./apiErrors');
+import log from '../../utils/colorizeLog';
+import { ApiError, InternalServerError, NotFoundError } from './apiErrors';
+
 
 /**
  * Get message for error logging.
  * @param {Error} err The error object.
  * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
+ * @param {express.Response} _ The response object from express.
  * @returns {string} A stringify json object.
  */
- const getErrorLogMessage = (err, req, res) => {
+const getErrorLogMessage = (err, req, _) => {
     // Message object.
     let messageObj = {
         correlationId: req.headers['x-correlation-id'],
         error: err.message,
     };
-    stringifyObj = JSON.stringify(messageObj);
-    // Stringify the object.
-    return `${err.getCode() || 500} ${req.url} `.concat(stringifyObj);
+    // Returning the error object.
+    return `${err.getCode() || 500} ${req.url} `.concat(messageObj);
 }
 
 /**
  * For handling the errors.
  * @param {express.Application} app The express application instance.
  */
-module.exports = (app) => {
+export default app => {
     /**
      * When URL is not valid.
      * @param {express.Request} req The request object from express.
      * @param {express.Request} _ The response object from express.
      * @param {Function} next The next middleware function.
-     * @returns {express.Response} The response as json object.
      */
     app.use((req, _, next) => {
         try {
@@ -51,7 +49,6 @@ module.exports = (app) => {
      * @param {express.Request} req The request object from express.
      * @param {express.Response} res The next middleware function.
      * @param {Function} _ The next middleware function.
-     * @returns {express.Response} The response as json object.
      */
     app.use((err, req, res, _) => {
         // Assuming the error status code is 500.
@@ -67,7 +64,7 @@ module.exports = (app) => {
             );
         }
         // Logging in the console if the node environment is set to 'test'.
-        if (process.env.NODE_ENV !== 'test')
+        if (process.env.ENVIRONMENT !== 'test')
             log(getErrorLogMessage(err, req, res), 'api_error', req.method);
         // Returning the error message with correlation id.
         res.status(code).json({

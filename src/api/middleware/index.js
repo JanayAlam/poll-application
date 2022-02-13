@@ -1,16 +1,16 @@
 // Dependencies.
-const express = require('express');
-const cors = require('cors');
-
+import cors from 'cors';
+import express from 'express';
 // Documentation dependencies.
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('../../utils/swagger');
-
-// Other middleware.
-const setCorrelationIdMiddleware = require('./correlationMiddleware');
-
+import swaggerUi from 'swagger-ui-express';
 // Loggers.
-const { infoLogger, errorLogger } = require('../../logger');
+import logger from '../../logger';
+import swaggerSpec from '../../utils/swagger';
+// Routes.
+import setRoutes from '../routes/route';
+// Other middleware.
+import setCorrelationIdMiddleware from './correlationMiddleware';
+
 
 // Some options for configure the cors
 const corsOptions = {
@@ -29,17 +29,17 @@ const allMiddleware = [
 ];
 
 /** Activating the middleware */
-module.exports = (app) => {
+export default app => {
     // Info logger if the node environment is set to 'test'.
-    if (process.env.NODE_ENV !== 'test') app.use(infoLogger);
+    if (process.env.ENVIRONMENT !== 'TEST') app.use(logger.infoLogger);
     // Other middleware.
     allMiddleware.forEach((middleware) => {
         app.use(middleware);
     });
     // Setting up the routes.
-    require('../routes/route')(app);
+    setRoutes(app);
     // Documentation route setup.
     app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     // Error logging if the node environment is set to 'test'.
-    if (process.env.NODE_ENV !== 'test') app.use(errorLogger);
+    if (process.env.ENVIRONMENT !== 'TEST') app.use(logger.errorLogger);
 }

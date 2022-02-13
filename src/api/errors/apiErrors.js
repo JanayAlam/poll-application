@@ -1,4 +1,4 @@
-class ApiError extends Error {
+export class ApiError extends Error {
     /**
      * Constructor of ApiError Class.
      * @param {String} msg Error message.
@@ -15,12 +15,12 @@ class ApiError extends Error {
     getCode = () => 500;
 }
 
-class BadRequestError extends ApiError {
+export class BadRequestError extends ApiError {
     /**
      * Error class for bad request error
      * @param {String} msg Error message.
      */
-    constructor(message = 'Some fields are reuquired.') {
+    constructor(message = 'Some fields are required.') {
         super(message);
         this.name = 'BadRequest';
     }
@@ -32,7 +32,7 @@ class BadRequestError extends ApiError {
     getCode = () => 400;
 }
 
-class UnauthorizationError extends ApiError {
+export class UnauthorizationError extends ApiError {
     /**
      * Error class for unauthorization error.
      * @param {String} msg Error message.
@@ -49,7 +49,7 @@ class UnauthorizationError extends ApiError {
     getCode = () => 401;
 }
 
-class NotFoundError extends ApiError {
+export class NotFoundError extends ApiError {
     /**
      * Error class for not found error.
      * @param {String} msg Error message.
@@ -66,7 +66,7 @@ class NotFoundError extends ApiError {
     getCode = () => 404;
 }
 
-class ConflictError extends ApiError {
+export class ConflictError extends ApiError {
     /**
      * Error class for already exists things.
      * @param {String} msg Error message.
@@ -83,7 +83,7 @@ class ConflictError extends ApiError {
     getCode = () => 409;
 }
 
-class NotAcceptableError extends ApiError {
+export class NotAcceptableError extends ApiError {
     /**
      * Error class for not acceptable request.
      * @param {String} msg Error message.
@@ -100,7 +100,7 @@ class NotAcceptableError extends ApiError {
     getCode = () => 406;
 }
 
-class InternalServerError extends ApiError {
+export class InternalServerError extends ApiError {
     /**
      * Error class for not acceptable request.
      * @param {String} msg Error message.
@@ -116,13 +116,3 @@ class InternalServerError extends ApiError {
      */
     getCode = () => 500;
 }
-
-module.exports = {
-    ApiError,
-    BadRequestError,
-    UnauthorizationError,
-    NotFoundError,
-    ConflictError,
-    NotAcceptableError,
-    InternalServerError,
-};

@@ -1,5 +1,5 @@
 // Dependencies.
-const Joi = require('joi');
+import Joi from 'joi';
 
 // Schema of the user request model.
 const schema = Joi.object({
@@ -12,7 +12,7 @@ const schema = Joi.object({
  * @param {Object} data The object which client sent.
  * @returns {Object} The result object validated by joi.
  */
-module.exports = (data) => {
+export default data => {
     const result = schema.validate(data);
     result.value = data;
     return result;

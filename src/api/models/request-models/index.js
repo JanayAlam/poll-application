@@ -1,6 +1,6 @@
 // Validators.
-const userSchemaValidator = require('./userReqSchema');
+import userSchemaValidator from './userReqSchema';
 
-module.exports = {
+export default {
     userSchemaValidator,
 };

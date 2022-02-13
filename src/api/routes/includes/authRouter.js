@@ -1,11 +1,14 @@
 // The router instance.
-const router = require('express').Router();
-
+import express from 'express';
 // Importing controller.
-const authController = require('../../controllers/authController');
+import { loginHandler } from '../../controllers/authController';
+
+// Router instance.
+const router = express.Router();
+
 
 // Route: /api/v1/auth/login.
-router.post('/login', authController.loginHandler);
+router.post('/login', loginHandler);
 
 // Exporting the routes.
-module.exports = router;
+export default router;

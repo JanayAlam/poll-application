@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const banSchema = new Schema(
     {
@@ -30,4 +30,4 @@ const banSchema = new Schema(
 
 const Ban = model('Ban', banSchema);
 
-module.exports = Ban;
+export default Ban;

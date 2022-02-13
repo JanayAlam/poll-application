@@ -1,6 +1,5 @@
 class UniversalVariables {
     DATABASE_BASE_URI = `mongodb://localhost:27017`;
-    DATABASE_CONN_URI = `${this.DATABASE_BASE_URI}/${process.env.DB_NAME}`;
     MONGODB_OPTIONS = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -16,4 +15,5 @@ class UniversalVariables {
     };
 }
 
-module.exports = new UniversalVariables();
+// Exporting the universal variables.
+export default new UniversalVariables();

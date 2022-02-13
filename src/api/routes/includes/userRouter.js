@@ -1,23 +1,24 @@
 // The router instance.
-const router = require('express').Router();
-
+import express from 'express';
 // Importing controller.
-const userController = require('../../controllers/userController');
-
-// Validators.
-const { userSchemaValidator } = require('../../models/request-models');
-
+import { createHandler, getAllHandler, getHandler } from '../../controllers/userController';
 // Importing middleware.
-const validate = require('../../middleware/validationMiddleware');
+import validate from '../../middleware/validationMiddleware';
+// Request models.
+import reqModels from '../../models/request-models';
+
+// Router instance.
+const router = express.Router();
+
 
 // Route: /api/v1/users.
-router.post('/', validate(userSchemaValidator), userController.createHandler);
+router.post('/', validate(reqModels.userSchemaValidator), createHandler);
 
 // Route: /api/v1/users.
-router.get('/', userController.getAllHandler);
+router.get('/', getAllHandler);
 
 // Route: /api/v1/users/{id}.
-router.get('/:id', userController.getHandler);
+router.get('/:id', getHandler);
 
 // Exporting the routes.
-module.exports = router;
+export default router;
