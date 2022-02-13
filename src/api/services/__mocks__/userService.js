@@ -18,6 +18,17 @@ let users = [
 ];
 
 /**
+ * [Private] Check if the provided id is valid or not mock function.
+ * @param {mongoose.ObjectId} id The user id.
+ */
+const __isValidateObjectId = (id) => {
+    // The provided id must be valid.
+    if (!mongoose.isValidObjectId(id)) {
+        throw new NotFoundError('User not found with the provided id.');
+    }
+};
+
+/**
  * Save a user mock function.
  * @param {models.User} user The object that will be stored.
  * @returns {models.User} Created user object.
@@ -48,9 +59,7 @@ export const getAll = async () => {
  */
 export const get = async id => {
     // The provided id must be valid.
-    if (!mongoose.isValidObjectId(id)) {
-        throw new NotFoundError('User not found with the provided id.');
-    }
+    __isValidateObjectId();
     // Fetching all the users from the database.
     const user = users.find(element => element._id === id);
     // If the user is not found in the database.
