@@ -2,6 +2,7 @@
 import express from 'express';
 // Modules.
 import log from '../../utils/colorizeLog';
+import universalVariables from '../../utils/universalVariables';
 import { ApiError, InternalServerError, NotFoundError } from './apiErrors';
 
 
@@ -64,8 +65,8 @@ export default app => {
             );
         }
         // Logging in the console if the node environment is set to 'test'.
-        if (process.env.ENVIRONMENT !== 'test')
-            log(getErrorLogMessage(err, req, res), 'api_error', req.method);
+        if (process.env.ENVIRONMENT !== 'TEST')
+            log(getErrorLogMessage(err, req, res), universalVariables.CONSOLE_LOG_CATEGORY.apiError, req.method);
         // Returning the error message with correlation id.
         res.status(code).json({
             name: err.name,
