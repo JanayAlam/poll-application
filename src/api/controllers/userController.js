@@ -5,11 +5,11 @@ import { get, getAll, store } from '../services/userService';
 
 
 /**
-     * Create user controller function.
-     * @param {express.Request} req The request object from express.
-     * @param {express.Response} res The response object from express.
-     * @param {Function} next The next middleware function.
-     */
+ * Create user controller function.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @param {Function} next The next middleware function.
+ */
 export const createHandler = async (req, res, next) => {
     try {
         const body = req.body;

@@ -51,7 +51,7 @@ export const get = async id => {
     const user = await User.findById(id);
     // If the user is not found in the database.
     if (!user) throw new NotFoundError('User not found with the provided id.');
-    // Returning the list of users.
+    // Returning the users.
     return user;
 };
 
