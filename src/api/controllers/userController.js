@@ -1,7 +1,21 @@
 // Dependencies.
 import express from 'express';
+import mongoose from 'mongoose';
+// Modules.
+import { NotFoundError } from '../errors/apiErrors';
 // Services.
 import { get, getAll, store, update } from '../services/userService';
+
+/**
+ * [Private] Check if the provided id is valid or not.
+ * @param {mongoose.ObjectId} id The user id.
+ */
+ const __isValidateObjectId = (id) => {
+    // The provided id must be valid.
+    if (!mongoose.isValidObjectId(id)) {
+        throw new NotFoundError('User not found with the provided id.');
+    }
+};
 
 /**
  * Create user controller function.
@@ -47,6 +61,8 @@ export const getAllHandler = async (req, res, next) => {
 export const getHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
+        // Validating the provided id.
+        __isValidateObjectId(id);
         const user = await get(id);
         // Showing the user to the client.
         res.status(200).json(user);
@@ -66,8 +82,14 @@ export const putHandler = async (req, res, next) => {
     try {
         // Getting the id from request parameter.
         const { id } = req.params;
+        // Validating the provided id.
+        __isValidateObjectId(id);
+        // Getting the request body.
+        const body = req.body;
+        // Adding the id into the request body.
+        body._id = id;
         // Updating the user.
-        const updatedUser = await update(id, req.body);
+        const updatedUser = await update(body);
         // Showing the updated user to the client.
         res.status(200).json(updatedUser);
     } catch (error) {

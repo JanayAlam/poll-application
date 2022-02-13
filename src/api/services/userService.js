@@ -10,17 +10,6 @@ import models from '../models/data-models';
 const User = models.User;
 
 /**
- * [Private] Check if the provided id is valid or not.
- * @param {mongoose.ObjectId} id The user id.
- */
-const __isValidateObjectId = (id) => {
-    // The provided id must be valid.
-    if (!mongoose.isValidObjectId(id)) {
-        throw new NotFoundError('User not found with the provided id.');
-    }
-};
-
-/**
  * Save a user into the database.
  * @param {models.User} user The object that will be stored.
  * @returns {models.User} Created user object.
@@ -54,8 +43,7 @@ export const getAll = async () => {
  * @returns {models.User} The desire user object.
  */
 export const get = async id => {
-    // Validating the provided id.
-    __isValidateObjectId(id);
+    
     // Fetching the user from the database.
     const user = await User.findById(id);
     // If the user is not found in the database.
@@ -66,16 +54,13 @@ export const get = async id => {
 
 /**
  * Update user by id.
- * @param {mongoose.ObjectId} id User id.
- * @param {models.User} user Updated user object.
+ * @param {models.User} user User object which will be stored newly.
  * @returns {models.User} Updated user object.
  */
-export const update = async (id, user) => {
-    // Validating the provided id.
-    __isValidateObjectId(id);
+export const update = async user => {
     // Fetching the user from the database.
     const updatedUser = await User.findOneAndUpdate(
-        { _id: id },
+        { _id: user._id },
         {
             $set: {
                 username: user.username,
