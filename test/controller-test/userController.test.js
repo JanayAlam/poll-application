@@ -116,7 +116,7 @@ describe('GET /users/id test suite.', () => {
         expect(body.name).toBe('NotFoundError');
     });
 
-    // When the id is valid and there is no user with that id in the database.
+    // When the id is not valid.
     it('should response with 404 status code for invalid id.', async () => {
         // Setting up the id which is not stored in the mocked file.
         const id = '1';
