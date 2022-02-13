@@ -33,4 +33,4 @@ const init = async () => {
     }
 };
 
-init() // Invoking the function which will start running the application.
+init(); // Invoking the function which will start running the application.

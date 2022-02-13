@@ -8,7 +8,7 @@ const schema = Joi.object({
 });
 
 /**
- * User schema validator.
+ * User create schema validator.
  * @param {Object} data The object which client sent.
  * @returns {Object} The result object validated by joi.
  */

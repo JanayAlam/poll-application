@@ -43,24 +43,36 @@ export const getAll = async () => {
  * @returns {models.User} The desire user object.
  */
 export const get = async id => {
-    // The provided id must be valid.
-    if (!mongoose.isValidObjectId(id)) {
-        throw new NotFoundError('User not found with the provided id.');
-    }
-    // Fetching all the users from the database.
+    
+    // Fetching the user from the database.
     const user = await User.findById(id);
     // If the user is not found in the database.
     if (!user) throw new NotFoundError('User not found with the provided id.');
-    // Returning the users.
+    // And returning the users.
     return user;
 };
 
 /**
  * Update user by id.
- * @param {models.User} user Updated user object.
+ * @param {models.User} user User object which will be stored newly.
  * @returns {models.User} Updated user object.
  */
-export const update = user => { };
+export const update = async user => {
+    // Fetching the user from the database.
+    const updatedUser = await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+            $set: {
+                username: user.username,
+                modifiedAt: Date.now(),
+            }
+        },
+        { new: true }
+    );
+    // If the user is not found in the database.
+    if (!updatedUser) throw new NotFoundError('User not found with the provided id.');
+    return updatedUser;
+};
 
 /**
  * Delete user by id.

@@ -8,6 +8,10 @@ jest.setTimeout(10000);
 
 // Base URI
 const BASE_URI = '/api/v1';
+// Basic constants.
+const STORED_ID = '594ced02ed345b2b049222c5';
+const NOT_STORED_ID = '594ced02ed345b2b049222c6';
+const INVALID_ID = '1';
 
 // Testing the user controllers 'createHandler' function.
 describe('POST /users test suite.', () => {
@@ -55,10 +59,10 @@ describe('GET /users test suite.', () => {
         expect(users.length).toBeGreaterThanOrEqual(0);
         /**
          * '_id' of the first entry of response body should be
-         *  '594ced02ed345b2b049222c5'. (From mocking).
+         *  '594ced02ed345b2b049222c5' or STORED_ID. (From mocking).
          */
         expect(user._id.length).toBe(24);
-        expect(user._id).toBe('594ced02ed345b2b049222c5');
+        expect(user._id).toBe(STORED_ID);
         /**
          * A single entry of the response body should have
          *  createdAt and modifiedAt property.
@@ -76,10 +80,9 @@ describe('GET /users test suite.', () => {
 // Testing the user controllers 'getHandler' function.
 describe('GET /users/id test suite.', () => {
     // When all things goes as planned.
-    it('should response with 200 status code with a object.', async () => {
+    it('should response with 200 status code with a user object.', async () => {
         // Setting up the id which is stored in the mocked file.
-        const id = '594ced02ed345b2b049222c5';
-        const response = await request.get(`${BASE_URI}/users/${id}`);
+        const response = await request.get(`${BASE_URI}/users/${STORED_ID}`);
         // Response status should be 200.
         expect(response.status).toBe(200);
         // Response body is the user object.
@@ -89,7 +92,7 @@ describe('GET /users/id test suite.', () => {
          *  should be the provided id.
          */
         expect(user._id).not.toBeUndefined();
-        expect(user._id).toBe(id);
+        expect(user._id).toBe(STORED_ID);
         // The user should have createdAt and modifiedAt property.
         expect(user.createdAt).not.toBeUndefined();
         expect(user.modifiedAt).not.toBeUndefined();
@@ -98,10 +101,9 @@ describe('GET /users/id test suite.', () => {
     });
 
     // When the id is valid and there is no user with that id in the database.
-    it('should response with 404 status code for not found the user.', async () => {
+    it('should response with 404 status code for not founding the user.', async () => {
         // Setting up the id which is not stored in the mocked file.
-        const id = '594ced02ed345b2b049222c6';
-        const response = await request.get(`${BASE_URI}/users/${id}`);
+        const response = await request.get(`${BASE_URI}/users/${NOT_STORED_ID}`);
         // Response status should be 404.
         expect(response.status).toBe(404);
         // Response header should have 'x-correlation-id' property.
@@ -119,8 +121,7 @@ describe('GET /users/id test suite.', () => {
     // When the id is not valid.
     it('should response with 404 status code for invalid id.', async () => {
         // Setting up the id which is not stored in the mocked file.
-        const id = '1';
-        const response = await request.get(`${BASE_URI}/users/${id}`);
+        const response = await request.get(`${BASE_URI}/users/${INVALID_ID}`);
         // Response status should be 404.
         expect(response.status).toBe(404);
         // Response header should have 'x-correlation-id' property.
@@ -133,5 +134,141 @@ describe('GET /users/id test suite.', () => {
         expect(body.correlationId).toBeTruthy();
         // Error name should be 'NotFoundError'.
         expect(body.name).toBe('NotFoundError');
+    });
+});
+
+// Testing the user controllers 'putHandler' function.
+describe('PUT /users/id test suite.', () => {
+    // When all things goes as planned.
+    it('should response with 200 status code with a user object.', async () => {
+        // Setting up the id which is stored in the mocked file.
+        const response = await request
+            .put(`${BASE_URI}/users/${STORED_ID}`)
+            .send({
+                username: 'username00',
+            });
+        // Response status should be 200.
+        expect(response.status).toBe(200);
+        // Response body is the user object.
+        const user = response.body;
+        /**
+         * '_id' of the user should not be undefined and the id of the user
+         *  should be the provided id.
+         */
+        expect(user._id).not.toBeUndefined();
+        expect(user._id).toBe(STORED_ID);
+        // The user should have createdAt and modifiedAt property.
+        expect(user.createdAt).not.toBeUndefined();
+        expect(user.modifiedAt).not.toBeUndefined();
+        // A single entry of the response body should have isSuperuser property.
+        expect(user.isSuperuser).not.toBeUndefined();
+    });
+
+    // When the id is valid and there is no user with that id in the database.
+    it('should response with 404 status code for not founding the user.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request
+            .put(`${BASE_URI}/users/${NOT_STORED_ID}`)
+            .send({
+                username: 'username00',
+            });
+        // Response status should be 404.
+        expect(response.status).toBe(404);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'NotFoundError'.
+        expect(body.name).toBe('NotFoundError');
+    });
+
+    // When the id of the user is not valid.
+    it('should response with 404 status code for invalid id.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request
+            .put(`${BASE_URI}/users/${INVALID_ID}`)
+            .send({
+                username: 'username00',
+            });
+        // Response status should be 404.
+        expect(response.status).toBe(404);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'NotFoundError'.
+        expect(body.name).toBe('NotFoundError');
+    });
+
+    // When username is missing from the request body or request body is empty.
+    it('should response with 400 status code if username is missing.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request
+            .put(`${BASE_URI}/users/${STORED_ID}`)
+            .send({});
+        // Response status should be 400.
+        expect(response.status).toBe(400);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'BadRequestError'.
+        expect(body.name).toBe('BadRequestError');
+    });
+
+    // When the provided username is less than 4 characters.
+    it('should response with 400 status code if username short.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request
+            .put(`${BASE_URI}/users/${STORED_ID}`)
+            .send({
+                username: 'eti',
+            });
+        // Response status should be 400.
+        expect(response.status).toBe(400);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'BadRequestError'.
+        expect(body.name).toBe('BadRequestError');
+    });
+
+    // When the provided username is greater than 10 characters.
+    it('should response with 400 status code if username short.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request
+            .put(`${BASE_URI}/users/${STORED_ID}`)
+            .send({
+                username: 'janay_alam7',
+            });
+        // Response status should be 400.
+        expect(response.status).toBe(400);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'BadRequestError'.
+        expect(body.name).toBe('BadRequestError');
     });
 });

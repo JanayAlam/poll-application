@@ -1,6 +1,8 @@
 // Validators.
-import userSchemaValidator from './userReqSchema';
+import userCreateSchemaValidator from './user/userCreateSchema';
+import userUpdateSchemaValidator from './user/userUpdateSchema';
 
 export default {
-    userSchemaValidator,
+    userCreateSchemaValidator,
+    userUpdateSchemaValidator
 };

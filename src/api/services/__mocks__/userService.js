@@ -47,14 +47,26 @@ export const getAll = async () => {
  * @returns {models.User} The desire user object.
  */
 export const get = async id => {
-    // The provided id must be valid.
-    if (!mongoose.isValidObjectId(id)) {
-        throw new NotFoundError('User not found with the provided id.');
-    }
     // Fetching all the users from the database.
     const user = users.find(element => element._id === id);
     // If the user is not found in the database.
     if (!user) throw new NotFoundError('User not found with the provided id.');
     // Returning the users.
     return user;
+};
+
+/**
+ * Update user by id mock function.
+ * @param {models.User} user User object which will be stored newly.
+ * @returns {models.User} Updated user object.
+ */
+export const update = async user => {
+    // Fetching the user from the database and updating.
+    let updatedUser = users.find(element => element._id === user._id);
+    // If the user is not found in the database.
+    if (!updatedUser) throw new NotFoundError('User not found with the provided id.');
+    // Modifying the user.
+    updatedUser.username = user.username;
+    updatedUser.modifiedAt = Date.now();
+    return updatedUser;
 };
