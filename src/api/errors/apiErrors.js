@@ -22,7 +22,7 @@ export class BadRequestError extends ApiError {
      */
     constructor(message = 'Some fields are required.') {
         super(message);
-        this.name = 'BadRequest';
+        this.name = 'BadRequestError';
     }
 
     /**
