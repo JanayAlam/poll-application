@@ -10,7 +10,7 @@ import { get, getAll, store, update } from '../services/userService';
  * [Private] Check if the provided id is valid or not.
  * @param {mongoose.ObjectId} id The user id.
  */
- const __isValidateObjectId = (id) => {
+const __isValidateObjectId = (id) => {
     // The provided id must be valid.
     if (!mongoose.isValidObjectId(id)) {
         throw new NotFoundError('User not found with the provided id.');
