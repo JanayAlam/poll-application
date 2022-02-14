@@ -43,7 +43,6 @@ export const getAll = async () => {
  * @returns {models.User} The desire user object.
  */
 export const get = async id => {
-    
     // Fetching the user from the database.
     const user = await User.findById(id);
     // If the user is not found in the database.
@@ -79,4 +78,12 @@ export const update = async user => {
  * @param {mongoose.ObjectId} id Id of the user.
  * @returns {models.User} Deleted user object.
  */
-export const destroy = id => { };
+export const destroy = async id => {
+    // Deleting the user object from the database.
+    const deletedUser = await User.findOneAndDelete({ _id: id });
+    // If the user is not in the database.
+    if (!deletedUser) throw new NotFoundError('User not found with the provided id.');
+    // Updating the modifiedAt property.
+    deletedUser.modifiedAt = Date.now();
+    return deletedUser;
+};

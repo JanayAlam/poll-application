@@ -4,10 +4,10 @@ import mongoose from 'mongoose';
 // Modules.
 import { NotFoundError } from '../errors/apiErrors';
 // Services.
-import { get, getAll, store, update } from '../services/userService';
+import { destroy, get, getAll, store, update } from '../services/userService';
 
 /**
- * [Private] Check if the provided id is valid or not.
+ * [Private] Throw an exception if the id is not valid mongoose object id.
  * @param {mongoose.ObjectId} id The user id.
  */
 const __isValidateObjectId = (id) => {
@@ -73,7 +73,7 @@ export const getHandler = async (req, res, next) => {
 }
 
 /**
- * Update user controller function
+ * Update user controller function.
  * @param {express.Request} req The request object from express.
  * @param {express.Response} res The response object from express.
  * @param {Function} next The next middleware function.
@@ -92,6 +92,28 @@ export const putHandler = async (req, res, next) => {
         const updatedUser = await update(body);
         // Showing the updated user to the client.
         res.status(200).json(updatedUser);
+    } catch (error) {
+        // Error occurred.
+        next(error);
+    }
+}
+
+/**
+ * Delete user controller function.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @param {Function} next The next middleware function.
+ */
+export const deleteHandler = async (req, res, next) => {
+    try {
+        // Getting the id from request parameter.
+        const { id } = req.params;
+        // Validating the provided id.
+        __isValidateObjectId(id);
+        // Deleting the user.
+        const deletedUser = await destroy(id);
+        // Showing the deleted user details to the client.
+        res.status(200).json(deletedUser);
     } catch (error) {
         // Error occurred.
         next(error);
