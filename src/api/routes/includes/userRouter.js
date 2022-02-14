@@ -1,7 +1,7 @@
 // The router instance.
 import express from 'express';
 // Importing controller.
-import { createHandler, getAllHandler, getHandler, putHandler } from '../../controllers/userController';
+import { createHandler, deleteHandler, getAllHandler, getHandler, putHandler } from '../../controllers/userController';
 // Importing middleware.
 import validate from '../../middleware/validationMiddleware';
 // Request models.
@@ -22,6 +22,9 @@ router.get('/:id', getHandler);
 
 // Route: /api/v1/{id}.
 router.put('/:id', validate(reqModels.userUpdateSchemaValidator), putHandler);
+
+// Route: /api/v1/{id}.
+router.delete('/:id', deleteHandler);
 
 // Exporting the routes.
 export default router;
