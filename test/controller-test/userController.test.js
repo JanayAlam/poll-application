@@ -76,7 +76,6 @@ describe('GET /users test suite.', () => {
     });
 });
 
-
 // Testing the user controllers 'getHandler' function.
 describe('GET /users/id test suite.', () => {
     // When all things goes as planned.
@@ -270,5 +269,63 @@ describe('PUT /users/id test suite.', () => {
         expect(body.correlationId).toBeTruthy();
         // Error name should be 'BadRequestError'.
         expect(body.name).toBe('BadRequestError');
+    });
+});
+
+// Testing the user controllers 'deleteHandler' function.
+describe('DELETE /users/id test suite.', () => {
+    // When all things goes as planned.
+    it('should response with 200 status code with a user object.', async () => {
+        // Setting up the id which is stored in the mocked file.
+        const response = await request.delete(`${BASE_URI}/users/${STORED_ID}`);
+        // Response status should be 200.
+        expect(response.status).toBe(200);
+        // Response body is the user object.
+        const user = response.body;
+        // '_id' of the user should not be undefined.
+        expect(user._id).not.toBeUndefined();
+        // The id of the user should be the provided id.
+        expect(user._id).toBe(STORED_ID);
+        // The user should have createdAt and modifiedAt property.
+        expect(user.createdAt).not.toBeUndefined();
+        expect(user.modifiedAt).not.toBeUndefined();
+        // A single entry of the response body should have isSuperuser property.
+        expect(user.isSuperuser).not.toBeUndefined();
+    });
+
+    // When the id is valid and there is no user with that id in the database.
+    it('should response with 404 status code for not founding the user.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request.delete(`${BASE_URI}/users/${NOT_STORED_ID}`);
+        // Response status should be 404.
+        expect(response.status).toBe(404);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'NotFoundError'.
+        expect(body.name).toBe('NotFoundError');
+    });
+
+    // When the id is not valid.
+    it('should response with 404 status code for invalid id.', async () => {
+        // Setting up the id which is not stored in the mocked file.
+        const response = await request.delete(`${BASE_URI}/users/${INVALID_ID}`);
+        // Response status should be 404.
+        expect(response.status).toBe(404);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'NotFoundError'.
+        expect(body.name).toBe('NotFoundError');
     });
 });

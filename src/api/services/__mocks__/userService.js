@@ -70,3 +70,19 @@ export const update = async user => {
     updatedUser.modifiedAt = Date.now();
     return updatedUser;
 };
+
+/**
+ * Delete user by id mock function.
+ * @param {mongoose.ObjectId} id Id of the user.
+ * @returns {models.User} Deleted user object.
+ */
+export const destroy = async id => {
+    // Finding the user from the local store.
+    // Don't need to delete the entry from the array as it is just a mock function.
+    const deletedUser = users.find(element => element._id === id);
+    // If the user is not in the database.
+    if (!deletedUser) throw new NotFoundError('User not found with the provided id.');
+    // Updating the modifiedAt property.
+    deletedUser.modifiedAt = Date.now();
+    return deletedUser;
+};
