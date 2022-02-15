@@ -1,7 +1,7 @@
 // Importing app.
 import app from './app';
 // Modules.
-import dbConnection from './config/databaseConnection';
+import dbConnection from './database/connection';
 import log from './utils/colorizeLog';
 import universalVariables from './utils/universalVariables';
 

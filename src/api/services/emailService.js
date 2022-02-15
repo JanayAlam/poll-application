@@ -1,11 +1,31 @@
-// Dependencies.
+// Dependencies and modules.
 import bcrypt from 'bcrypt';
-// Importing models.
+import EmailMessage from '../../email/emailMessage';
+import sendMail from '../../email/sendMail';
 import { generateCode } from '../../utils/generator';
 import models from '../models/data-models';
 
 // Shortcut.
 const Email = models.Email;
+
+/**
+ * Send a email to the user with a code for activating the account of a user.
+ * @param {Email} email The email model instance.
+ * @param {string} code The code which will be sent with the email.
+ * @param {string} message The additional message which will be sent with the code.
+ */
+export const __sendActivationCode = async (email, code, message) => {
+    // Creating the email object.
+    const emailObj = new EmailMessage(
+        email.address,
+        'Email verification code for activating the email address.',
+        message + `Your verification code is ${code}.\n\n`
+        + `Thank you from,\n`
+        + `Janay Poll Team.`
+    );
+    // Sending the code through email to the user.
+    await sendMail(emailObj);
+}
 
 /**
  * Save a email object into the database.
@@ -23,6 +43,13 @@ export const store = async (email) => {
     if (email.userId) emailModel.user = email.userId;
     // Saving the model into the database.
     await emailModel.save();
+    // Sending email.
+    await __sendActivationCode(
+        emailModel, code,
+        `Congratulations. Your account has been created.`
+        + `Now you need to activate your account to use the application.\n`
+    );
+    // Returning the email model.
     return emailModel;
 };
 

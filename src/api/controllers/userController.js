@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 // Modules.
 import { NotFoundError } from '../errors/apiErrors';
+import { store as storeEmail } from '../services/emailService';
 // Services.
 import { destroy, get, getAll, store, update } from '../services/userService';
 
@@ -23,10 +24,19 @@ const __isValidateObjectId = (id) => {
  * @param {express.Response} res The response object from express.
  * @param {Function} next The next middleware function.
  */
-export const createHandler = async (req, res, next) => {
+export const postHandler = async (req, res, next) => {
     try {
         const body = req.body;
-        const user = await store(body);
+        // Creating the user in the database.
+        const user = await store({
+            username: body.username,
+            password: body.password,
+        });
+        // Creating the email in the database.
+        const email = await storeEmail({
+            address: body.email,
+            userId: user._id,
+        });
         // Showing the user object to the client.
         res.status(201).json(user);
     } catch (error) {

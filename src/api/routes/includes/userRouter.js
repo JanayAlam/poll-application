@@ -1,7 +1,10 @@
 // The router instance.
 import express from 'express';
 // Importing controller.
-import { createHandler, deleteHandler, getAllHandler, getHandler, putHandler } from '../../controllers/userController';
+import {
+    deleteHandler, getAllHandler,
+    getHandler, postHandler, putHandler
+} from '../../controllers/userController';
 // Importing middleware.
 import validate from '../../middleware/validationMiddleware';
 // Request models.
@@ -12,7 +15,7 @@ const router = express.Router();
 
 
 // Route: /api/v1/users.
-router.post('/', validate(reqModels.userCreateSchemaValidator), createHandler);
+router.post('/', validate(reqModels.userCreateSchemaValidator), postHandler);
 
 // Route: /api/v1/users.
 router.get('/', getAllHandler);
