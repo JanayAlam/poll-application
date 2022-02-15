@@ -20,7 +20,7 @@ const getErrorLogMessage = (err, req, _) => {
         error: err.message,
     };
     // Returning the error object.
-    return `${err.getCode() || 500} ${req.url} `.concat(messageObj);
+    return `${err.getCode() || 500} ${req.url} `.concat(JSON.stringify(messageObj) || '');
 }
 
 /**
