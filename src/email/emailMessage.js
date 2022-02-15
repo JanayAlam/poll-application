@@ -23,7 +23,7 @@ class EmailMessage {
         to: this.to,
         from: this.from,
         subject: this.subject,
-        bodyText: this.bodyText,
+        text: this.bodyText,
         html: this.html,
     });
 }

@@ -1,5 +1,8 @@
 // Importing nodemailer.
+import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+
+dotenv.config();
 
 // Creating the transport from mailing setup.
 // Exporting the transport.

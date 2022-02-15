@@ -6,6 +6,7 @@ import log from './utils/colorizeLog';
 import universalVariables from './utils/universalVariables';
 
 
+
 /** Connecting the database and running the application. */
 const init = async () => {
     try {

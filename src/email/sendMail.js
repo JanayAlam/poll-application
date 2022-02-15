@@ -12,6 +12,10 @@ export default async (emailMessage) => {
     try {
         await transporter.sendMail(emailMessage.getEmailObject());
     } catch (error) {
-        throw new InternalServerError(`Failed to send email${' to ' + emailObject.to || '.'}`);
+        throw new InternalServerError(
+            `Failed to send email${
+                emailMessage.to ? (' to ' + emailMessage.to + '.') : '.'
+            } -> ${error.message}.`
+        );
     }
 }

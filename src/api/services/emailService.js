@@ -19,7 +19,7 @@ export const __sendActivationCode = async (email, code, message) => {
     const emailObj = new EmailMessage(
         email.address,
         'Email verification code for activating the email address.',
-        message + `Your verification code is ${code}.\n\n`
+        message + `\nYour verification code is ${code}.\n\n`
         + `Thank you from,\n`
         + `Janay Poll Team.`
     );
