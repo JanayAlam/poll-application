@@ -11,7 +11,7 @@ const Email = models.Email;
 
 /**
  * Send a email to the user with a code for activating the account of a user.
- * @param {Email} email The email model instance.
+ * @param {models.Email} email The email model instance.
  * @param {string} code The code which will be sent with the email.
  * @param {string} message The additional message which will be sent with the code.
  */
@@ -30,8 +30,8 @@ export const __sendActivationCode = async (email, code, message) => {
 
 /**
  * Save a email object into the database.
- * @param {Email} email The object that will be stored.
- * @returns {Email} Created email object.
+ * @param {models.Email} email The object that will be stored.
+ * @returns {models.Email} Created email object.
  */
 export const store = async email => {
     // Checking the availability of the email address
@@ -69,7 +69,7 @@ export const getAll = () => {
 /**
  * Get email by id.
  * @param {int} id Id of the email.
- * @returns {Email} The desire email object.
+ * @returns {models.Email} The desire email object.
  */
 export const get = id => {
     return {};
@@ -77,21 +77,21 @@ export const get = id => {
 
 /**
  * Update email by id.
- * @param {int} id Email object which will be saved.
- * @returns {Email} Updated email object.
+ * @param {models.Email} email Email object which will be saved.
+ * @returns {models.Email} Updated email object.
  */
-export const update = id => { };
+export const update = email => { };
 
 /**
  * Delete email by id.
- * @param {int} id Id of the email object.
- * @returns {Email} Deleted email object.
+ * @param {string} address Address of the email object.
+ * @returns {models.Email} Deleted email object.
  */
-export const destroy = async id => {
+export const destroy = async address => {
     // Deleting the email object from the database.
-    const deletedEmail = await Email.findOneAndDelete({ _id: id });
+    const deletedEmail = await Email.findOneAndDelete({ address });
     // If the email is not in the database.
-    if (!deletedEmail) throw new NotFoundError('Email not found with the provided id.');
+    if (!deletedEmail) return null;
     // Updating the modifiedAt property.
     deletedEmail.modifiedAt = Date.now();
     return deletedEmail;

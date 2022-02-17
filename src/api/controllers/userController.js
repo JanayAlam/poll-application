@@ -3,7 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 // Modules.
 import { NotFoundError } from '../errors/apiErrors';
-import { store as storeEmail } from '../services/emailService';
+import { destroy as destroyEmail, store as storeEmail } from '../services/emailService';
 // Services.
 import { destroy, get, getAll, store, update } from '../services/userService';
 
@@ -25,6 +25,10 @@ const __isValidateObjectId = (id) => {
  * @param {Function} next The next middleware function.
  */
 export const postHandler = async (req, res, next) => {
+    let createdObjectsIdHolder = {
+        userId: null,
+        emailId: null,
+    };
     try {
         const body = req.body;
         // Creating the user in the database.
@@ -32,11 +36,15 @@ export const postHandler = async (req, res, next) => {
             username: body.username,
             password: body.password,
         });
+        // Storing the user id so that it can be deleted after some error.
+        createdObjectsIdHolder.userId = user._id;
         // Creating the email in the database.
         const email = await storeEmail({
             address: body.email,
             userId: user._id,
         });
+        // Storing the email id so that it can be deleted after some error.
+        createdObjectsIdHolder.emailId = email._id;
         // Updating the email into the database
         const updatedUser = await update({
             _id: user._id,
@@ -45,6 +53,9 @@ export const postHandler = async (req, res, next) => {
         // Showing the user object to the client.
         res.status(201).json(updatedUser);
     } catch (error) {
+        // Deleting all created data.
+        await destroy(createdObjectsIdHolder.userId);
+        await destroyEmail(createdObjectsIdHolder.emailId);
         // Passing error to next middleware.
         next(error);
     }
@@ -79,6 +90,8 @@ export const getHandler = async (req, res, next) => {
         // Validating the provided id.
         __isValidateObjectId(id);
         const user = await get(id);
+        // If the user is null.
+        if (!user) throw new NotFoundError('User not found with the provided id.');
         // Showing the user to the client.
         res.status(200).json(user);
     } catch (error) {
@@ -105,6 +118,8 @@ export const putHandler = async (req, res, next) => {
         body._id = id;
         // Updating the user.
         const updatedUser = await update(body);
+        // If the updated user is null.
+        if (!updatedUser) throw new NotFoundError('User not found with the provided id.')
         // Showing the updated user to the client.
         res.status(200).json(updatedUser);
     } catch (error) {
@@ -127,6 +142,8 @@ export const deleteHandler = async (req, res, next) => {
         __isValidateObjectId(id);
         // Deleting the user.
         const deletedUser = await destroy(id);
+        // If the deleted user is null.
+        if (!deletedUser) throw new NotFoundError('User not found with the provided id.');
         // Showing the deleted user details to the client.
         res.status(200).json(deletedUser);
     } catch (error) {

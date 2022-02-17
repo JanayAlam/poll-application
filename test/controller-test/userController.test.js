@@ -273,7 +273,7 @@ describe('PUT /users/id test suite.', () => {
 });
 
 // Testing the user controllers 'deleteHandler' function.
-describe.only('DELETE /users/id test suite.', () => {
+describe('DELETE /users/id test suite.', () => {
     // When all things goes as planned.
     it('should response with 200 status code with a user object.', async () => {
         // Setting up the id which is stored in the mocked file.

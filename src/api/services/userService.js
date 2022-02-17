@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 // Modules.
-import { ConflictError, NotFoundError } from '../errors/apiErrors';
+import { ConflictError } from '../errors/apiErrors';
 // Importing models.
 import models from '../models/data-models';
 
@@ -55,7 +55,7 @@ export const get = async id => {
         select: 'address isVerified modifiedAt createdAt'
     });
     // If the user is not found in the database.
-    if (!user) throw new NotFoundError('User not found with the provided id.');
+    if (!user) return null;
     // And returning the users.
     return user;
 };
@@ -82,7 +82,7 @@ export const update = async user => {
         select: 'address isVerified modifiedAt createdAt'
     });
     // If the user is not found in the database.
-    if (!updatedUser) throw new NotFoundError('User not found with the provided id.');
+    if (!updatedUser) return null;
     return updatedUser;
 };
 
@@ -95,7 +95,7 @@ export const destroy = async id => {
     // Deleting the user object from the database.
     const deletedUser = await User.findOneAndDelete({ _id: id });
     // If the user is not in the database.
-    if (!deletedUser) throw new NotFoundError('User not found with the provided id.');
+    if (!deletedUser) return null;
     // Updating the modifiedAt property.
     deletedUser.modifiedAt = Date.now();
     return deletedUser;
