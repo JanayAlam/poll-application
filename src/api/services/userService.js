@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 // Modules.
-import { NotFoundError } from '../errors/apiErrors';
+import { ConflictError, NotFoundError } from '../errors/apiErrors';
 // Importing models.
 import models from '../models/data-models';
 
@@ -15,6 +15,9 @@ const User = models.User;
  * @returns {models.User} Created user object.
  */
 export const store = async user => {
+    // Checking for duplicate username.
+    const fetchedUser = await User.findOne({ username: user.username });
+    if (fetchedUser) throw new ConflictError('Username is already taken.');
     // Hashing the password and saving into the variable.
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
@@ -32,7 +35,10 @@ export const store = async user => {
  */
 export const getAll = async () => {
     // Fetching all the users from the database.
-    const users = await User.find();
+    const users = await User.find().populate({
+        path: 'email',
+        select: 'address isVerified modifiedAt createdAt'
+    });
     // Returning the list of users.
     return users;
 };
@@ -44,7 +50,10 @@ export const getAll = async () => {
  */
 export const get = async id => {
     // Fetching the user from the database.
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate({
+        path: 'email',
+        select: 'address isVerified modifiedAt createdAt'
+    });
     // If the user is not found in the database.
     if (!user) throw new NotFoundError('User not found with the provided id.');
     // And returning the users.
@@ -54,6 +63,7 @@ export const get = async id => {
 /**
  * Update user by id.
  * @param {models.User} user User object which will be stored newly.
+ *  This user object must have a '_id' property.
  * @returns {models.User} Updated user object.
  */
 export const update = async user => {
@@ -62,12 +72,15 @@ export const update = async user => {
         { _id: user._id },
         {
             $set: {
-                username: user.username,
+                ...user,
                 modifiedAt: Date.now(),
             }
         },
         { new: true }
-    );
+    ).populate({
+        path: 'email',
+        select: 'address isVerified modifiedAt createdAt'
+    });
     // If the user is not found in the database.
     if (!updatedUser) throw new NotFoundError('User not found with the provided id.');
     return updatedUser;

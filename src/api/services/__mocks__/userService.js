@@ -1,4 +1,5 @@
 // Dependencies.
+import _ from 'lodash';
 import mongoose from 'mongoose';
 // Modules.
 import { NotFoundError } from '../../errors/apiErrors';
@@ -24,6 +25,11 @@ let users = [
  */
 export const store = async user => {
     const User = models.User;
+    // Checking for duplicate username.
+    const fetchedUser = _.find(
+        users, element => element.username === user.username
+    );
+    if (fetchedUser) throw new ConflictError('Username is already taken.');
     // Creating the model.
     const model = new User(user);
     // Storing the model into the local database.
@@ -77,12 +83,11 @@ export const update = async user => {
  * @returns {models.User} Deleted user object.
  */
 export const destroy = async id => {
-    // Finding the user from the local store.
-    // Don't need to delete the entry from the array as it is just a mock function.
-    const deletedUser = users.find(element => element._id === id);
+    // Finding and deleting the user from the local store.
+    const user = _.remove(users, element => element._id === id)[0] || undefined;
     // If the user is not in the database.
-    if (!deletedUser) throw new NotFoundError('User not found with the provided id.');
+    if (!user) throw new NotFoundError('User not found with the provided id.');
     // Updating the modifiedAt property.
-    deletedUser.modifiedAt = Date.now();
-    return deletedUser;
+    user.modifiedAt = Date.now();
+    return user;
 };

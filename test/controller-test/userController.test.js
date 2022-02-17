@@ -273,7 +273,7 @@ describe('PUT /users/id test suite.', () => {
 });
 
 // Testing the user controllers 'deleteHandler' function.
-describe('DELETE /users/id test suite.', () => {
+describe.only('DELETE /users/id test suite.', () => {
     // When all things goes as planned.
     it('should response with 200 status code with a user object.', async () => {
         // Setting up the id which is stored in the mocked file.
@@ -291,6 +291,10 @@ describe('DELETE /users/id test suite.', () => {
         expect(user.modifiedAt).not.toBeUndefined();
         // A single entry of the response body should have isSuperuser property.
         expect(user.isSuperuser).not.toBeUndefined();
+        // Making sure if the user is still there or not.
+        const getResponse = await request.get(`${BASE_URI}/users/${STORED_ID}`);
+        // The status code should be 404.
+        expect(getResponse.status).toBe(404);
     });
 
     // When the id is valid and there is no user with that id in the database.

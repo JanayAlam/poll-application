@@ -37,12 +37,15 @@ export const postHandler = async (req, res, next) => {
             address: body.email,
             userId: user._id,
         });
-        // Putting email information into the user data.
-        user.email = email;
+        // Updating the email into the database
+        const updatedUser = await update({
+            _id: user._id,
+            email,
+        });
         // Showing the user object to the client.
-        res.status(201).json(user);
+        res.status(201).json(updatedUser);
     } catch (error) {
-        // Error occurred.
+        // Passing error to next middleware.
         next(error);
     }
 }

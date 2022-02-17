@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import EmailMessage from '../../email/emailMessage';
 import sendMail from '../../email/sendMail';
 import { generateCode } from '../../utils/generator';
+import { ConflictError } from '../errors/apiErrors';
 import models from '../models/data-models';
 
 // Shortcut.
@@ -32,7 +33,11 @@ export const __sendActivationCode = async (email, code, message) => {
  * @param {Email} email The object that will be stored.
  * @returns {Email} Created email object.
  */
-export const store = async (email) => {
+export const store = async email => {
+    // Checking the availability of the email address
+    const fetchedEmail = await Email.findOne({ address: email.address });
+    if (fetchedEmail) throw new ConflictError('Email address has been already taken.');
+    // Generating verification code.
     const code = generateCode(6);
     const hashCode = await bcrypt.hash(code, 10);
     // Creating model.
@@ -66,7 +71,7 @@ export const getAll = () => {
  * @param {int} id Id of the email.
  * @returns {Email} The desire email object.
  */
-export const get = (id) => {
+export const get = id => {
     return {};
 };
 
@@ -75,11 +80,19 @@ export const get = (id) => {
  * @param {int} id Email object which will be saved.
  * @returns {Email} Updated email object.
  */
-export const update = (id) => { };
+export const update = id => { };
 
 /**
  * Delete email by id.
  * @param {int} id Id of the email object.
  * @returns {Email} Deleted email object.
  */
-export const destroy = (id) => { };
+export const destroy = async id => {
+    // Deleting the email object from the database.
+    const deletedEmail = await Email.findOneAndDelete({ _id: id });
+    // If the email is not in the database.
+    if (!deletedEmail) throw new NotFoundError('Email not found with the provided id.');
+    // Updating the modifiedAt property.
+    deletedEmail.modifiedAt = Date.now();
+    return deletedEmail;
+};
