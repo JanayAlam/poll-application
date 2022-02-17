@@ -1,22 +1,11 @@
 // Dependencies.
 import express from 'express';
-import mongoose from 'mongoose';
 // Modules.
 import { NotFoundError } from '../errors/apiErrors';
 import { destroy as destroyEmail, store as storeEmail } from '../services/emailService';
 // Services.
 import { destroy, get, getAll, store, update } from '../services/userService';
 
-/**
- * [Private] Throw an exception if the id is not valid mongoose object id.
- * @param {mongoose.ObjectId} id The user id.
- */
-const __isValidateObjectId = (id) => {
-    // The provided id must be valid.
-    if (!mongoose.isValidObjectId(id)) {
-        throw new NotFoundError('User not found with the provided id.');
-    }
-};
 
 /**
  * Create user controller function.
@@ -25,37 +14,36 @@ const __isValidateObjectId = (id) => {
  * @param {Function} next The next middleware function.
  */
 export const postHandler = async (req, res, next) => {
-    let createdObjectsIdHolder = {
-        userId: null,
-        emailId: null,
-    };
+    // Getting the request body.
+    const body = req.body;
     try {
-        const body = req.body;
         // Creating the user in the database.
         const user = await store({
             username: body.username,
+            emailAddress: body.email,
             password: body.password,
         });
-        // Storing the user id so that it can be deleted after some error.
-        createdObjectsIdHolder.userId = user._id;
+        if (user.error) throw user.error;
         // Creating the email in the database.
         const email = await storeEmail({
-            address: body.email,
+            address: user.emailAddress,
             userId: user._id,
         });
-        // Storing the email id so that it can be deleted after some error.
-        createdObjectsIdHolder.emailId = email._id;
-        // Updating the email into the database
-        const updatedUser = await update({
-            _id: user._id,
-            email,
-        });
+        if (email.error) throw email.error;
+        // Binding the email object into the user.
+        user.email = {
+            _id: email._id,
+            address: email.address,
+            isVerified: email.isVerified,
+            modifiedAt: email.modifiedAt,
+            createdAt: email.createdAt,
+        };
         // Showing the user object to the client.
-        res.status(201).json(updatedUser);
+        res.status(201).json(user);
     } catch (error) {
         // Deleting all created data.
-        await destroy(createdObjectsIdHolder.userId);
-        await destroyEmail(createdObjectsIdHolder.emailId);
+        await destroy(body.username);
+        await destroyEmail(body.email);
         // Passing error to next middleware.
         next(error);
     }
@@ -86,12 +74,11 @@ export const getAllHandler = async (req, res, next) => {
  */
 export const getHandler = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        // Validating the provided id.
-        __isValidateObjectId(id);
-        const user = await get(id);
+        const { username } = req.params;
+        // Getting the user by its username.
+        const user = await get(username);
         // If the user is null.
-        if (!user) throw new NotFoundError('User not found with the provided id.');
+        if (!user) throw new NotFoundError('User not found with the provided username.');
         // Showing the user to the client.
         res.status(200).json(user);
     } catch (error) {
@@ -109,17 +96,16 @@ export const getHandler = async (req, res, next) => {
 export const putHandler = async (req, res, next) => {
     try {
         // Getting the id from request parameter.
-        const { id } = req.params;
-        // Validating the provided id.
-        __isValidateObjectId(id);
+        const { username } = req.params;
         // Getting the request body.
         const body = req.body;
-        // Adding the id into the request body.
-        body._id = id;
+        // Adding the username into the request body.
+        // In case the client dont provide username in body.
+        body.username = username;
         // Updating the user.
         const updatedUser = await update(body);
         // If the updated user is null.
-        if (!updatedUser) throw new NotFoundError('User not found with the provided id.')
+        if (!updatedUser) throw new NotFoundError('User not found with the provided username.')
         // Showing the updated user to the client.
         res.status(200).json(updatedUser);
     } catch (error) {
@@ -137,13 +123,11 @@ export const putHandler = async (req, res, next) => {
 export const deleteHandler = async (req, res, next) => {
     try {
         // Getting the id from request parameter.
-        const { id } = req.params;
-        // Validating the provided id.
-        __isValidateObjectId(id);
+        const { username } = req.params;
         // Deleting the user.
-        const deletedUser = await destroy(id);
+        const deletedUser = await destroy(username);
         // If the deleted user is null.
-        if (!deletedUser) throw new NotFoundError('User not found with the provided id.');
+        if (!deletedUser) throw new NotFoundError('User not found with the provided username.');
         // Showing the deleted user details to the client.
         res.status(200).json(deletedUser);
     } catch (error) {

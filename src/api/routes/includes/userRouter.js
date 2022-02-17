@@ -20,14 +20,14 @@ router.post('/', validate(reqModels.userCreateSchemaValidator), postHandler);
 // Route: /api/v1/users.
 router.get('/', getAllHandler);
 
-// Route: /api/v1/users/{id}.
-router.get('/:id', getHandler);
+// Route: /api/v1/users/{username}.
+router.get('/:username', getHandler);
 
-// Route: /api/v1/{id}.
-router.put('/:id', validate(reqModels.userUpdateSchemaValidator), putHandler);
+// Route: /api/v1/{username}.
+router.put('/:username', validate(reqModels.userUpdateSchemaValidator), putHandler);
 
-// Route: /api/v1/{id}.
-router.delete('/:id', deleteHandler);
+// Route: /api/v1/{username}.
+router.delete('/:username', deleteHandler);
 
 // Exporting the routes.
 export default router;

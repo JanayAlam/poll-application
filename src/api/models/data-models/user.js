@@ -9,6 +9,13 @@ const userSchema = new Schema(
             minlength: 4,
             required: true,
         },
+        emailAddress: {
+            type: String,
+            trim: true,
+            maxlength: 150,
+            minlength: 5,
+            required: true,
+        },
         password: {
             type: String,
             trim: true,
@@ -17,10 +24,6 @@ const userSchema = new Schema(
         isSuperuser: {
             type: Boolean,
             default: false,
-        },
-        email: {
-            type: Schema.Types.ObjectId,
-            ref: 'Email',
         },
         profile: {
             type: Schema.Types.ObjectId,

@@ -31,31 +31,36 @@ export const __sendActivationCode = async (email, code, message) => {
 /**
  * Save a email object into the database.
  * @param {models.Email} email The object that will be stored.
- * @returns {models.Email} Created email object.
+ * @returns {models.Email | ConflictError} Created email object or error.
  */
 export const store = async email => {
     // Checking the availability of the email address
     const fetchedEmail = await Email.findOne({ address: email.address });
-    if (fetchedEmail) throw new ConflictError('Email address has been already taken.');
+    // If the email address has been taken.
+    if (fetchedEmail) {
+        return {
+            error: new ConflictError('Email address has been already taken.'),
+        };
+    }
     // Generating verification code.
     const code = generateCode(6);
     const hashCode = await bcrypt.hash(code, 10);
     // Creating model.
-    const emailModel = new Email({
+    const model = new Email({
         address: email.address,
         verificationCode: hashCode,
     });
-    if (email.userId) emailModel.user = email.userId;
+    if (email.userId) model.user = email.userId;
     // Saving the model into the database.
-    await emailModel.save();
+    await model.save();
     // Sending email.
     await __sendActivationCode(
-        emailModel, code,
-        `Congratulations. Your account has been created.`
+        model, code,
+        `Congratulations. Your account has been created. `
         + `Now you need to activate your account to use the application.\n`
     );
     // Returning the email model.
-    return emailModel;
+    return model;
 };
 
 /**
