@@ -1,5 +1,6 @@
 // Dependencies.
 import cors from 'cors';
+import dotenv from 'dotenv';
 import express from 'express';
 // Documentation dependencies.
 import swaggerUi from 'swagger-ui-express';
@@ -10,6 +11,9 @@ import swaggerSpec from '../../utils/swagger';
 import setRoutes from '../routes/route';
 // Other middleware.
 import setCorrelationIdMiddleware from './correlationMiddleware';
+
+// Configuring the dotenv file.
+dotenv.config();
 
 
 // Some options for configure the cors

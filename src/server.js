@@ -1,10 +1,14 @@
 // Importing app.
+// Dependencies.
+import dotenv from 'dotenv';
 import app from './app';
 // Modules.
 import dbConnection from './database/connection';
 import log from './utils/colorizeLog';
 import universalVariables from './utils/universalVariables';
 
+// Configuring the dotenv file.
+dotenv.config();
 
 
 /** Connecting the database and running the application. */

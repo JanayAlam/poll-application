@@ -2,6 +2,7 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 
+// Configuring the dotenv file.
 dotenv.config();
 
 // Creating the transport from mailing setup.

@@ -4,7 +4,6 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 // Requiring `winston-mongodb` will expose 'winston.transports.DailyRotateFile'.
 import 'winston-daily-rotate-file';
-// Modules.
 import universalVariables from '../utils/universalVariables';
 
 

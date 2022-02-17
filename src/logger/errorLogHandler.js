@@ -1,12 +1,14 @@
 // Dependencies.
+import dotenv from 'dotenv';
 import expressWinston from 'express-winston';
 import winston from 'winston';
 // Requiring `winston-mongodb` will expose 'winston.transports.DailyRotateFile'.
 import 'winston-daily-rotate-file';
 // Requiring `winston-mongodb` will expose 'winston.transports.MongoDB'.
 import 'winston-mongodb';
-// Modules.
 import universalVariables from '../utils/universalVariables';
+// Configuring the dotenv file.
+dotenv.config();
 
 
 // A configuration for transport of log file.

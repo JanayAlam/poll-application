@@ -1,9 +1,12 @@
 // Dependencies.
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 // Modules.
 import log from '../utils/colorizeLog';
 import universalVariables from '../utils/universalVariables';
 
+// Configuring the dotenv file.
+dotenv.config();
 
 /** Returns true if the connection is established otherwise false. */
 export default async () => {

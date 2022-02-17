@@ -1,10 +1,13 @@
 // Dependencies.
+import dotenv from 'dotenv';
 import express from 'express';
 // Modules.
 import log from '../../utils/colorizeLog';
 import universalVariables from '../../utils/universalVariables';
 import { ApiError, InternalServerError, NotFoundError } from './apiErrors';
 
+// Configuring the dotenv file.
+dotenv.config();
 
 /**
  * Get message for error logging.
