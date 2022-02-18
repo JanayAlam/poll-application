@@ -5,9 +5,11 @@ import sendMail from '../../email/sendMail';
 import { generateCode } from '../../utils/generator';
 import { ConflictError } from '../errors/apiErrors';
 import models from '../models/data-models';
+import responseModels from '../models/response-models';
 
 // Shortcut.
 const Email = models.Email;
+const EmailResponse = responseModels.EmailResponse;
 
 /**
  * Send a email to the user with a code for activating the account of a user.
@@ -59,8 +61,10 @@ export const store = async email => {
         `Congratulations. Your account has been created. `
         + `Now you need to activate your account to use the application.\n`
     );
+    // Getting ready the response.
+    const responseEmail = new EmailResponse(model);
     // Returning the email model.
-    return model;
+    return responseEmail;
 };
 
 /**
@@ -99,5 +103,8 @@ export const destroy = async address => {
     if (!deletedEmail) return null;
     // Updating the modifiedAt property.
     deletedEmail.modifiedAt = Date.now();
-    return deletedEmail;
+    // Getting ready the response.
+    const responseEmail = new EmailResponse(deletedEmail);
+    // Returning the email model.
+    return responseEmail;
 };

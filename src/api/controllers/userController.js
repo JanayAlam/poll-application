@@ -1,11 +1,10 @@
 // Dependencies.
 import express from 'express';
 // Modules.
-import { NotFoundError } from '../errors/apiErrors';
+import { InternalServerError, NotFoundError } from '../errors/apiErrors';
 import { destroy as destroyEmail, store as storeEmail } from '../services/emailService';
 // Services.
 import { destroy, get, getAll, store, update } from '../services/userService';
-
 
 /**
  * Create user controller function.
@@ -27,19 +26,18 @@ export const postHandler = async (req, res, next) => {
         // Creating the email in the database.
         const email = await storeEmail({
             address: user.emailAddress,
-            userId: user._id,
+            // 'id' instead of '_id' because of the response model.
+            userId: user.id,
         });
         if (email.error) throw email.error;
-        // Binding the email object into the user.
-        user.email = {
-            _id: email._id,
-            address: email.address,
-            isVerified: email.isVerified,
-            modifiedAt: email.modifiedAt,
-            createdAt: email.createdAt,
-        };
         // Showing the user object to the client.
-        res.status(201).json(user);
+        res.status(201).json({
+            flash: 'User created successfully.'
+                + ' Check email for verification code to activate the account.',
+            user: user,
+            email: email,
+            profile: null,
+        });
     } catch (error) {
         // Deleting all created data.
         await destroy(body.username);
@@ -79,7 +77,7 @@ export const getHandler = async (req, res, next) => {
         const user = await get(username);
         // If the user is null.
         if (!user) throw new NotFoundError('User not found with the provided username.');
-        // Showing the user to the client.
+        // Showing the user object to the client.
         res.status(200).json(user);
     } catch (error) {
         // Error occurred.
@@ -99,13 +97,12 @@ export const putHandler = async (req, res, next) => {
         const { username } = req.params;
         // Getting the request body.
         const body = req.body;
-        // Adding the username into the request body.
-        // In case the client dont provide username in body.
-        body.username = username;
+        // Adding the old username into the request body.
+        body.oldUsername = username;
         // Updating the user.
         const updatedUser = await update(body);
         // If the updated user is null.
-        if (!updatedUser) throw new NotFoundError('User not found with the provided username.')
+        if (!updatedUser) throw new NotFoundError('User not found with the provided username.');
         // Showing the updated user to the client.
         res.status(200).json(updatedUser);
     } catch (error) {
@@ -127,9 +124,20 @@ export const deleteHandler = async (req, res, next) => {
         // Deleting the user.
         const deletedUser = await destroy(username);
         // If the deleted user is null.
-        if (!deletedUser) throw new NotFoundError('User not found with the provided username.');
+        if (!deletedUser) {
+            throw new NotFoundError('User not found with the provided username.');
+        }
+        const deletedEmail = await destroyEmail(deletedUser.emailAddress);
+        // If the deleted email is null.
+        if (!deletedEmail) {
+            throw new InternalServerError('Could not delete the associated email for the user.');
+        }
         // Showing the deleted user details to the client.
-        res.status(200).json(deletedUser);
+        res.status(200).json({
+            flash: 'User and its associated email deleted successfully.',
+            user: deletedUser,
+            email: deletedEmail,
+        });
     } catch (error) {
         // Error occurred.
         next(error);

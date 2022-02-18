@@ -16,7 +16,7 @@ const schema = Joi.object({
  * @returns {Object} The result object validated by joi.
  */
 export default data => {
-    const result = schema.validateAsync(data);
+    const result = schema.validate(data);
     result.value = data;
     return result;
 };

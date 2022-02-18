@@ -1,27 +1,42 @@
 // Dependencies.
 import bcrypt from 'bcrypt';
 // Errors.
-import { ConflictError } from '../errors/apiErrors';
+import { ConflictError, InternalServerError } from '../errors/apiErrors';
 // Importing models.
 import models from '../models/data-models';
+import responseModels from '../models/response-models';
 
 // Shortcut.
 const User = models.User;
+const UserResponse = responseModels.UserResponse;
 
 /**
- * Save a user into the database.
- * @param {models.User} user The object that will be stored.
- * @returns {models.User | ConflictError} Created user object or error.
+ * Check the given username is duplicate or not.
+ * @param {string} username Username which will be checked.
+ * @returns {ConflictError | null} Error instance if there are duplicate username.
  */
-export const store = async user => {
+const __checkDuplicateUsername = async username => {
     // Checking for duplicate username.
-    const fetchedUser = await User.findOne({ username: user.username });
+    const fetchedUser = await User.findOne({ username });
     // If the username is taken.
     if (fetchedUser) {
         return {
             error: new ConflictError('Username has been already taken.'),
         };
     }
+    return null;
+}
+
+/**
+ * Save a user into the database.
+ * @param {models.User} user The object that will be stored.
+ *  'user' object must contains 'oldUsername' property.
+ * @returns {models.User | ConflictError} Created user object or error.
+ */
+export const store = async user => {
+    // Checking for duplicate username.
+    const duplicate = await __checkDuplicateUsername(user.username);
+    if (duplicate) return duplicate;
     // Hashing the password and saving into the variable.
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
@@ -29,8 +44,10 @@ export const store = async user => {
     const model = new User(user);
     // Storing the model into the database.
     const createdUser = await model.save();
+    // Getting ready the response.
+    const responseUser = new UserResponse(createdUser);
     // Returning the created user.
-    return createdUser;
+    return responseUser;
 };
 
 /**
@@ -40,8 +57,10 @@ export const store = async user => {
 export const getAll = async () => {
     // Fetching all the users from the database.
     const users = await User.find();
+    // Getting ready the response.
+    let responseUser = users.map(user => new UserResponse(user));
     // Returning the list of users.
-    return users;
+    return responseUser;
 };
 
 /**
@@ -55,20 +74,30 @@ export const get = async username => {
         await User.findOne({ username: user.username });
     // If the user is not found in the database.
     if (!user) return null;
+    // Getting ready the response.
+    const responseUser = new UserResponse(user);
     // And returning the users.
-    return user;
+    return responseUser;
 };
 
 /**
  * Update user by username.
  * @param {User} user User object which will be stored newly.
- *  This user object must have a '_id' property.
  * @returns {User} Updated user object.
  */
 export const update = async user => {
-    // Fetching the user from the database.
+    // When the oldUsername is not given.
+    if (!user.oldUsername) {
+        return {
+            error: new InternalServerError('Old username was not sent from the user controller.')
+        };
+    }
+    // Checking for duplicate username.
+    const duplicate = await __checkDuplicateUsername(user.username);
+    if (duplicate) return duplicate;
+    // Fetching the user from the database with old username.
     const updatedUser = await User.findOneAndUpdate(
-        { username: user.username },
+        { username: user.oldUsername },
         {
             $set: {
                 ...user,
@@ -79,7 +108,10 @@ export const update = async user => {
     );
     // If the user is not found in the database.
     if (!updatedUser) return null;
-    return updatedUser;
+    // Getting ready the response.
+    const responseUser = new UserResponse(updatedUser);
+    // And returning the users.
+    return responseUser;
 };
 
 /**
@@ -94,5 +126,8 @@ export const destroy = async username => {
     if (!deletedUser) return null;
     // Updating the modifiedAt property.
     deletedUser.modifiedAt = Date.now();
-    return deletedUser;
+    // Getting ready the response.
+    const responseUser = new UserResponse(deletedUser);
+    // And returning the users.
+    return responseUser;
 };

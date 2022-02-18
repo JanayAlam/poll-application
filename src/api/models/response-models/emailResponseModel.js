@@ -7,6 +7,7 @@ export default class EmailResponse {
     constructor(email) {
         this.id = email._id;
         this.address = email.address;
+        this.user = email.user;
         this.isVerified = email.isVerified;
         this.modifiedAt = email.modifiedAt;
         this.createdAt = email.createdAt;
