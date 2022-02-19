@@ -108,7 +108,7 @@ export const update = id => { };
  */
 export const destroy = async id => {
     // Deleting the email object from the database.
-    const deletedEmail = await Email.findById(id);
+    const deletedEmail = await Email.findOneAndDelete(id);
     // If the email is not in the database.
     if (!deletedEmail) return null;
     // Updating the modifiedAt property.

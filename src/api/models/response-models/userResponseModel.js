@@ -1,5 +1,6 @@
 // Dependencies.
 import mongoose from 'mongoose';
+import EmailResponse from './emailResponseModel';
 
 // The user response class.
 export default class UserResponse {
@@ -11,7 +12,7 @@ export default class UserResponse {
         this.id = user._id;
         this.username = user.username;
         this.isSuperuser = user.isSuperuser;
-        this.email = user.email;
+        this.email = user.email instanceof Object ? new EmailResponse(user.email) : user.email;
         this.profile = user.profile;
         this.modifiedAt = user.modifiedAt;
         this.createdAt = user.createdAt;

@@ -1,7 +1,7 @@
 // Dependencies.
 import express from 'express';
 // Modules.
-import { InternalServerError, NotFoundError } from '../errors/apiErrors';
+import { NotFoundError } from '../errors/apiErrors';
 import { destroy as destroyEmail, store as storeEmail } from '../services/emailService';
 // Services.
 import { destroy, get, getAll, store, update } from '../services/userService';
@@ -15,7 +15,6 @@ import { destroy, get, getAll, store, update } from '../services/userService';
 export const postHandler = async (req, res, next) => {
     // Getting the request body.
     const body = req.body;
-    let emailId = null;
     try {
         // Creating the user in the database.
         const user = await store({
@@ -31,14 +30,12 @@ export const postHandler = async (req, res, next) => {
         });
         if (email.error) throw email.error;
         // Updating the email id.
-        emailId = email.id;
         user.setEmail(email.id);
         // Showing the user object to the client.
         res.status(201).json(user);
     } catch (error) {
         // Deleting all created data.
         await destroy(body.username);
-        await destroyEmail(emailId);
         // Passing error to next middleware.
         next(error);
     }
@@ -120,15 +117,8 @@ export const deleteHandler = async (req, res, next) => {
         const { username } = req.params;
         // Deleting the user.
         const deletedUser = await destroy(username);
-        // If the deleted user is null.
-        if (!deletedUser) {
-            throw new NotFoundError('User not found with the provided username.');
-        }
-        const deletedEmail = await destroyEmail(deletedUser.emailAddress);
-        // If the deleted email is null.
-        if (!deletedEmail) {
-            throw new InternalServerError('Could not delete the associated email for the user.');
-        }
+        // If the deleted user has error.
+        if (deletedUser.error) throw deletedUser.error;
         // Showing the deleted user details to the client.
         res.status(200).json(deletedUser);
     } catch (error) {

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { ConflictError, InternalServerError } from '../errors/apiErrors';
 import models from '../models/data-models';
 import responseModels from '../models/response-models';
+import { destroy as destroyEmail } from './emailService';
 
 // Shortcut.
 const User = models.User;
@@ -119,11 +120,27 @@ export const update = async user => {
  */
 export const destroy = async username => {
     // Deleting the user object from the database.
-    const deletedUser = await User.findOneAndDelete({ username });
+    const deletedUser = await User.findOneAndDelete({ username })
+        .populate({
+            path: 'email',
+            select: '_id address isVerified',
+        });
     // If the user is not in the database.
-    if (!deletedUser) return null;
+    if (!deletedUser) {
+        return {
+            error: new NotFoundError('User not found with the provided username.'),
+        };
+    }
     // Updating the modifiedAt property.
     deletedUser.modifiedAt = Date.now();
+    // Deleting the email object.
+    const deletedEmail = await destroyEmail(deletedUser.email._id);
+    // If the deleted email is null.
+    if (!deletedEmail) {
+        return {
+            error: new InternalServerError('Could not delete the associated email for the user.'),
+        };
+    }
     // Getting ready the response.
     const responseUser = new UserResponse(deletedUser);
     // And returning the users.
