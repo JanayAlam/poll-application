@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt';
 import { ConflictError, InternalServerError } from '../errors/apiErrors';
 import models from '../models/data-models';
-import responseModels from '../models/response-models';
+import responseModels from '../models/view-models';
 import { destroy as destroyEmail } from './emailService';
 
 // Shortcut.

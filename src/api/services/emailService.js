@@ -6,7 +6,7 @@ import sendMail from '../../email/sendMail';
 import { generateCode } from '../../utils/generator';
 import { ConflictError } from '../errors/apiErrors';
 import models from '../models/data-models';
-import responseModels from '../models/response-models';
+import responseModels from '../models/view-models';
 
 // Shortcut.
 const Email = models.Email;
