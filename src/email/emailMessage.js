@@ -1,9 +1,3 @@
-// Dependencies.
-import dotenv from 'dotenv';
-
-// Configuring the dotenv file.
-dotenv.config();
-
 // Email Message class for sending email information.
 class EmailMessage {
     /**

@@ -1,12 +1,8 @@
-// Dependencies.
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 // Modules.
 import log from '../utils/colorizeLog';
 import universalVariables from '../utils/universalVariables';
 
-// Configuring the dotenv file.
-dotenv.config();
 
 /**
  * Connect the application with MongoDB.
