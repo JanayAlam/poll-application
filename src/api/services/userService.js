@@ -1,8 +1,6 @@
 // Dependencies.
 import bcrypt from 'bcrypt';
-// Errors.
 import { ConflictError, InternalServerError } from '../errors/apiErrors';
-// Importing models.
 import models from '../models/data-models';
 import responseModels from '../models/response-models';
 
@@ -66,12 +64,12 @@ export const getAll = async () => {
 /**
  * Get user by id.
  * @param {string} username Username of the user.
- * @returns {User} The desire user object.
+ * @returns {models.User} The desire user object.
  */
 export const get = async username => {
     // Fetching the user from the database.
     const user =
-        await User.findOne({ username: user.username });
+        await User.findOne({ username: username });
     // If the user is not found in the database.
     if (!user) return null;
     // Getting ready the response.
@@ -82,8 +80,8 @@ export const get = async username => {
 
 /**
  * Update user by username.
- * @param {User} user User object which will be stored newly.
- * @returns {User} Updated user object.
+ * @param {models.User} user User object which will be stored newly.
+ * @returns {models.User} Updated user object.
  */
 export const update = async user => {
     // When the oldUsername is not given.

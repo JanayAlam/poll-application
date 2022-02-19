@@ -15,33 +15,30 @@ import { destroy, get, getAll, store, update } from '../services/userService';
 export const postHandler = async (req, res, next) => {
     // Getting the request body.
     const body = req.body;
+    let emailId = null;
     try {
         // Creating the user in the database.
         const user = await store({
             username: body.username,
-            emailAddress: body.email,
             password: body.password,
         });
         if (user.error) throw user.error;
         // Creating the email in the database.
         const email = await storeEmail({
-            address: user.emailAddress,
+            address: body.email,
             // 'id' instead of '_id' because of the response model.
             userId: user.id,
         });
         if (email.error) throw email.error;
+        // Updating the email id.
+        emailId = email.id;
+        user.setEmail(email.id);
         // Showing the user object to the client.
-        res.status(201).json({
-            flash: 'User created successfully.'
-                + ' Check email for verification code to activate the account.',
-            user: user,
-            email: email,
-            profile: null,
-        });
+        res.status(201).json(user);
     } catch (error) {
         // Deleting all created data.
         await destroy(body.username);
-        await destroyEmail(body.email);
+        await destroyEmail(emailId);
         // Passing error to next middleware.
         next(error);
     }
@@ -133,11 +130,7 @@ export const deleteHandler = async (req, res, next) => {
             throw new InternalServerError('Could not delete the associated email for the user.');
         }
         // Showing the deleted user details to the client.
-        res.status(200).json({
-            flash: 'User and its associated email deleted successfully.',
-            user: deletedUser,
-            email: deletedEmail,
-        });
+        res.status(200).json(deletedUser);
     } catch (error) {
         // Error occurred.
         next(error);

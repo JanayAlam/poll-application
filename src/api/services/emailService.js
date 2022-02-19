@@ -1,5 +1,6 @@
 // Dependencies and modules.
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import EmailMessage from '../../email/emailMessage';
 import sendMail from '../../email/sendMail';
 import { generateCode } from '../../utils/generator';
@@ -52,7 +53,16 @@ export const store = async email => {
         address: email.address,
         verificationCode: hashCode,
     });
-    if (email.userId) model.user = email.userId;
+    if (email.userId) {
+        model.user = email.userId;
+        // Updating the user
+        await models.User.findOneAndUpdate(
+            { _id: email.userId },
+            {
+                $set: { email: model._id },
+            },
+        );
+    }
     // Saving the model into the database.
     await model.save();
     // Sending email.
@@ -77,7 +87,7 @@ export const getAll = () => {
 
 /**
  * Get email by id.
- * @param {int} id Id of the email.
+ * @param {mongoose.ObjectId} id Id of the email object.
  * @returns {models.Email} The desire email object.
  */
 export const get = id => {
@@ -86,19 +96,19 @@ export const get = id => {
 
 /**
  * Update email by id.
- * @param {models.Email} email Email object which will be saved.
+ * @param {mongoose.ObjectId} id Id of the email object.
  * @returns {models.Email} Updated email object.
  */
-export const update = email => { };
+export const update = id => { };
 
 /**
  * Delete email by id.
- * @param {string} address Address of the email object.
+ * @param {mongoose.ObjectId} id Id of the email object.
  * @returns {models.Email} Deleted email object.
  */
-export const destroy = async address => {
+export const destroy = async id => {
     // Deleting the email object from the database.
-    const deletedEmail = await Email.findOneAndDelete({ address });
+    const deletedEmail = await Email.findById(id);
     // If the email is not in the database.
     if (!deletedEmail) return null;
     // Updating the modifiedAt property.
