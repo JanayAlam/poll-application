@@ -15,7 +15,7 @@ dotenv.config();
 const init = async () => {
     try {
         // Connecting the database.
-        await dbConnection();
+        await dbConnection('App will be running soon...');
         // The port for the application.
         const PORT = process.env.PORT || 8080;
         const DOMAIN = process.env.DOMAIN_NAME || 'localhost';

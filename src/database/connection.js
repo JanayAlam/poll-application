@@ -8,14 +8,17 @@ import universalVariables from '../utils/universalVariables';
 // Configuring the dotenv file.
 dotenv.config();
 
-/** Returns true if the connection is established otherwise false. */
-export default async () => {
+/**
+ * Connect the application with MongoDB.
+ * @param {string} message A message that will be print in console after a successful connection.
+ */
+export default async (message) => {
     try {
         const URI = `${universalVariables.DATABASE_BASE_URI}/${process.env.DB_NAME}`;
         await mongoose.connect(
             URI, universalVariables.MONGODB_OPTIONS
         );
-        log('Database connected! App will be running soon...', 'success');
+        log(`Database connected! ${message}`, 'success');
     } catch (error) {
         log(`Database connection error: ${error.message}`, 'error');
         log('Could not connect with the database! Try again.', 'info');

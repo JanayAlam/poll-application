@@ -9,7 +9,6 @@ import setMiddleware from './api/middleware';
 // Configuring the dot env file.
 dotenv.config();
 
-
 // Creating the app instance.
 const app = express();
 
