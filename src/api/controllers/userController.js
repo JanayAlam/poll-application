@@ -1,8 +1,8 @@
 // Dependencies.
 import express from 'express';
 // Modules.
-import { NotFoundError } from '../errors/apiErrors';
-import { destroy as destroyEmail, store as storeEmail } from '../services/emailService';
+import { ConflictError, NotFoundError } from '../errors/apiErrors';
+import { store as storeEmail } from '../services/emailService';
 // Services.
 import { destroy, get, getAll, store, update } from '../services/userService';
 
@@ -30,12 +30,14 @@ export const postHandler = async (req, res, next) => {
         });
         if (email.error) throw email.error;
         // Updating the email id.
-        user.setEmail(email.id);
+        user.setEmail(email);
         // Showing the user object to the client.
         res.status(201).json(user);
     } catch (error) {
-        // Deleting all created data.
-        await destroy(body.username);
+        if (!error instanceof ConflictError) {
+            // Deleting all created data.
+            await destroy(body.username);
+        }
         // Passing error to next middleware.
         next(error);
     }

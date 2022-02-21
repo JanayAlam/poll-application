@@ -1,6 +1,6 @@
 // Importing response models.
-import EmailResponse from "./emailResponseModel";
-import UserResponse from "./userResponseModel";
+import EmailResponse from "./emailViewModel";
+import UserResponse from "./userViewModel";
 
 // Exporting the response models.
 export default {

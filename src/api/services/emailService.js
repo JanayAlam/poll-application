@@ -4,13 +4,12 @@ import mongoose from 'mongoose';
 import EmailMessage from '../../email/emailMessage';
 import sendMail from '../../email/sendMail';
 import { generateCode } from '../../utils/generator';
-import { ConflictError } from '../errors/apiErrors';
+import { ConflictError, NotFoundError } from '../errors/apiErrors';
 import models from '../models/data-models';
-import responseModels from '../models/view-models';
+import viewModels from '../models/view-models';
 
 // Shortcut.
 const Email = models.Email;
-const EmailResponse = responseModels.EmailResponse;
 
 /**
  * Send a email to the user with a code for activating the account of a user.
@@ -72,7 +71,7 @@ export const store = async email => {
         + `Now you need to activate your account to use the application.\n`
     );
     // Getting ready the response.
-    const responseEmail = new EmailResponse(model);
+    const responseEmail = new viewModels.EmailResponse(model);
     // Returning the email model.
     return responseEmail;
 };
@@ -90,8 +89,13 @@ export const getAll = () => {
  * @param {mongoose.ObjectId} id Id of the email object.
  * @returns {models.Email} The desire email object.
  */
-export const get = id => {
-    return {};
+export const get = async id => {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+        return {
+            error: new NotFoundError('Email not found with the provided id.'),
+        }
+    }
+    return await Email.findById(id);
 };
 
 /**
@@ -108,13 +112,15 @@ export const update = id => { };
  */
 export const destroy = async id => {
     // Deleting the email object from the database.
-    const deletedEmail = await Email.findOneAndDelete(id);
+    const deletedEmail = await Email.findOneAndDelete({
+        _id: id
+    });
     // If the email is not in the database.
     if (!deletedEmail) return null;
     // Updating the modifiedAt property.
     deletedEmail.modifiedAt = Date.now();
     // Getting ready the response.
-    const responseEmail = new EmailResponse(deletedEmail);
+    const responseEmail = new viewModels.EmailResponse(deletedEmail);
     // Returning the email model.
     return responseEmail;
 };

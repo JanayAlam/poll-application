@@ -1,6 +1,6 @@
 // Dependencies.
 import mongoose from 'mongoose';
-import EmailResponse from './emailResponseModel';
+import EmailResponse from './emailViewModel';
 
 // The user response class.
 export default class UserResponse {
