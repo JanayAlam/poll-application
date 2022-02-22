@@ -1,6 +1,6 @@
 // Importing routes.
-import authRouter from './includes/authRouter';
-import userRouter from './includes/userRouter';
+import authRouter from './authRouter';
+import userRouter from './userRouter';
 
 // All the root routes.
 const routes = [

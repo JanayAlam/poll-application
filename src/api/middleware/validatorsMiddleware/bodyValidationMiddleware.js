@@ -1,5 +1,5 @@
 // Errors.
-import { BadRequestError } from '../errors/apiErrors';
+import { BadRequestError } from '../../errors/apiErrors';
 
 /**
  * Validate the request body and throw bad request error if request is not valid.

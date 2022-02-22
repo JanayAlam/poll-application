@@ -1,8 +1,9 @@
 // Validators.
-import userCreateSchemaValidator from './user/userCreateSchema';
-import userUpdateSchemaValidator from './user/userUpdateSchema';
+import authRequestModel from './authRequestModel';
+import userRequestModel from './userRequestModel';
 
+// Exporting the request models.
 export default {
-    userCreateSchemaValidator,
-    userUpdateSchemaValidator
+    authRequestModel,
+    userRequestModel,
 };

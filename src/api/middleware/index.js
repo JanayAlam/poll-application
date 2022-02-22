@@ -7,7 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import logger from '../../logger';
 import swaggerSpec from '../../utils/swagger';
 // Routes.
-import setRoutes from '../routes/route';
+import setRoutes from '../routes';
 // Other middleware.
 import setCorrelationIdMiddleware from './correlationMiddleware';
 

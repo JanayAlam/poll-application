@@ -1,12 +1,9 @@
 // Dependencies.
 import bcrypt from 'bcrypt';
-import { ConflictError, InternalServerError } from '../errors/apiErrors';
+import mongoose from 'mongoose';
+import { ConflictError } from '../errors/apiErrors';
 import models from '../models/data-models';
 import viewModels from '../models/view-models';
-import { destroy as destroyEmail } from './emailService';
-
-// Shortcut.
-const User = models.User;
 
 
 /**
@@ -16,7 +13,7 @@ const User = models.User;
  */
 const __checkDuplicateUsername = async username => {
     // Checking for duplicate username.
-    const fetchedUser = await User.findOne({ username });
+    const fetchedUser = await models.User.findOne({ username });
     // If the username is taken.
     if (fetchedUser) {
         return {
@@ -39,7 +36,7 @@ export const store = async user => {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
     // Creating the model.
-    const model = new User(user);
+    const model = new models.User(user);
     // Storing the model into the database.
     const createdUser = await model.save();
     // Getting ready the response.
@@ -54,10 +51,7 @@ export const store = async user => {
  */
 export const getAll = async () => {
     // Fetching all the users from the database.
-    const users = await User.find().populate({
-        path: 'email',
-        select: '_id address isVerified user createdAt modifiedAt',
-    });
+    const users = await models.User.find();
     // Getting ready the response.
     let responseUser = users.map(user => new viewModels.UserResponse(user));
     // Returning the list of users.
@@ -65,17 +59,13 @@ export const getAll = async () => {
 };
 
 /**
- * Get user by username.
- * @param {string} username Username of the user.
+ * Get user by id.
+ * @param {mongoose.ObjectId} id Id of the user.
  * @returns {models.User} The desire user object.
  */
-export const get = async username => {
+export const get = async id => {
     // Fetching the user from the database.
-    const user =
-        await User.findOne({ username: username }).populate({
-            path: 'email',
-            select: '_id address isVerified user createdAt modifiedAt',
-        });
+    const user = await models.User.findById(id);
     // If the user is not found in the database.
     if (!user) return null;
     // Getting ready the response.
@@ -85,24 +75,17 @@ export const get = async username => {
 };
 
 /**
- * Update user by username.
+ * Update user by id.
  * @param {models.User} user User object which will be stored newly.
- * 'user' object must contains 'oldUsername' property.
  * @returns {models.User} Updated user object.
  */
 export const update = async user => {
-    // When the oldUsername is not given.
-    if (!user.oldUsername) {
-        return {
-            error: new InternalServerError('Old username was not sent from the user controller.')
-        };
-    }
     // Checking for duplicate username.
     const duplicate = await __checkDuplicateUsername(user.username);
     if (duplicate) return duplicate;
     // Fetching the user from the database with old username.
-    const updatedUser = await User.findOneAndUpdate(
-        { username: user.oldUsername },
+    const updatedUser = await models.User.findOneAndUpdate(
+        { _id: user._id },
         {
             $set: {
                 ...user,
@@ -110,10 +93,7 @@ export const update = async user => {
             }
         },
         { new: true }
-    ).populate({
-        path: 'email',
-        select: '_id address isVerified user createdAt modifiedAt',
-    });
+    );
     // If the user is not found in the database.
     if (!updatedUser) return null;
     // Getting ready the response.
@@ -123,35 +103,21 @@ export const update = async user => {
 };
 
 /**
- * Delete user by username.
- * @param {string} username Username of the user.
+ * Delete user by id.
+ * @param {mongoose.ObjectId} id Id of the user.
  * @returns {models.User} Deleted user object.
  */
-export const destroy = async username => {
+export const destroy = async id => {
     // Deleting the user object from the database.
-    const deletedUser = await User.findOneAndDelete({ username })
-        .populate({
-            path: 'email',
-            select: '_id address isVerified user createdAt modifiedAt',
-        });
+    const deletedUser = await models.User.findOneAndDelete({ _id: id });
     // If the user is not in the database.
     if (!deletedUser) {
         return {
-            error: new NotFoundError('User not found with the provided username.'),
+            error: new NotFoundError('User not found with the provided id.'),
         };
     }
     // Updating the modifiedAt property.
     deletedUser.modifiedAt = Date.now();
-    if (deletedUser.email) {
-        // Deleting the email object.
-        const deletedEmail = await destroyEmail(deletedUser.email._id);
-        // If the deleted email is null.
-        if (!deletedEmail) {
-            return {
-                error: new InternalServerError('Could not delete the associated email for the user.'),
-            };
-        }
-    }
     // Getting ready the response.
     const responseUser = new viewModels.UserResponse(deletedUser);
     // And returning the users.
