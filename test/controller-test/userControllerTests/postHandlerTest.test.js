@@ -14,9 +14,9 @@ describe('POST /users test suite.', () => {
     // In success case.
     it('should response with 201 status code when all things goes well.', async () => {
         const model = {
-            username: 'username02',
-            email: 'email020@gmail.com',
-            password: 'password02',
+            username: 'username01',
+            email: 'email01@gmail.com',
+            password: 'password01',
         }
         const response = await request.post(`${BASE_URI}/users`).send(model);
         // The user object.
@@ -36,13 +36,21 @@ describe('POST /users test suite.', () => {
         expect(user.password).toBeUndefined();
         // Response body should have email property.
         expect(user.email).not.toBeUndefined();
+        // Email property should have some properties.
+        expect(user.email.id).not.toBeUndefined();
+        expect(user.email.address).not.toBeUndefined();
+        expect(user.email.isVerified).not.toBeUndefined();
+        expect(user.email.createdAt).not.toBeUndefined();
+        expect(user.email.modifiedAt).not.toBeUndefined();
+        // First email should not be verified.
+        expect(user.email.isVerified).not.toBeTruthy();
     });
 
     // When username will not be given.
     it('should response with 400 status code when username will not be given.', async () => {
         const model = {
-            email: 'email020@gmail.com',
-            password: 'password02',
+            email: 'email01@gmail.com',
+            password: 'password01',
         }
         const response = await request.post(`${BASE_URI}/users`).send(model);
         // Response status should be 400.
@@ -62,8 +70,8 @@ describe('POST /users test suite.', () => {
     // When email will not be given.
     it('should response with 400 status code when email will not be given.', async () => {
         const model = {
-            username: 'username02',
-            password: 'password02',
+            username: 'username01',
+            password: 'password01',
         }
         const response = await request.post(`${BASE_URI}/users`).send(model);
         // Response status should be 400.
@@ -83,8 +91,8 @@ describe('POST /users test suite.', () => {
     // When password will not be given.
     it('should response with 400 status code when password will not be given.', async () => {
         const model = {
-            username: 'username02',
-            email: 'email020@gmail.com',
+            username: 'username01',
+            email: 'email01@gmail.com',
         }
         const response = await request.post(`${BASE_URI}/users`).send(model);
         // Response status should be 400.
@@ -122,8 +130,8 @@ describe('POST /users test suite.', () => {
     it('should response with 400 status code when username is greater than 10 characters.', async () => {
         const model = {
             username: 'username123',
-            email: 'email020@gmail.com',
-            password: 'password02',
+            email: 'email01@gmail.com',
+            password: 'password01',
         }
         const response = await request.post(`${BASE_URI}/users`).send(model);
         // Response status should be 400.
@@ -144,8 +152,30 @@ describe('POST /users test suite.', () => {
     it('should response with 400 status code when username is less than 4 characters.', async () => {
         const model = {
             username: 'usr',
-            email: 'email020@gmail.com',
-            password: 'password02',
+            email: 'email01@gmail.com',
+            password: 'password01',
+        }
+        const response = await request.post(`${BASE_URI}/users`).send(model);
+        // Response status should be 400.
+        expect(response.status).toBe(400);
+        // Response header should have 'x-correlation-id' property.
+        expect(response.headers['x-correlation-id']).toBeTruthy();
+        // Extracting the response body.
+        const body = response.body;
+        // Response body should have a message.
+        expect(body.message).toBeTruthy();
+        // Response body should have a correlationId.
+        expect(body.correlationId).toBeTruthy();
+        // Error name should be 'NotFoundError'.
+        expect(body.name).toBe('BadRequestError');
+    });
+
+    // When email is not valid.
+    it('should response with 400 status code when email is not valid.', async () => {
+        const model = {
+            username: 'username01',
+            email: 'email01',
+            password: 'password01',
         }
         const response = await request.post(`${BASE_URI}/users`).send(model);
         // Response status should be 400.
