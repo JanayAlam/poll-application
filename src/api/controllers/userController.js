@@ -1,55 +1,18 @@
 // Dependencies.
 import express from 'express';
 // Modules.
-import { ConflictError, NotFoundError } from '../errors/apiErrors';
-import { store as storeEmail } from '../services/emailService';
+import { NotFoundError } from '../errors/apiErrors';
 // Services.
-import { destroy, get, getAll, store, update } from '../services/userService';
+import { get, getAll, update } from '../services/userService';
 
-/**
- * Create user controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
- */
-// export const postHandler = async (req, res, next) => {
-//     // Getting the request body.
-//     const body = req.body;
-//     try {
-//         // Creating the user in the database.
-//         const user = await store({
-//             username: body.username,
-//             password: body.password,
-//         });
-//         if (user.error) throw user.error;
-//         // Creating the email in the database.
-//         const email = await storeEmail({
-//             address: body.email,
-//             // 'id' instead of '_id' because of the response model.
-//             userId: user.id,
-//         });
-//         if (email.error) throw email.error;
-//         // Updating the email id.
-//         user.setEmail(email);
-//         // Showing the user object to the client.
-//         res.status(201).json(user);
-//     } catch (error) {
-//         if (!error instanceof ConflictError) {
-//             // Deleting all created data.
-//             await destroy(body.username);
-//         }
-//         // Passing error to next middleware.
-//         next(error);
-//     }
-// }
 
 /**
  * Get all users controller function.
- * @param {express.Request} req The request object from express.
+ * @param {express.Request} _ The request object from express.
  * @param {express.Response} res The response object from express.
  * @param {Function} next The next middleware function.
  */
-export const getAllHandler = async (req, res, next) => {
+export const getAllHandler = async (_, res, next) => {
     try {
         const users = await getAll();
         // Showing the list of users to the client.

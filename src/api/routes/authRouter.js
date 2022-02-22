@@ -1,14 +1,15 @@
-// The router instance.
+// Dependencies..
 import express from 'express';
-// Importing controller.
-import { registerHandler, loginHandler } from '../controllers/authController';
+import { loginHandler, registerHandler } from '../controllers/authController';
+import validateBody from '../middleware/validatorsMiddleware/bodyValidationMiddleware';
+import reqModels from '../models/request-models';
 
 // Router instance.
 const router = express.Router();
 
 
 // Route: /api/v1/auth/register.
-router.post('/register', registerHandler);
+router.post('/register', validateBody(reqModels.authRequestModel), registerHandler);
 // Route: /api/v1/auth/login.
 router.post('/login', loginHandler);
 

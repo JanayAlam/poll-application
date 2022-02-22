@@ -1,9 +1,9 @@
 // Validators.
-import authRequestModel from './authRequestModel';
+import authRequestRegModel from './auth/registrationModel';
 import userRequestModel from './userRequestModel';
 
 // Exporting the request models.
 export default {
-    authRequestModel,
     userRequestModel,
+    authRequestRegModel,
 };
