@@ -9,9 +9,9 @@ const router = express.Router();
 
 
 // Route: /api/v1/auth/register.
-router.post('/register', validateBody(reqModels.authRequestModel), registerHandler);
+router.post('/register', validateBody(reqModels.registrationRequestModel), registerHandler);
 // Route: /api/v1/auth/login.
-router.post('/login', loginHandler);
+router.post('/login', validateBody(reqModels.loginRequestModel), loginHandler);
 
 // Exporting the routes.
 export default router;

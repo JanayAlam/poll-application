@@ -3,15 +3,32 @@ import Joi from 'joi';
 
 // Schema of the auth request model.
 const schema = Joi.object({
-    username: Joi.string().alphanum().min(4).max(10).required(),
-    email: Joi.string().alphanum().min(5).max(150).required(),
-    firstName: Joi.string().alphanum().min(3).max(15).required(),
-    lastName: Joi.string().alphanum().min(3).max(15).required(),
+    username: Joi.string().alphanum().min(4)
+        .max(10).required(),
+
+    email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: {
+            allow: ['com', 'org', 'net'],
+        }
+    }).min(5).max(150).required(),
+
+    firstName: Joi.string().alphanum().min(3)
+        .max(15).required(),
+
+    lastName: Joi.string().alphanum().min(3)
+        .max(15).required(),
+
     password: Joi.string().alphanum().min(6).required(),
+
     confirmPassword: Joi.any().equal(Joi.ref('password'))
         .required()
         .label('Confirm password')
-        .options({ messages: { 'any.only': '{{#label}} does not match' } })
+        .options({
+            messages: {
+                'any.only': '{{#label}} does not match'
+            }
+        })
 });
 
 /**
