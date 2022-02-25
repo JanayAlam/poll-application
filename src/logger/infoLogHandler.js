@@ -14,12 +14,17 @@ import universalVariables from '../utils/universalVariables';
  * @returns {string} A stringify json object.
  */
 const getInfoMessage = (req, _) => {
+    let reqBody = req.body;
+    if (reqBody.password || reqBody.confirmPassword) {
+        reqBody.password = '';
+        reqBody.confirmPassword = '';
+    }
     // Message object.
     let messageObj = {
         url: req.url,
         method: req.method,
         correlationId: req.headers['x-correlation-id'],
-        requestBody: req.body,
+        requestBody: reqBody,
     };
     // Stringify the object.
     return JSON.stringify(messageObj);
