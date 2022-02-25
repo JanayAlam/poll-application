@@ -1,11 +1,8 @@
-// Dependencies.
-import EmailResponse from './emailViewModel';
-
 // The user response class.
 export default class UserResponse {
     /**
      * Create a user response model.
-     * @param {User} user The user object.
+     * @param {Object} user The user object.
      */
     constructor(user) {
         this.id = user._id;

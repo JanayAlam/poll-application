@@ -2,7 +2,7 @@
 export default class EmailResponse {
     /**
      * Create a email response model.
-     * @param {email} email The email object.
+     * @param {Object} email The email object.
      */
     constructor(email) {
         this.id = email._id;

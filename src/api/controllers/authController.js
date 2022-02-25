@@ -1,7 +1,6 @@
 // Dependencies.
 import express from 'express';
-import { store as storeEmail } from '../services/emailService';
-import { store as storeUser } from '../services/userService';
+import { store } from '../services/authService';
 
 /**
  * Create user controller function.
@@ -12,24 +11,22 @@ import { store as storeUser } from '../services/userService';
 export const registerHandler = async (req, res, next) => {
     // Getting the request body.
     const body = req.body;
+    const user = {
+        username: body.username,
+        password: body.password,
+    };
+    const email = {
+        address: body.email,
+    };
+    const profile = {
+        firstName: body.firstName,
+        lastName: body.lastName,
+    };
     try {
-        // Creating the user in the database.
-        const user = await storeUser({
-            username: body.username,
-            password: body.password,
-        });
-        if (user.error) throw user.error;
-        // Creating the email in the database.
-        const email = await storeEmail({
-            address: body.email,
-            // 'id' instead of '_id' because of the response model.
-            userId: user.id,
-        });
-        if (email.error) throw email.error;
-        // Updating the email id.
-        user.setEmail(email);
-        // Showing the user object to the client.
-        res.status(201).json(user);
+        // Creating a new user in the database.
+        const model = await store(user, email, profile);
+        // Showing the new user object to the client.
+        res.status(201).json(model);
     } catch (error) {
         // Passing error to next middleware.
         next(error);

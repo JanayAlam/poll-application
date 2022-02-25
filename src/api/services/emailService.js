@@ -8,27 +8,6 @@ import { ConflictError, NotFoundError } from '../errors/apiErrors';
 import models from '../models/data-models';
 import viewModels from '../models/view-models';
 
-// Shortcut.
-const Email = models.Email;
-
-/**
- * Send a email to the user with a code for activating the account of a user.
- * @param {models.Email} email The email model instance.
- * @param {string} code The code which will be sent with the email.
- * @param {string} message The additional message which will be sent with the code.
- */
-export const __sendActivationCode = async (email, code, message) => {
-    // Creating the email object.
-    const emailObj = new EmailMessage(
-        email.address,
-        'Email verification code for activating the email address.',
-        message + `\nYour verification code is ${code}.\n\n`
-        + `Thank you from,\n`
-        + `Janay Poll Team.`
-    );
-    // Sending the code through email to the user.
-    await sendMail(emailObj);
-}
 
 /**
  * Save a email object into the database.
@@ -37,7 +16,7 @@ export const __sendActivationCode = async (email, code, message) => {
  */
 export const store = async email => {
     // Checking the availability of the email address
-    const fetchedEmail = await Email.findOne({ address: email.address });
+    const fetchedEmail = await models.Email.findOne({ address: email.address });
     // If the email address has been taken.
     if (fetchedEmail) {
         return {
@@ -48,7 +27,7 @@ export const store = async email => {
     const code = generateCode(6);
     const hashCode = await bcrypt.hash(code, 10);
     // Creating model.
-    const model = new Email({
+    const model = new models.Email({
         address: email.address,
         verificationCode: hashCode,
     });
@@ -95,7 +74,7 @@ export const get = async id => {
             error: new NotFoundError('Email not found with the provided id.'),
         }
     }
-    return await Email.findById(id);
+    return await models.Email.findById(id);
 };
 
 /**
@@ -112,7 +91,7 @@ export const update = id => { };
  */
 export const destroy = async id => {
     // Deleting the email object from the database.
-    const deletedEmail = await Email.findOneAndDelete({
+    const deletedEmail = await models.Email.findOneAndDelete({
         _id: id
     });
     // If the email is not in the database.
