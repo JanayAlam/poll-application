@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 
 const emailSchema = new Schema(
     {
@@ -36,4 +36,5 @@ const emailSchema = new Schema(
 
 const Email = model('Email', emailSchema);
 
+// Exporting the email.
 export default Email;
