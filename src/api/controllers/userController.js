@@ -69,25 +69,3 @@ export const putHandler = async (req, res, next) => {
         next(error);
     }
 }
-
-/**
- * Delete user controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
- */
-// export const deleteHandler = async (req, res, next) => {
-//     try {
-//         // Getting the id from request parameter.
-//         const { username } = req.params;
-//         // Deleting the user.
-//         const deletedUser = await destroy(username);
-//         // If the deleted user has error.
-//         if (deletedUser.error) throw deletedUser.error;
-//         // Showing the deleted user details to the client.
-//         res.status(200).json(deletedUser);
-//     } catch (error) {
-//         // Error occurred.
-//         next(error);
-//     }
-// }

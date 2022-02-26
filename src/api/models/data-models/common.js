@@ -66,6 +66,23 @@ export const store = async (data, modelName) => {
 };
 
 /**
+ * Fetch all entries from the database.
+ * @param {string} modelName The model name.
+ * @returns {Array} The fetched models.
+ */
+export const getAll = async modelName => {
+    try {
+        const models = await mongoose.models[modelName].find();
+        return models;
+    } catch (error) {
+        if (error instanceof TypeError) {
+            error.message = 'Wrong model name provided by the service.'
+        }
+        throw error;
+    }
+}
+
+/**
  * Fetched a object by id.
  * @param {mongoose.Types.ObjectId} id The id of the schema.
  * @param {string} modelName The model name. Example: 'User'.
@@ -74,7 +91,7 @@ export const store = async (data, modelName) => {
 export const getById = async (id, modelName) => {
     const error = __isIdValid(id).error;
     if (error) throw error;
-    const model = await mongoose.models[modelName].findById(id);
+    const model = await mongoose.models[modelName].findOne({ _id: id });
     if (!model) {
         throw new NotFoundError(`${modelName} not found by the id: ${id}.`);
     }

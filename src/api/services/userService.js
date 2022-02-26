@@ -1,10 +1,12 @@
 // Dependencies.
-import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { ConflictError } from '../errors/apiErrors';
 import models from '../models/data-models';
+import { getAll as getAllData, getById as getByIdData } from '../models/data-models/common';
 import viewModels from '../models/view-models';
 
+// Constants.
+const MODEL_NAME = 'User';
 
 /**
  * Check the given username is duplicate or not.
@@ -24,34 +26,12 @@ const __checkDuplicateUsername = async username => {
 }
 
 /**
- * Save a user into the database.
- * @param {models.User} user The object that will be stored.
- * @returns {models.User | ConflictError} Created user object or error.
- */
-export const store = async user => {
-    // Checking for duplicate username.
-    const duplicate = await __checkDuplicateUsername(user.username);
-    if (duplicate) return duplicate;
-    // Hashing the password and saving into the variable.
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    user.password = hashedPassword;
-    // Creating the model.
-    const model = new models.User(user);
-    // Storing the model into the database.
-    const createdUser = await model.save();
-    // Getting ready the response.
-    const responseUser = new viewModels.UserResponse(createdUser);
-    // Returning the created user.
-    return responseUser;
-};
-
-/**
  * Get all the users from the database.
  * @returns {Array} Array of user objects.
  */
 export const getAll = async () => {
     // Fetching all the users from the database.
-    const users = await models.User.find();
+    const users = await getAllData(MODEL_NAME);
     // Getting ready the response.
     let responseUser = users.map(user => new viewModels.UserResponse(user));
     // Returning the list of users.
@@ -65,7 +45,7 @@ export const getAll = async () => {
  */
 export const get = async id => {
     // Fetching the user from the database.
-    const user = await models.User.findById(id);
+    const user = await getByIdData(id, MODEL_NAME);
     // If the user is not found in the database.
     if (!user) return null;
     // Getting ready the response.
@@ -98,28 +78,6 @@ export const update = async user => {
     if (!updatedUser) return null;
     // Getting ready the response.
     const responseUser = new viewModels.UserResponse(updatedUser);
-    // And returning the users.
-    return responseUser;
-};
-
-/**
- * Delete user by id.
- * @param {mongoose.ObjectId} id Id of the user.
- * @returns {models.User} Deleted user object.
- */
-export const destroy = async id => {
-    // Deleting the user object from the database.
-    const deletedUser = await models.User.findOneAndDelete({ _id: id });
-    // If the user is not in the database.
-    if (!deletedUser) {
-        return {
-            error: new NotFoundError('User not found with the provided id.'),
-        };
-    }
-    // Updating the modifiedAt property.
-    deletedUser.modifiedAt = Date.now();
-    // Getting ready the response.
-    const responseUser = new viewModels.UserResponse(deletedUser);
     // And returning the users.
     return responseUser;
 };
