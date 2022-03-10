@@ -23,7 +23,7 @@ const schema = Joi.object({
 
     confirmPassword: Joi.any().equal(Joi.ref('password'))
         .required()
-        .label('Confirm password')
+        .label('confirmPassword')
         .options({
             messages: {
                 'any.only': '{{#label}} does not match'
