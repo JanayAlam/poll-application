@@ -1,9 +1,9 @@
 // Dependencies and modules.
+import { getStringHash } from '../../utils/generator';
 import { ConflictError } from '../errors/apiErrors';
-import models from '../models/data-models';
 import { store as storeData } from '../models/data-models/common';
 import authViewModel from '../models/view-models';
-import { getStringHash } from '../../utils/generator';
+import { checkDuplicateEmailAddress, checkDuplicateUsername } from './common';
 
 const MODEL_NAME_USER = 'User';
 const MODEL_NAME_EMAIL = 'Email';
@@ -20,13 +20,13 @@ const MODEL_NAME_PROFILE = 'Profile';
 export const store = async (user, email, profile) => {
     try {
         // Validating the uniqueness of the username and email address.
-        const isUniqueUsername = await models.User.findOne({ username: user.username });
+        const isUniqueUsername = await checkDuplicateUsername(user.username);
         if (isUniqueUsername) {
-            throw new ConflictError('Username is already taken. Try another one.');
+            throw isUniqueUsername.error;
         }
-        const isUniqueEmailAddress = await models.Email.findOne({ address: email.address });
+        const isUniqueEmailAddress = await checkDuplicateEmailAddress(email.address);
         if (isUniqueEmailAddress) {
-            throw new ConflictError('Email address is already taken. Try another one.');
+            throw isUniqueEmailAddress.error;
         }
         // Hashing the password.
         const hashedPassword = await getStringHash(user.password);

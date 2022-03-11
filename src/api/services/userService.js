@@ -1,29 +1,13 @@
 // Dependencies.
 import mongoose from 'mongoose';
-import { ConflictError } from '../errors/apiErrors';
 import models from '../models/data-models';
 import { getAll as getAllData, getById as getByIdData } from '../models/data-models/common';
 import viewModels from '../models/view-models';
+import { checkDuplicateUsername } from './common';
 
 // Constants.
 const MODEL_NAME = 'User';
 
-/**
- * Check the given username is duplicate or not.
- * @param {string} username Username which will be checked.
- * @returns {ConflictError | null} Error instance if there are duplicate username.
- */
-const __checkDuplicateUsername = async username => {
-    // Checking for duplicate username.
-    const fetchedUser = await models.User.findOne({ username });
-    // If the username is taken.
-    if (fetchedUser) {
-        return {
-            error: new ConflictError('Username has been already taken.'),
-        };
-    }
-    return null;
-}
 
 /**
  * Get all the users from the database.
@@ -61,8 +45,8 @@ export const get = async id => {
  */
 export const update = async user => {
     // Checking for duplicate username.
-    const duplicate = await __checkDuplicateUsername(user.username);
-    if (duplicate) return duplicate;
+    const isDuplicate = await checkDuplicateUsername(user.username);
+    if (isDuplicate) throw isDuplicate.error;
     // Fetching the user from the database with old username.
     const updatedUser = await models.User.findOneAndUpdate(
         { _id: user._id },
