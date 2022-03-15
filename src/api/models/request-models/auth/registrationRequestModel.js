@@ -19,7 +19,7 @@ const schema = Joi.object({
     lastName: Joi.string().alphanum().min(3)
         .max(15).required(),
 
-    password: Joi.string().alphanum().min(6).required(),
+    password: Joi.string().min(6).required(),
 
     confirmPassword: Joi.any().equal(Joi.ref('password'))
         .required()

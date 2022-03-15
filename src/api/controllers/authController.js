@@ -33,11 +33,62 @@ export const registerHandler = async (req, res, next) => {
     }
 }
 
+/**
+ * Login into account controller function.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @param {Function} next The next middleware function.
+ */
 export const loginHandler = async (req, res, next) => {
     try {
         // Login handler.
-        return res.status(200);
+        res.status(200);
     } catch (error) {
-        return next(error);
+        next(error);
+    }
+}
+
+/**
+ * Change password controller function.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @param {Function} next The next middleware function.
+ */
+ export const changePasswordHandler = async (req, res, next) => {
+    try {
+        // Change handler.
+        res.status(200);
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * Forget password controller function.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @param {Function} next The next middleware function.
+ */
+ export const forgetPasswordHandler = async (req, res, next) => {
+    try {
+        // Change handler.
+        res.status(200);
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * Reset password controller function.
+ * @param {express.Request} req The request object from express.
+ * @param {express.Response} res The response object from express.
+ * @param {Function} next The next middleware function.
+ */
+ export const resetPasswordHandler = async (req, res, next) => {
+    try {
+        // Change handler.
+        res.status(200);
+    } catch (error) {
+        next(error);
     }
 }

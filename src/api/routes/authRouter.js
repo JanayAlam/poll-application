@@ -1,7 +1,8 @@
 // Dependencies..
 import express from 'express';
-import { loginHandler, registerHandler } from '../controllers/authController';
+import { deleteAccountHandler, loginHandler, registerHandler } from '../controllers/authController';
 import validateBody from '../middleware/validatorsMiddleware/bodyValidationMiddleware';
+import oldPasswordCheckerMiddleware from '../middleware/validatorsMiddleware/oldPasswordChecker';
 import reqModels from '../models/request-models';
 
 // Router instance.
