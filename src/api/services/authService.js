@@ -1,8 +1,7 @@
 // Dependencies and modules.
-import mongose from 'mongoose';
 import { getStringHash } from '../../utils/generator';
-import { ConflictError } from '../errors/apiErrors';
-import { deleteById as remove, store as storeData } from '../models/data-models/common';
+import { ConflictError, NotAcceptableError } from '../errors/apiErrors';
+import { store as storeData } from '../models/data-models/common';
 import authViewModel from '../models/view-models';
 import { checkDuplicateEmailAddress, checkDuplicateUsername } from './common';
 
@@ -46,3 +45,14 @@ export const store = async (user, email, profile) => {
         throw error;
     }
 };
+
+/**
+ * Change password of a user.
+ * @param {Object} user The user object that will be stored.
+ * @param {Object} email The email object that will be stored.
+ * @param {Object} profile The profile object that will be stored.
+ * @returns {authViewModel.AuthUserResponse | NotAcceptableError} Created user object or error.
+ */
+export const changePassword = async (oldPassword, newPassword) => {
+    // TODO
+}

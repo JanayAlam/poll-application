@@ -16,9 +16,6 @@ const oldPasswordChecker = async (req, _, next) => {
         const { oldPassword } = req.body;
         // Getting the id from the request parameter.
         const { id } = req.params;
-        if (!oldPassword) {
-            throw new BadRequestError('"oldPassword" field is required.');
-        }
         // Getting the user.
         const user = await get(id, 'User');
         // If the user is not found.

@@ -1,7 +1,7 @@
 // Dependencies.
 import Joi from 'joi';
 
-// Schema of the auth request model.
+// Schema of the login request model.
 const schema = Joi.object({
     email: Joi.string().email({
         minDomainSegments: 2,

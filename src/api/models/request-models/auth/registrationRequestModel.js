@@ -1,7 +1,7 @@
 // Dependencies.
 import Joi from 'joi';
 
-// Schema of the auth request model.
+// Schema of the register request model.
 const schema = Joi.object({
     username: Joi.string().alphanum().min(4)
         .max(10).required(),
