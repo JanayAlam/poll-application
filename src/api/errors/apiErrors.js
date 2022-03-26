@@ -39,7 +39,7 @@ export class UnauthorizationError extends ApiError {
      */
     constructor(message = 'User need to be authorized.') {
         super(message);
-        this.name = 'UnauthorizationError';
+        this.name = 'UnauthorizeError';
     }
 
     /**

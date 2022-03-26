@@ -57,7 +57,10 @@ export const loginHandler = async (req, res, next) => {
  export const changePasswordHandler = async (req, res, next) => {
     try {
         // Change handler.
-        res.status(200);
+        res.status(200).json({
+            message: 'Hitted',
+            user: req.user,
+        });
     } catch (error) {
         next(error);
     }

@@ -1,6 +1,8 @@
 // Dependencies.
 import cors from 'cors';
 import express from 'express';
+// Passport
+import passport from 'passport';
 // Documentation dependencies.
 import swaggerUi from 'swagger-ui-express';
 // Loggers.
@@ -26,6 +28,7 @@ const allMiddleware = [
     setCorrelationIdMiddleware,
     express.static('public'),
     cors(corsOptions),
+    passport.initialize(),
 ];
 
 /** Activating the middleware */
@@ -36,6 +39,8 @@ export default app => {
     allMiddleware.forEach((middleware) => {
         app.use(middleware);
     });
+    // Setting up the passport options.
+    require('./passportConfigMiddleware');
     // Setting up the routes.
     setRoutes(app);
     // Documentation route setup.

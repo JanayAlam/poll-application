@@ -1,18 +1,20 @@
 // Dependencies..
 import express from 'express';
-import { deleteAccountHandler, loginHandler, registerHandler } from '../controllers/authController';
+import { changePasswordHandler, loginHandler, registerHandler } from '../controllers/authController';
+import authenticate from '../middleware/validatorsMiddleware/authenticate';
 import validateBody from '../middleware/validatorsMiddleware/bodyValidationMiddleware';
-import oldPasswordCheckerMiddleware from '../middleware/validatorsMiddleware/oldPasswordChecker';
 import reqModels from '../models/request-models';
 
 // Router instance.
 const router = express.Router();
 
 
-// Route: /api/v1/auth/register.
+// POST: /api/v1/auth/register.
 router.post('/register', validateBody(reqModels.registrationRequestModel), registerHandler);
-// Route: /api/v1/auth/login.
+// POST: /api/v1/auth/login.
 router.post('/login', validateBody(reqModels.loginRequestModel), loginHandler);
+// PUT: /api/v1/auth/change-password.
+router.put('/change-password', authenticate, changePasswordHandler)
 
 // Exporting the routes.
 export default router;
