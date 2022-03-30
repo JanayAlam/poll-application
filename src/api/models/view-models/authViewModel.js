@@ -9,7 +9,7 @@ export default class AuthUserResponse {
      * @param {Object} email The email object.
      * @param {Object} profile The profile object.
      */
-    constructor(user, email, profile, token=null) {
+    constructor(user, email, profile, token = null) {
         this.id = user._id;
         this.username = user.username;
         this.isSuperuser = user.isSuperuser;
@@ -20,6 +20,10 @@ export default class AuthUserResponse {
         this.createdAt = user.createdAt;
     }
 
+    /**
+     * Set the token value in the object.
+     * @param {string} token The token string which will be stored.
+     */
     setToken = token => {
         this.token = token;
     }
