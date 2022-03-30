@@ -1,7 +1,7 @@
 // Dependencies.
 import bcrypt from 'bcrypt';
 import express from 'express';
-import jwt from 'jsonwebtoken';
+import { generateJWTToken } from '../../utils/generator';
 import { AuthenticationError } from '../errors/apiErrors';
 import models from '../models/data-models';
 import responseModels from '../models/view-models';
@@ -30,6 +30,9 @@ export const registerHandler = async (req, res, next) => {
     try {
         // Creating a new user in the database.
         const model = await store(user, email, profile);
+        // Generate a JWT token.
+        const token = await generateJWTToken(user);
+        model.setToken(token);
         // Showing the new user object to the client.
         res.status(201).json(model);
     } catch (error) {
@@ -49,7 +52,9 @@ export const loginHandler = async (req, res, next) => {
     const { username, password } = req.body;
     try {
         // Finding the user in the database.
-        const user = await models.User.findOne({ username });
+        const user = await models.User.findOne({ username }).populate({
+            path: 'email',
+        }).populate({ path: 'profile' });
         // If the user is not found.
         if (!user) throw new AuthenticationError();
         // Validate the credentials.
@@ -57,16 +62,11 @@ export const loginHandler = async (req, res, next) => {
         // If the credentials are not valid.
         if (!isMatched) throw new AuthenticationError();
         // Generate a JWT token.
-        let token = await jwt.sign({
-            id: user._id,
-            username: user.username,
-        }, process.env.JWT_SECRET, { expiresIn: '2d' });
-        token = `Bearer ${token}`
+        const token = await generateJWTToken(user);
         // Send response to the client.
-        res.status(200).json({
-            user: new responseModels.UserResponse(user),
-            token,
-        });
+        res.status(200).json(
+            new responseModels.AuthUserResponse(user, user.email, user.profile, token)
+        );
     } catch (error) {
         next(error);
     }

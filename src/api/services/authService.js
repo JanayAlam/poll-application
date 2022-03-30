@@ -1,8 +1,7 @@
 // Dependencies and modules.
-import mongose from 'mongoose';
 import { getStringHash } from '../../utils/generator';
 import { ConflictError } from '../errors/apiErrors';
-import { deleteById as remove, store as storeData } from '../models/data-models/common';
+import { store as storeData, update as updateData } from '../models/data-models/common';
 import authViewModel from '../models/view-models';
 import { checkDuplicateEmailAddress, checkDuplicateUsername } from './common';
 
@@ -33,13 +32,17 @@ export const store = async (user, email, profile) => {
         const hashedPassword = await getStringHash(user.password);
         user.password = hashedPassword;
         // Creating the user model.
-        const userModel = await storeData(user, MODEL_NAME_USER);
+        let userModel = await storeData(user, MODEL_NAME_USER);
         // Updating the models payload.
         email.user = userModel._id;
         profile.user = userModel._id;
         // Creating the email and profile model.
         const emailModel = await storeData(email, MODEL_NAME_EMAIL);
         const profileModel = await storeData(profile, MODEL_NAME_PROFILE);
+        // Updating the user model.
+        userModel.profile = profileModel._id;
+        userModel.email = emailModel._id;
+        userModel = await updateData(userModel, MODEL_NAME_USER);
         // Returning the response models.
         return new authViewModel.AuthUserResponse(userModel, emailModel, profileModel);
     } catch (error) {

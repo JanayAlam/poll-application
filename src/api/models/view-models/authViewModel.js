@@ -9,13 +9,18 @@ export default class AuthUserResponse {
      * @param {Object} email The email object.
      * @param {Object} profile The profile object.
      */
-    constructor(user, email, profile) {
+    constructor(user, email, profile, token=null) {
         this.id = user._id;
         this.username = user.username;
         this.isSuperuser = user.isSuperuser;
         this.email = new viewModels.EmailResponse(email);
         this.profile = new viewModels.ProfileResponse(profile);
+        this.token = token;
         this.modifiedAt = user.modifiedAt;
         this.createdAt = user.createdAt;
+    }
+
+    setToken = token => {
+        this.token = token;
     }
 }
