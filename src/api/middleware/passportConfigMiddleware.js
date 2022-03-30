@@ -15,10 +15,13 @@ let JWTOptions = {
 }
 // Configuring the passport js.
 passport.use(new JwtStrategy(JWTOptions, function (JWTPayload, done) {
+    // Finding the user from the database.
     models.User.findOne({ id: JWTPayload.id }, function (err, user) {
         if (err || !user) {
+            // Invalid token.
             return done(err, false);
         }
+        // Valid token.
         return done(null, user);
     });
 }));

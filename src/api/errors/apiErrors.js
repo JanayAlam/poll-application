@@ -49,6 +49,23 @@ export class UnauthorizationError extends ApiError {
     getCode = () => 401;
 }
 
+export class AuthenticationError extends ApiError {
+    /**
+     * Error class for authentication error.
+     * @param {String} msg Error message.
+     */
+    constructor(message = 'Invalid credentials.') {
+        super(message);
+        this.name = 'AuthenticationError';
+    }
+
+    /**
+     * Get error status code.
+     * @returns {int} Status code of the error.
+     */
+    getCode = () => 403;
+}
+
 export class NotFoundError extends ApiError {
     /**
      * Error class for not found error.

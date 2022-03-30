@@ -3,14 +3,10 @@ import Joi from 'joi';
 
 // Schema of the auth request model.
 const schema = Joi.object({
-    email: Joi.string().email({
-        minDomainSegments: 2,
-        tlds: {
-            allow: ['com', 'org', 'net'],
-        }
-    }).min(5).max(150).required(),
+    username: Joi.string().alphanum().min(4)
+        .max(10).required(),
 
-    password: Joi.string().alphanum().min(6).required(),
+    password: Joi.string().min(6).required(),
 });
 
 /**
