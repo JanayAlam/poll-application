@@ -25,6 +25,8 @@ const transportsMongoDbConfig = {
 // Exporting the winston configured object.
 export default expressWinston.errorLogger({
     transports: [
+        // Writing on the console.
+        new winston.transports.Console(),
         // Local file.
         new winston.transports.DailyRotateFile(transportsFileConfig),
         // Mongodb schema.
@@ -36,5 +38,4 @@ export default expressWinston.errorLogger({
             winston.format.json()
         ),
     meta: true,
-    msg: '{ "correlationId": {{req.headers["x-correlation-id"]}}, "error": "{{err.message}}" }',
 });
