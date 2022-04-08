@@ -1,9 +1,8 @@
 // Dependencies and modules.
-import bcrypt from 'bcrypt';
 import { getStringHash } from '../../utils/generator';
 import { ConflictError } from '../errors/apiErrors';
 import { store as storeData, update as updateData } from '../models/data-models/common';
-import authViewModel from '../models/view-models';
+import viewModels from '../models/view-models';
 import { checkDuplicateEmailAddress, checkDuplicateUsername } from './common';
 
 const MODEL_NAME_USER = 'User';
@@ -45,7 +44,7 @@ export const store = async (user, email, profile) => {
         userModel.email = emailModel._id;
         userModel = await updateData(userModel, MODEL_NAME_USER);
         // Returning the response models.
-        return new authViewModel.AuthUserResponse(userModel, emailModel, profileModel);
+        return new viewModels.AuthUserResponse(userModel, emailModel, profileModel);
     } catch (error) {
         throw error;
     }
@@ -54,7 +53,7 @@ export const store = async (user, email, profile) => {
 /**
  * Change password of a user.
  * @param {Object} user The user object that will be stored.
- * @returns {authViewModel.AuthUserResponse | ConflictError} Created user object or error.
+ * @returns {viewModels.UserResponse} Created user object or error.
  */
 export const updatePassword = async user => {
     try {
@@ -66,7 +65,7 @@ export const updatePassword = async user => {
             password,
         }, MODEL_NAME_USER);
         // Returning the user.
-        return updatedUser;
+        return new viewModels.UserResponse(updatedUser);
     } catch (error) {
         throw error;
     }

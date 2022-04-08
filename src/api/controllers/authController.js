@@ -93,7 +93,7 @@ export const changePasswordHandler = async (req, res, next) => {
         user.password = newPassword;
         const updatedUser = await updatePassword(user);
         // Sending the response to the client.
-        res.status(200).json(new responseModels.UserResponse(updatedUser));
+        res.status(200).json(updatedUser);
     } catch (error) {
         next(error);
     }
