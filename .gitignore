@@ -2,6 +2,7 @@ node_modules/
 .vscode/
 .env
 coverage/
+.yarn/
 
 /src/logger/log-files/
 

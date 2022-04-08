@@ -33,10 +33,6 @@ const profileSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Notification',
         }],
-        votes: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Choice',
-        }],
         mute: {
             type: Schema.Types.ObjectId,
             ref: 'Mute',
@@ -55,14 +51,6 @@ const profileSchema = new Schema(
             required: true,
             default: false,
         },
-        comments: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Comment',
-        }],
-        replies: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Reply',
-        }],
         modifiedAt: {
             type: Schema.Types.Date,
             default: Date.now(),

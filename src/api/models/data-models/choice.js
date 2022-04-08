@@ -19,10 +19,6 @@ const choiceSchema = new Schema(
             trim: true,
             default: 'images/defaults/choicePhoto/default.png',
         },
-        poll: {
-            type: Schema.Types.ObjectId,
-            ref: 'Poll',
-        },
         voters: [{
             type: Schema.Types.ObjectId,
             ref: 'Profile',

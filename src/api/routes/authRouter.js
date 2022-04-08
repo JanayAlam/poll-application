@@ -9,11 +9,13 @@ import reqModels from '../models/request-models';
 const router = express.Router();
 
 // POST: /api/v1/auth/register.
-router.post('/register', validateBody(reqModels.registrationRequestModel), registerHandler);
+router.post('/register', validateBody(reqModels.registrationRequestModel),
+    registerHandler);
 // POST: /api/v1/auth/login.
 router.post('/login', validateBody(reqModels.loginRequestModel), loginHandler);
 // PUT: /api/v1/auth/change-password.
-router.put('/change-password', authenticate, changePasswordHandler)
+router.put('/change-password', authenticate,
+    validateBody(reqModels.changePasswordRequestModel), changePasswordHandler)
 
 // Exporting the routes.
 export default router;

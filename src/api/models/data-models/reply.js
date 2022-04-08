@@ -8,13 +8,9 @@ const replySchema = new Schema(
             maxlength: 250,
             required: true,
         },
-        profile: {
+        writer: {
             type: Schema.Types.ObjectId,
             ref: 'Profile',
-        },
-        comment: {
-            type: Schema.Types.ObjectId,
-            ref: 'Comment',
         },
         modifiedAt: {
             type: Schema.Types.Date,

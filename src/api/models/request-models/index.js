@@ -1,4 +1,5 @@
 // Validators.
+import changePasswordRequestModel from './auth/changePasswordRequestModel';
 import loginRequestModel from './auth/loginRequestModel';
 import registrationRequestModel from './auth/registrationRequestModel';
 import userRequestModel from './userRequestModel';
@@ -8,4 +9,5 @@ export default {
     userRequestModel,
     registrationRequestModel,
     loginRequestModel,
+    changePasswordRequestModel,
 };

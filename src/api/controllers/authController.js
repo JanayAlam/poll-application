@@ -2,10 +2,10 @@
 import bcrypt from 'bcrypt';
 import express from 'express';
 import { generateJWTToken } from '../../utils/generator';
-import { AuthenticationError } from '../errors/apiErrors';
+import { AuthenticationError, BadRequestError } from '../errors/apiErrors';
 import models from '../models/data-models';
 import responseModels from '../models/view-models';
-import { store } from '../services/authService';
+import { store, updatePassword } from '../services/authService';
 
 /**
  * Create user controller function.
@@ -80,11 +80,20 @@ export const loginHandler = async (req, res, next) => {
  */
 export const changePasswordHandler = async (req, res, next) => {
     try {
-        // Change handler.
-        res.status(200).json({
-            message: 'Hitted',
-            user: req.user,
-        });
+        // Fetch the user from the database.
+        let user = req.user;
+        // Extracting the passwords from the request boy.
+        const { oldPassword, newPassword } = req.body;
+        // Checking the old password.
+        const isMatched = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatched) {
+            throw new BadRequestError('Old password did not matched.');
+        }
+        // Updating the password.
+        user.password = newPassword;
+        const updatedUser = await updatePassword(user);
+        // Sending the response to the client.
+        res.status(200).json(new responseModels.UserResponse(updatedUser));
     } catch (error) {
         next(error);
     }

@@ -13,10 +13,6 @@ const notificationSchema = new Schema(
             type: String,
             trim: true,
         },
-        profile: {
-            type: Schema.Types.ObjectId,
-            ref: 'Profile',
-        },
         modifiedAt: {
             type: Schema.Types.Date,
             default: Date.now(),

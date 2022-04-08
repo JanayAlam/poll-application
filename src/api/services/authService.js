@@ -1,4 +1,5 @@
 // Dependencies and modules.
+import bcrypt from 'bcrypt';
 import { getStringHash } from '../../utils/generator';
 import { ConflictError } from '../errors/apiErrors';
 import { store as storeData, update as updateData } from '../models/data-models/common';
@@ -49,3 +50,24 @@ export const store = async (user, email, profile) => {
         throw error;
     }
 };
+
+/**
+ * Change password of a user.
+ * @param {Object} user The user object that will be stored.
+ * @returns {authViewModel.AuthUserResponse | ConflictError} Created user object or error.
+ */
+export const updatePassword = async user => {
+    try {
+        // Hashing the password.
+        const password = await getStringHash(user.password);
+        // Updating the password of a user.
+        const updatedUser = await updateData({
+            _id: user._id,
+            password,
+        }, MODEL_NAME_USER);
+        // Returning the user.
+        return updatedUser;
+    } catch (error) {
+        throw error;
+    }
+}

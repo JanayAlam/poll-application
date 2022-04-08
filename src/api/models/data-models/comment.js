@@ -8,13 +8,9 @@ const commentSchema = new Schema(
             maxlength: 250,
             required: true,
         },
-        profile: {
+        writer: {
             type: Schema.Types.ObjectId,
             ref: 'Profile',
-        },
-        poll: {
-            type: Schema.Types.ObjectId,
-            ref: 'Poll',
         },
         replies: [{
             type: Schema.Types.ObjectId,
