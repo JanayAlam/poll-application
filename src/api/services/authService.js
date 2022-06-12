@@ -71,3 +71,12 @@ export const updatePassword = async user => {
         throw error;
     }
 }
+
+/**
+ * Forget password service of a user.
+ * @param {string} username The username of the user.
+ * @returns {viewModels.UserResponse} The user model itself.
+ */
+export const forgetPassword = async username => {
+    // TODO
+}
