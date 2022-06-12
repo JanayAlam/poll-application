@@ -5,7 +5,6 @@ import dbConnection from './database/connection';
 import log from './utils/colorizeLog';
 import universalVariables from './utils/universalVariables';
 
-
 /** Connecting the database and running the application. */
 const init = async () => {
     try {
@@ -22,13 +21,19 @@ const init = async () => {
             universalVariables.CONSOLE_LOG_CATEGORY.success
         );
         log(
-            `Documentation available at http://${DOMAIN}:${PORT}/api/v1/api-docs`,
+            `Documentation available at http://${DOMAIN}:${PORT}`,
             universalVariables.CONSOLE_LOG_CATEGORY.info
         );
     } catch (error) {
         // Error occurred.
-        log(`Error: ${error.message}`, universalVariables.CONSOLE_LOG_CATEGORY.error);
-        log('Exiting the application...', universalVariables.CONSOLE_LOG_CATEGORY.info);
+        log(
+            `Error: ${error.message}`,
+            universalVariables.CONSOLE_LOG_CATEGORY.error
+        );
+        log(
+            'Exiting the application...',
+            universalVariables.CONSOLE_LOG_CATEGORY.info
+        );
         throw error;
     }
 };

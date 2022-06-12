@@ -1,5 +1,5 @@
 class UniversalVariables {
-    DATABASE_BASE_URI = `mongodb://localhost:27017`;
+    DATABASE_BASE_URI = `mongodb://localhost:27018`;
     MONGODB_OPTIONS = {
         useNewUrlParser: true,
         useUnifiedTopology: true,

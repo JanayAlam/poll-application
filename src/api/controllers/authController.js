@@ -107,7 +107,8 @@ export const changePasswordHandler = async (req, res, next) => {
  */
 export const forgetPasswordHandler = async (req, res, next) => {
     try {
-        // Change handler.
+        // Extracting the user.
+        // TODO
         res.status(200);
     } catch (error) {
         next(error);
