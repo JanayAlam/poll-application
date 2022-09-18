@@ -1,27 +1,26 @@
-// Dependencies.
-import passport from 'passport';
-import passportJWT from 'passport-jwt';
-import models from '../models/data-models';
-// Some variables.
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+const models = require('../models/data-models');
+
 const JwtStrategy = passportJWT.Strategy;
 const ExtractJwt = passportJWT.ExtractJwt;
-// The secret key.
+
 const secretKey = process.env.JWT_SECRET;
 
-// The passport jwt strategy options. 
+// the passport jwt strategy options.
 let JWTOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: secretKey,
 }
-// Configuring the passport js.
+// configuring the passport js
 passport.use(new JwtStrategy(JWTOptions, function (JWTPayload, done) {
-    // Finding the user from the database.
+    // finding the user from the database
     models.User.findOne({ id: JWTPayload.id }, function (err, user) {
         if (err || !user) {
-            // Invalid token.
+            // invalid token
             return done(err, false);
         }
-        // Valid token.
+        // valid token
         return done(null, user);
     });
 }));

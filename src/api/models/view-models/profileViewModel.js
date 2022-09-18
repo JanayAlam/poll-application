@@ -1,8 +1,8 @@
-// The profile response class.
-export default class ProfileResponse {
+// the profile response class
+class ProfileResponse {
     /**
-     * Create a user response model.
-     * @param {Object} user The user object.
+     * create a user response model
+     * @param {Object} user the user object
      */
     constructor(profile) {
         this.id = profile._id;
@@ -23,3 +23,5 @@ export default class ProfileResponse {
         this.createdAt = profile.createdAt;
     }
 }
+
+module.exports = ProfileResponse;

@@ -1,17 +1,14 @@
-// Dependencies.
-import express from 'express';
-import expressWinston from 'express-winston';
-import winston from 'winston';
-// Requiring `winston-mongodb` will expose 'winston.transports.DailyRotateFile'.
-import 'winston-daily-rotate-file';
-import universalVariables from '../utils/universalVariables';
-
+const express = require('express');
+const expressWinston = require('express-winston');
+const winston = require('winston');
+require('winston-daily-rotate-file');
+const constant = require('../utils/constant');
 
 /**
- * Get message for info logging.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} _ The response object from express.
- * @returns {string} A stringify json object.
+ * get message for info logging
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} _ the response object from express
+ * @returns {string} a stringify json object
  */
 const getInfoMessage = (req, _) => {
     let reqBody = req.body;
@@ -19,37 +16,36 @@ const getInfoMessage = (req, _) => {
         reqBody.password = '';
         reqBody.confirmPassword = '';
     }
-    // Message object.
+    // message object
     let messageObj = {
         url: req.url,
         method: req.method,
         correlationId: req.headers['x-correlation-id'],
         requestBody: reqBody,
     };
-    // Stringify the object.
+    // stringify the object
     return JSON.stringify(messageObj);
-}
-
-// A configuration for transport of log file.
-const transportsFileConfig = {
-    level: 'info',
-    datePattern: universalVariables.LOG_DATE_FORMATE,
-    filename: `${universalVariables.LOG_FILE_DIR}/info-log-%DATE%.log`,
 };
 
-// Exporting the winston configured object.
-export default expressWinston.logger({
+// a configuration for transport of log file
+const transportsFileConfig = {
+    level: 'info',
+    datePattern: constant.LOG_DATE_FORMATE,
+    filename: `${constant.LOG_FILE_DIR}/info-log-%DATE%.log`,
+};
+
+// exporting the winston configured object
+module.exports = expressWinston.logger({
     transports: [
-        // Writing on the console.
+        // writing on the console
         new winston.transports.Console(),
-        // Writing on the file.
+        // writing on the file
         new winston.transports.DailyRotateFile(transportsFileConfig),
     ],
-    format: winston
-        .format.combine(
-            winston.format.colorize(),
-            winston.format.json()
-        ),
+    format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.json()
+    ),
     meta: false,
     msg: getInfoMessage,
 });

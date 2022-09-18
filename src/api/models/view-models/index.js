@@ -1,13 +1,12 @@
-// Importing response models.
-import AuthUserResponse from "./authViewModel";
-import EmailResponse from "./emailViewModel";
-import ProfileResponse from "./profileViewModel";
-import UserResponse from "./userViewModel";
+const AuthUserResponse = require('./authViewModel');
+const EmailResponse = require('./emailViewModel');
+const ProfileResponse = require('./profileViewModel');
+const UserResponse = require('./userViewModel');
 
-// Exporting the response models.
-export default {
+// exporting the response models
+module.exports = {
     AuthUserResponse,
     UserResponse,
     EmailResponse,
     ProfileResponse,
-}
+};

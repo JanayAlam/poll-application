@@ -1,12 +1,11 @@
-// Errors.
-import { BadRequestError } from '../../errors/apiErrors';
+const { BadRequestError } = require('../../errors/apiErrors');
 
 /**
- * Validate the request body and throw bad request error if request is not valid.
- * @param {Function} validate Validate callback function.
- * @returns {Function} A middleware function.
+ * validate the request body and throw bad request error if request is not valid
+ * @param {Function} validate validate callback function
+ * @returns {Function} a middleware function
  */
-export default validate => {
+module.exports = (validate) => {
     return (req, _, next) => {
         const result = validate(req.body);
         if (result.error) {
@@ -15,5 +14,5 @@ export default validate => {
             throw new BadRequestError(message);
         }
         next();
-    }
-}
+    };
+};

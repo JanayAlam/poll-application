@@ -1,11 +1,10 @@
-// Validators.
-import changePasswordRequestModel from './auth/changePasswordRequestModel';
-import loginRequestModel from './auth/loginRequestModel';
-import registrationRequestModel from './auth/registrationRequestModel';
-import userRequestModel from './userRequestModel';
+const changePasswordRequestModel = require('./auth/changePasswordRequestModel');
+const loginRequestModel = require('./auth/loginRequestModel');
+const registrationRequestModel = require('./auth/registrationRequestModel');
+const userRequestModel = require('./userRequestModel');
 
-// Exporting the request models.
-export default {
+// exporting the request models
+module.exports = {
     userRequestModel,
     registrationRequestModel,
     loginRequestModel,

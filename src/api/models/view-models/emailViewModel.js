@@ -1,8 +1,8 @@
-// The email response class.
-export default class EmailResponse {
+// the email response class
+class EmailResponse {
     /**
-     * Create a email response model.
-     * @param {Object} email The email object.
+     * create a email response model
+     * @param {Object} email the email object
      */
     constructor(email) {
         this.id = email._id;
@@ -13,3 +13,5 @@ export default class EmailResponse {
         this.createdAt = email.createdAt;
     }
 }
+
+module.exports = EmailResponse;

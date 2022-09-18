@@ -1,4 +1,2 @@
-// Dependencies.
-
-// Local DB.
-export let emails = [];
+// local DB
+let emails = [];

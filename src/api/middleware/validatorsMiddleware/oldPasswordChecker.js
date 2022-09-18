@@ -1,42 +1,42 @@
-// Dependencies.
-import bcrypt from 'bcrypt';
-import express from 'express';
-import { BadRequestError, NotAcceptableError, NotFoundError } from '../../errors/apiErrors';
-import { getById as get } from '../../models/data-models/common';
+const bcrypt = require('bcrypt');
+const {
+    BadRequestError,
+    NotAcceptableError,
+    NotFoundError,
+} = require('../../errors/apiErrors');
+const { getById: get } = require('../../models/data-models/common');
+const { Request, Response } = require('express');
 
 /**
- * Check the old password is matched or not with the provided id of that user.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} _ The response object from express.
- * @param {Function} next The next middleware function.
+ * check the old password is matched or not with the provided id of that user
+ * @param {Request} req the request object from express
+ * @param {Response} _res the response object from express
+ * @param {Function} next the next middleware function
  */
-const oldPasswordChecker = async (req, _, next) => {
+module.exports = async (req, _res, next) => {
     try {
-        // Getting the password from the request body.
+        // getting the password from the request body
         const { oldPassword } = req.body;
-        // Getting the id from the request parameter.
+        // getting the id from the request parameter
         const { id } = req.params;
         if (!oldPassword) {
             throw new BadRequestError('"oldPassword" field is required.');
         }
-        // Getting the user.
+        // getting the user
         const user = await get(id, 'User');
-        // If the user is not found.
+        // if the user is not found
         if (!user) {
             throw new NotFoundError('User not found with the provided id.');
         }
-        // Validating the password.
+        // validating the password
         const isMatched = await bcrypt.compare(oldPassword, user.password);
         if (!isMatched) {
             throw new NotAcceptableError('Old password did not match.');
         }
-        // All okay.
+        // all okay
         next();
     } catch (error) {
-        // Passing the error to the next middleware.
+        // passing the error to the next middleware
         next(error);
     }
-}
-
-// Exporting the function.
-export default oldPasswordChecker;
+};

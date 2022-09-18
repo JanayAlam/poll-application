@@ -25,5 +25,5 @@ const options = {
     apis: ['../routes/includes/*.js', '../models/*.js'],
 };
 
-// Exporting the swagger jsdoc with options configured.
-export default swaggerJsdoc(options);
+// exporting the swagger jsdoc with options configured
+module.exports = swaggerJsdoc(options);

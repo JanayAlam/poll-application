@@ -1,13 +1,13 @@
-// Email Message class for sending email information.
+// email Message class for sending email information
 class EmailMessage {
     /**
-     * Constructor of email message class.
-     * @param {string} to The receiver email address.
-     * @param {string} subject The email subject.
-     * @param {string} bodyText The body of the email.
-     * @param {string} html The html string if there is need for html coding.
+     * constructor of email message class
+     * @param {string} to the receiver email address
+     * @param {string} subject the email subject
+     * @param {string} bodyText the body of the email
+     * @param {string} html the html string if there is need for html coding
      */
-    constructor(to, subject, bodyText, html=null) {
+    constructor(to, subject, bodyText, html = null) {
         this.to = to;
         this.from = process.env.MAIL_ADDRESS;
         this.subject = subject;
@@ -16,10 +16,10 @@ class EmailMessage {
     }
 
     /**
-     * Get email object.
-     * @returns a object of email.
+     * get email object
+     * @returns a object of email
      */
-     getEmailObject = () => ({
+    getEmailObject = () => ({
         to: this.to,
         from: this.from,
         subject: this.subject,
@@ -28,5 +28,5 @@ class EmailMessage {
     });
 }
 
-// Exporting the email message class.
-export default EmailMessage;
+// exporting the email message class
+module.exports = EmailMessage;

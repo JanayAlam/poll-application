@@ -1,105 +1,110 @@
-// Dependencies and modules.
-import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
-import EmailMessage from '../../email/emailMessage';
-import sendMail from '../../email/sendMail';
-import { generateCode } from '../../utils/generator';
-import { ConflictError, NotFoundError } from '../errors/apiErrors';
-import models from '../models/data-models';
-import viewModels from '../models/view-models';
-
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const { generateCode } = require('../../utils/generator');
+const { ConflictError, NotFoundError } = require('../errors/apiErrors');
+const models = require('../models/data-models');
+const viewModels = require('../models/view-models');
 
 /**
- * Save a email object into the database.
- * @param {models.Email} email The object that will be stored.
- * @returns {models.Email | ConflictError} Created email object or error.
+ * save a email object into the database
+ * @param {models.Email} email the object that will be stored
+ * @returns {models.Email | ConflictError} created email object or error
  */
-export const store = async email => {
-    // Checking the availability of the email address
+const store = async (email) => {
+    // checking the availability of the email address
     const fetchedEmail = await models.Email.findOne({ address: email.address });
-    // If the email address has been taken.
+    // if the email address has been taken
     if (fetchedEmail) {
         return {
-            error: new ConflictError('Email address has been already taken.'),
+            error: new ConflictError('Email address has been already taken'),
         };
     }
-    // Generating verification code.
+    // generating verification code
     const code = generateCode(6);
     const hashCode = await bcrypt.hash(code, 10);
-    // Creating model.
+    // creating model
     const model = new models.Email({
         address: email.address,
         verificationCode: hashCode,
     });
     if (email.userId) {
         model.user = email.userId;
-        // Updating the user
+        // updating the user
         await models.User.findOneAndUpdate(
             { _id: email.userId },
             {
                 $set: { email: model._id },
-            },
+            }
         );
     }
-    // Saving the model into the database.
+    // saving the model into the database
     await model.save();
-    // Sending email.
-    await __sendActivationCode(
-        model, code,
-        `Congratulations. Your account has been created. `
-        + `Now you need to activate your account to use the application.\n`
+    // sending email
+    __sendActivationCode(
+        model,
+        code,
+        `Congratulations. Your account has been created. ` +
+            `Now you need to activate your account to use the application.\n`
     );
-    // Getting ready the response.
+    // getting ready the response
     const responseEmail = new viewModels.EmailResponse(model);
-    // Returning the email model.
+    // returning the email model
     return responseEmail;
 };
 
 /**
- * Get all the emails from the database.
- * @returns Array of email objects.
+ * get all the emails from the database
+ * @returns Array of email objects
  */
-export const getAll = () => {
+const getAll = () => {
     return [];
 };
 
 /**
- * Get email by id.
- * @param {mongoose.ObjectId} id Id of the email object.
- * @returns {models.Email} The desire email object.
+ * get email by id
+ * @param {mongoose.ObjectId} id Id of the email object
+ * @returns {models.Email} The desire email object
  */
-export const get = async id => {
+const get = async (id) => {
     if (mongoose.Types.ObjectId.isValid(id)) {
         return {
-            error: new NotFoundError('Email not found with the provided id.'),
-        }
+            error: new NotFoundError('Email not found with the provided id'),
+        };
     }
     return await models.Email.findById(id);
 };
 
 /**
- * Update email by id.
- * @param {mongoose.ObjectId} id Id of the email object.
- * @returns {models.Email} Updated email object.
+ * update email by id
+ * @param {mongoose.ObjectId} id Id of the email object
+ * @returns {models.Email} updated email object
  */
-export const update = id => { };
+const update = (id) => {};
 
 /**
- * Delete email by id.
- * @param {mongoose.ObjectId} id Id of the email object.
- * @returns {models.Email} Deleted email object.
+ * delete email by id
+ * @param {mongoose.ObjectId} id id of the email object
+ * @returns {models.Email} deleted email object
  */
-export const destroy = async id => {
-    // Deleting the email object from the database.
+const destroy = async (id) => {
+    // deleting the email object from the database
     const deletedEmail = await models.Email.findOneAndDelete({
-        _id: id
+        _id: id,
     });
-    // If the email is not in the database.
+    // if the email is not in the database
     if (!deletedEmail) return null;
-    // Updating the modifiedAt property.
+    // Updating the modifiedAt property
     deletedEmail.modifiedAt = Date.now();
-    // Getting ready the response.
+    // getting ready the response
     const responseEmail = new viewModels.EmailResponse(deletedEmail);
-    // Returning the email model.
+    // returning the email model
     return responseEmail;
+};
+
+module.exports = {
+    store,
+    getAll,
+    get,
+    update,
+    destroy,
 };

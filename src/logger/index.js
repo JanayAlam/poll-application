@@ -1,9 +1,8 @@
-// Modules.
-import errorLogger from './errorLogHandler';
-import infoLogger from './infoLogHandler';
+const errorLogger = require('./errorLogHandler');
+const infoLogger = require('./infoLogHandler');
 
-// Exporting all the logger middleware.
-export default {
+// exporting all the logger middleware
+module.exports = {
     infoLogger,
     errorLogger,
 };

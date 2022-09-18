@@ -1,20 +1,19 @@
-// Dependencies.
-import bcrypt from 'bcrypt';
-import express from 'express';
-import { generateJWTToken } from '../../utils/generator';
-import { AuthenticationError, BadRequestError } from '../errors/apiErrors';
-import models from '../models/data-models';
-import responseModels from '../models/view-models';
-import { store, updatePassword } from '../services/authService';
+const bcrypt = require('bcrypt');
+const express = require('express');
+const { generateJWTToken } = require('../../utils/generator');
+const { AuthenticationError, BadRequestError } = require('../errors/apiErrors');
+const models = require('../models/data-models');
+const responseModels = require('../models/view-models');
+const { store, updatePassword } = require('../services/authService');
 
 /**
- * Create user controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
+ * create user controller function
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} res the response object from express
+ * @param {Function} next the next middleware function
  */
-export const registerHandler = async (req, res, next) => {
-    // Getting the request body.
+const registerHandler = async (req, res, next) => {
+    // getting the request body
     const body = req.body;
     const user = {
         username: body.username,
@@ -28,104 +27,119 @@ export const registerHandler = async (req, res, next) => {
         lastName: body.lastName,
     };
     try {
-        // Creating a new user in the database.
+        // creating a new user in the database
         const model = await store(user, email, profile);
-        // Generate a JWT token.
+        // generate a JWT token.
         const token = await generateJWTToken(user);
         model.setToken(token);
-        // Showing the new user object to the client.
+        // showing the new user object to the client
         res.status(201).json(model);
     } catch (error) {
-        // Passing error to next middleware.
+        // passing error to next middleware
         next(error);
     }
-}
+};
 
 /**
- * Log in to the account controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
+ * log in to the account controller function
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} res the response object from express
+ * @param {Function} next the next middleware function
  */
-export const loginHandler = async (req, res, next) => {
-    // Extract the information from the request object.
+const loginHandler = async (req, res, next) => {
+    // extract the information from the request object
     const { username, password } = req.body;
     try {
-        // Finding the user in the database.
-        const user = await models.User.findOne({ username }).populate({
-            path: 'email',
-        }).populate({ path: 'profile' });
-        // If the user is not found.
+        // finding the user in the database
+        const user = await models.User.findOne({ username })
+            .populate({
+                path: 'email',
+            })
+            .populate({ path: 'profile' });
+        // if the user is not found
         if (!user) throw new AuthenticationError();
-        // Validate the credentials.
+        // validate the credentials
         const isMatched = await bcrypt.compare(password, user.password);
-        // If the credentials are not valid.
+        // if the credentials are not valid
         if (!isMatched) throw new AuthenticationError();
-        // Generate a JWT token.
+        // generate a JWT token
         const token = await generateJWTToken(user);
-        // Send response to the client.
+        // send response to the client
         res.status(200).json(
-            new responseModels.AuthUserResponse(user, user.email, user.profile, token)
+            new responseModels.AuthUserResponse(
+                user,
+                user.email,
+                user.profile,
+                token
+            )
         );
     } catch (error) {
         next(error);
     }
-}
+};
 
 /**
- * Change password controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
+ * change password controller function
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} res the response object from express
+ * @param {Function} next the next middleware function
  */
-export const changePasswordHandler = async (req, res, next) => {
+const changePasswordHandler = async (req, res, next) => {
     try {
-        // Fetch the user from the database.
+        // fetch the user from the database
         let user = req.user;
-        // Extracting the passwords from the request boy.
+        // extracting the passwords from the request boy
         const { oldPassword, newPassword } = req.body;
-        // Checking the old password.
+        // checking the old password
         const isMatched = await bcrypt.compare(oldPassword, user.password);
         if (!isMatched) {
-            throw new BadRequestError('Old password did not matched.');
+            throw new BadRequestError('Old password did not matched');
         }
-        // Updating the password.
+        // updating the password
         user.password = newPassword;
         const updatedUser = await updatePassword(user);
-        // Sending the response to the client.
+        // sending the response to the client
         res.status(200).json(updatedUser);
     } catch (error) {
         next(error);
     }
-}
+};
 
 /**
- * Forget password controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
+ * forget password controller function
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} res the response object from express
+ * @param {Function} next the next middleware function
  */
-export const forgetPasswordHandler = async (req, res, next) => {
+const forgetPasswordHandler = async (req, res, next) => {
     try {
-        // Extracting the user.
+        // extracting the user
         // TODO
         res.status(200);
     } catch (error) {
         next(error);
     }
-}
+};
 
 /**
- * Reset password controller function.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
+ * reset password controller function
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} res the response object from express
+ * @param {Function} next the next middleware function
  */
-export const resetPasswordHandler = async (req, res, next) => {
+const resetPasswordHandler = async (req, res, next) => {
     try {
-        // Change handler.
+        // change handler
         res.status(200);
     } catch (error) {
         next(error);
     }
-}
+};
+
+module.exports = {
+    registerHandler,
+    loginHandler,
+    changePasswordHandler,
+    forgetPasswordHandler,
+    resetPasswordHandler,
+};

@@ -1,21 +1,21 @@
-// Dependencies.
-import viewModels from '.';
+const EmailResponse = require('./emailViewModel');
+const ProfileResponse = require('./profileViewModel');
 
-// The email response class.
-export default class AuthUserResponse {
+// the email response class
+class AuthUserResponse {
     /**
-     * Create a user response model for a newly registered or logged in user.
-     * @param {Object} user The user object.
-     * @param {Object} email The email object.
-     * @param {Object} profile The profile object.
+     * create a user response model for a newly registered or logged in user
+     * @param {Object} user the user object
+     * @param {Object} email the email object
+     * @param {Object} profile the profile object
      */
     constructor(user, email, profile, token = null) {
         this.user = {
             id: user._id,
             username: user.username,
             isSuperuser: user.isSuperuser,
-            email: new viewModels.EmailResponse(email),
-            profile: new viewModels.ProfileResponse(profile),
+            email: new EmailResponse(email),
+            profile: new ProfileResponse(profile),
             modifiedAt: user.modifiedAt,
             createdAt: user.createdAt,
         };
@@ -23,10 +23,12 @@ export default class AuthUserResponse {
     }
 
     /**
-     * Set the token value in the object.
-     * @param {string} token The token string which will be stored.
+     * set the token value in the object
+     * @param {string} token the token string which will be stored
      */
-    setToken = token => {
+    setToken = (token) => {
         this.token = token;
-    }
+    };
 }
+
+module.exports = AuthUserResponse;

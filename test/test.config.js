@@ -1,11 +1,9 @@
-// Dependencies.
-import supertest from 'supertest';
-// Modules.
-import app from '../src/app';
+const supertest = require('supertest');
 
+const app = require('../src/app');
 
-export default () => {
+module.exports = () => {
     const request = supertest(app);
-    // Returning the request instance.
+    // returning the request instance
     return request;
-}
+};

@@ -1,41 +1,33 @@
-// Importing application.
-import app from './app';
-// Modules.
-import dbConnection from './database/connection';
-import log from './utils/colorizeLog';
-import universalVariables from './utils/universalVariables';
+const app = require('./app');
+const dbConnection = require('./database/connection');
+const log = require('./utils/colorizeLog');
+const constant = require('./utils/constant');
 
-/** Connecting the database and running the application. */
+/** connecting the database and running the application */
 const init = async () => {
     try {
-        // Connecting the database.
+        // connecting the database
         await dbConnection('App will be running soon...');
-        // The port for the application.
+        // the port for the application
         const PORT = process.env.PORT || 8080;
         const DOMAIN = process.env.DOMAIN_NAME || 'localhost';
-        // Running the application.
+        // running the application
         await app.listen(PORT);
-        // Success message.
+        // success message
         log(
             `Server running on port ${PORT}`,
-            universalVariables.CONSOLE_LOG_CATEGORY.success
+            constant.CONSOLE_LOG_CATEGORY.success
         );
         log(
             `Documentation available at http://${DOMAIN}:${PORT}`,
-            universalVariables.CONSOLE_LOG_CATEGORY.info
+            constant.CONSOLE_LOG_CATEGORY.info
         );
     } catch (error) {
-        // Error occurred.
-        log(
-            `Error: ${error.message}`,
-            universalVariables.CONSOLE_LOG_CATEGORY.error
-        );
-        log(
-            'Exiting the application...',
-            universalVariables.CONSOLE_LOG_CATEGORY.info
-        );
+        // error occurred
+        log(`Error: ${error.message}`, constant.CONSOLE_LOG_CATEGORY.error);
+        log('Exiting the application...', constant.CONSOLE_LOG_CATEGORY.info);
         throw error;
     }
 };
 
-init(); // Invoking the function which will start running the application.
+init(); // invoking the function which will start running the application

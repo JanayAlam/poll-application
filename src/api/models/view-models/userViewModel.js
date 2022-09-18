@@ -1,8 +1,8 @@
-// The user response class.
-export default class UserResponse {
+// the user response class
+class UserResponse {
     /**
-     * Create a user response model.
-     * @param {Object} user The user object.
+     * create a user response model
+     * @param {Object} user the user object
      */
     constructor(user) {
         this.id = user._id;
@@ -14,3 +14,5 @@ export default class UserResponse {
         this.createdAt = user.createdAt;
     }
 }
+
+module.exports = UserResponse;

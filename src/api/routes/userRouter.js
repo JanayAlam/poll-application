@@ -1,23 +1,26 @@
-// Dependencies.
-import express from 'express';
-import {
+const router = require('express').Router();
+const {
     getAllHandler,
-    getHandler, putHandler
-} from '../controllers/userController';
-import validateBody from '../middleware/validatorsMiddleware/bodyValidationMiddleware';
-import objectIdValidatorMiddleware from '../middleware/validatorsMiddleware/objectIdValidatorMiddleware';
-import reqModels from '../models/request-models';
+    getHandler,
+    putHandler,
+} = require('../controllers/userController');
+const validateBody = require('../middleware/validatorsMiddleware/bodyValidationMiddleware');
+const objectIdValidatorMiddleware = require('../middleware/validatorsMiddleware/objectIdValidatorMiddleware');
+const reqModels = require('../models/request-models');
 
-// Router instance.
-const router = express.Router();
-
-
-// Route: /api/v1/users.
+// GET: /api/v1/users
 router.get('/', getAllHandler);
-// Route: /api/v1/users/:id.
-router.get('/:id', objectIdValidatorMiddleware, getHandler);
-// Route: /api/v1/users/:id.
-router.put('/:id', objectIdValidatorMiddleware, validateBody(reqModels.userRequestModel), putHandler);
 
-// Exporting the routes.
-export default router;
+// GET: /api/v1/users/:id
+router.get('/:id', objectIdValidatorMiddleware, getHandler);
+
+// PUT: /api/v1/users/:id
+router.put(
+    '/:id',
+    objectIdValidatorMiddleware,
+    validateBody(reqModels.userRequestModel),
+    putHandler
+);
+
+// exporting the routes
+module.exports = router;

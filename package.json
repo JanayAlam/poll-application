@@ -4,8 +4,8 @@
   "main": "./src/server.js",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=production node -r esm",
-    "dev": "nodemon -L -r esm",
+    "start": "node",
+    "dev": "nodemon",
     "test": "jest --forceExit",
     "test:watch": "jest --watch"
   },
@@ -14,7 +14,6 @@
     "chalk": "2.4.1",
     "cors": "^2.8.5",
     "dotenv": "^14.3.2",
-    "esm": "^3.2.25",
     "express": "^4.17.2",
     "express-winston": "^4.2.0",
     "joi": "^17.6.0",

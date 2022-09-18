@@ -1,8 +1,7 @@
-// Importing routes.
-import authRouter from './authRouter';
-import userRouter from './userRouter';
+const authRouter = require('./authRouter');
+const userRouter = require('./userRouter');
 
-// All the root routes.
+// all the root routes
 const routes = [
     {
         path: '/auth',
@@ -14,8 +13,8 @@ const routes = [
     },
 ];
 
-// Exporting the routes with basic prefix.
-export default app => {
+// exporting the routes with basic prefix
+module.exports = (app) => {
     routes.forEach((route) => {
         if (route.path === '/api/v1') {
             app.get(route.path, route.router);

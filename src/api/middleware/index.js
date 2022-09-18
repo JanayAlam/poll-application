@@ -1,28 +1,27 @@
-// Dependencies.
-import cors from 'cors';
-import express from 'express';
-// Passport
-import passport from 'passport';
-// Documentation dependencies.
-import swaggerUi from 'swagger-ui-express';
-// Loggers.
-import logger from '../../logger';
-import swaggerSpec from '../../utils/swagger';
-// Routes.
-import setRoutes from '../routes';
-// Other middleware.
-import setCorrelationIdMiddleware from './correlationMiddleware';
+const cors = require('cors');
+const express = require('express');
 
-// Some options for configure the cors
+const passport = require('passport');
+
+const swaggerUi = require('swagger-ui-express');
+
+const logger = require('../../logger');
+const swaggerSpec = require('../../utils/swagger');
+
+const setRoutes = require('../routes');
+
+const setCorrelationIdMiddleware = require('./correlationMiddleware');
+
+// some options for configure the cors
 const corsOptions = {
     origin:
         `http://${process.env.CROSS_ORIGIN_HOST || 'localhost'}` +
         `:${process.env.CROSS_ORIGIN_PORT || 3000}/`,
-    // Some legacy browsers (IE11, various SmartTVs) choke on 204.
+    // some legacy browsers (IE11, various SmartTVs) choke on 204
     optionsSuccessStatus: 200,
 };
 
-// The middleware array
+// the middleware array
 const allMiddleware = [
     express.json(),
     setCorrelationIdMiddleware,
@@ -31,26 +30,26 @@ const allMiddleware = [
     passport.initialize(),
 ];
 
-/** Activating the middleware */
-export default (app) => {
-    // Info logger if the node environment is set to 'test'.
+/** activating the middleware */
+module.exports = (app) => {
+    // info logger if the node environment is set to 'test'
     if (process.env.ENVIRONMENT !== 'TEST') app.use(logger.infoLogger);
-    // Other middleware.
+    // other middleware
     allMiddleware.forEach((middleware) => {
         app.use(middleware);
     });
-    // Setting up the passport options.
+    // setting up the passport options
     require('./passportConfigMiddleware');
-    // Set health route.
-    app.use('/health', (req, res, next) => {
+    // set health route
+    app.use('/health', (_req, res, _next) => {
         res.status(200).json({
-            message: 'Api health is okay.',
+            message: 'Api health is okay',
         });
     });
-    // Setting up the routes.
+    // setting up the routes
     setRoutes(app);
-    // Documentation route setup.
+    // documentation route setup
     app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    // Error logging if the node environment is set to 'test'.
+    // error logging if the node environment is set to 'test'
     if (process.env.ENVIRONMENT !== 'TEST') app.use(logger.errorLogger);
 };

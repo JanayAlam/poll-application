@@ -1,13 +1,12 @@
-// Dependencies.
-import express from 'express';
+const { Request, Response } = require('express');
 
 /**
- * Set correlation id if not provided and bind the correlation id with response.
- * @param {express.Request} req The request object from express.
- * @param {express.Response} res The response object from express.
- * @param {Function} next The next middleware function.
+ * set correlation id if not provided and bind the correlation id with response
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
+ * @param {Function} next the next middleware function
  */
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
     try {
         let correlationId = req.headers['x-correlation-id'];
         if (!correlationId) {
@@ -19,4 +18,4 @@ export default (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};

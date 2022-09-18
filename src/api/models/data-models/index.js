@@ -1,17 +1,16 @@
-// Importing models.
-import Ban from './ban';
-import Choice from './choice';
-import Comment from './comment';
-import Email from './email';
-import Mute from './mute';
-import Notification from './notification';
-import Poll from './poll';
-import Profile from './profile';
-import Reply from './reply';
-import User from './user';
+const Ban = require('./ban');
+const Choice = require('./choice');
+const Comment = require('./comment');
+const Email = require('./email');
+const Mute = require('./mute');
+const Notification = require('./notification');
+const Poll = require('./poll');
+const Profile = require('./profile');
+const Reply = require('./reply');
+const User = require('./user');
 
-// Exporting all the models.
-export default {
+// exporting all the models
+module.exports = {
     User,
     Profile,
     Email,
@@ -22,4 +21,4 @@ export default {
     Notification,
     Poll,
     Reply,
-}
+};

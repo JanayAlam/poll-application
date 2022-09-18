@@ -1,41 +1,38 @@
-// Dependencies.
-import expressWinston from 'express-winston';
-import winston from 'winston';
-// Requiring `winston-mongodb` will expose 'winston.transports.DailyRotateFile'.
-import 'winston-daily-rotate-file';
-// Requiring `winston-mongodb` will expose 'winston.transports.MongoDB'.
-import 'winston-mongodb';
-import universalVariables from '../utils/universalVariables';
+const expressWinston = require('express-winston');
+const winston = require('winston');
+require('winston-daily-rotate-file');
+require('winston-mongodb');
+const constant = require('../utils/constant');
 
-
-// A configuration for transport of log file.
+// a configuration for transport of log file
 const transportsFileConfig = {
     level: 'error',
-    datePattern: universalVariables.LOG_DATE_FORMATE,
-    filename: `${universalVariables.LOG_FILE_DIR}/error-log-%DATE%.log`,
+    datePattern: constant.LOG_DATE_FORMATE,
+    filename: `${constant.LOG_FILE_DIR}/error-log-%DATE%.log`,
 };
 
-// A configuration for transport of log schema in the database.
+// a configuration for transport of log schema in the database
 const transportsMongoDbConfig = {
-    db: `${universalVariables.DATABASE_BASE_URI}/${process.env.DB_NAME}`,
-    options: universalVariables.MONGODB_OPTIONS,
+    db: `${process.env.DB_URI || 'mongodb://localhost:27017'}/${
+        process.env.DB_NAME
+    }`,
+    options: constant.MONGODB_OPTIONS,
     metaKey: 'meta',
-}
+};
 
-// Exporting the winston configured object.
-export default expressWinston.errorLogger({
+// exporting the winston configured object
+module.exports = expressWinston.errorLogger({
     transports: [
-        // Writing on the console.
+        // writing on the console
         new winston.transports.Console(),
-        // Local file.
+        // local file
         new winston.transports.DailyRotateFile(transportsFileConfig),
-        // Mongodb schema.
+        // MongoDB schema
         new winston.transports.MongoDB(transportsMongoDbConfig),
     ],
-    format: winston
-        .format.combine(
-            winston.format.colorize(),
-            winston.format.json()
-        ),
+    format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.json()
+    ),
     meta: true,
 });

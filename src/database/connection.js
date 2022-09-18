@@ -1,16 +1,17 @@
-import mongoose from 'mongoose';
-// Modules.
-import log from '../utils/colorizeLog';
-import universalVariables from '../utils/universalVariables';
+const mongoose = require('mongoose');
+const log = require('../utils/colorizeLog');
+const constant = require('../utils/constant');
 
 /**
- * Connect the application with MongoDB.
- * @param {string} message A message that will be print in console after a successful connection.
+ * connect the application with MongoDB
+ * @param {string} message A message that will be print in console after a successful connection
  */
-export default async (message) => {
+module.exports = async (message) => {
     try {
-        const URI = `${universalVariables.DATABASE_BASE_URI}/${process.env.DB_NAME}`;
-        await mongoose.connect(URI, universalVariables.MONGODB_OPTIONS);
+        const URI = `${process.env.DB_URI || 'mongodb://localhost:27017'}/${
+            process.env.DB_NAME
+        }`;
+        await mongoose.connect(URI, constant.MONGODB_OPTIONS);
         log(`Database connected! ${message}`, 'success');
     } catch (error) {
         log(`Database connection error: ${error.message}`, 'error');
