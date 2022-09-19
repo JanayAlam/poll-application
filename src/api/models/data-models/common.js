@@ -53,7 +53,7 @@ const store = async (data, modelName) => {
         const code = generateCode(6);
         const hashedCode = await getStringHash(code);
         model.verificationCode = hashedCode;
-        await __sendActivationCode(
+        __sendActivationCode(
             model,
             code,
             `Congratulations. Your account has been created. ` +

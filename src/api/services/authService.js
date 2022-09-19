@@ -3,6 +3,7 @@ const { ConflictError } = require('../errors/apiErrors');
 const {
     store: storeData,
     update: updateData,
+    getById: getByIdData,
 } = require('../models/data-models/common');
 const viewModels = require('../models/view-models');
 const {
@@ -39,16 +40,14 @@ const store = async (user, email, profile) => {
         user.password = hashedPassword;
         // creating the user model
         let userModel = await storeData(user, MODEL_NAME_USER);
-        // updating the models payload
-        email.user = userModel._id;
-        profile.user = userModel._id;
         // creating the email and profile model
         const emailModel = await storeData(email, MODEL_NAME_EMAIL);
         const profileModel = await storeData(profile, MODEL_NAME_PROFILE);
         // updating the user model
         userModel.profile = profileModel._id;
         userModel.email = emailModel._id;
-        userModel = await updateData(userModel, MODEL_NAME_USER);
+        // userModel = await updateData(userModel, MODEL_NAME_USER);
+        userModel.save();
         // returning the response models
         return new viewModels.AuthUserResponse(
             userModel,
@@ -93,8 +92,23 @@ const forgetPassword = async (username) => {
     // TODO
 };
 
+/**
+ * get me service of a user
+ * @param {ObjectId} userId the id of the user
+ * @returns {viewModels.UserResponse} the user model itself
+ */
+const getMe = async (userId) => {
+    const user = await getByIdData(userId, MODEL_NAME_USER);
+    const email = await getByIdData(user.email, MODEL_NAME_EMAIL);
+    const profile = await getByIdData(user.profile, MODEL_NAME_PROFILE);
+
+    if (!user || !email || !profile) return null;
+    return new viewModels.AuthUserResponse(user, email, profile);
+};
+
 module.exports = {
     store,
     updatePassword,
     forgetPassword,
+    getMe,
 };

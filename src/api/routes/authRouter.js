@@ -3,6 +3,7 @@ const {
     changePasswordHandler,
     loginHandler,
     registerHandler,
+    getMeHandler,
 } = require('../controllers/authController');
 const authenticate = require('../middleware/validatorsMiddleware/authenticate');
 const validateBody = require('../middleware/validatorsMiddleware/bodyValidationMiddleware');
@@ -17,6 +18,9 @@ router.post(
 
 // POST: /api/v1/auth/login
 router.post('/login', validateBody(reqModels.loginRequestModel), loginHandler);
+
+// GET: /api/v1/auth/get-me
+router.get('/get-me', authenticate, getMeHandler)
 
 // PUT: /api/v1/auth/change-password
 router.put(

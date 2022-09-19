@@ -19,7 +19,9 @@ class AuthUserResponse {
             modifiedAt: user.modifiedAt,
             createdAt: user.createdAt,
         };
-        this.token = token;
+        if (token) {
+            this.token = token;
+        }
     }
 
     /**

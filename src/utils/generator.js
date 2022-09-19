@@ -50,8 +50,6 @@ const generateJWTToken = async (user) => {
             process.env.JWT_SECRET,
             { expiresIn: '2d' }
         );
-        // adding 'Bearer' keyword in front of the token
-        token = `Bearer ${token}`;
         // returning the token
         return token;
     } catch (error) {

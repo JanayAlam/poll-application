@@ -1,10 +1,14 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
 const { generateJWTToken } = require('../../utils/generator');
-const { AuthenticationError, BadRequestError } = require('../errors/apiErrors');
+const {
+    AuthenticationError,
+    BadRequestError,
+    NotFoundError,
+} = require('../errors/apiErrors');
 const models = require('../models/data-models');
 const responseModels = require('../models/view-models');
-const { store, updatePassword } = require('../services/authService');
+const { store, updatePassword, getMe } = require('../services/authService');
 
 /**
  * create user controller function
@@ -136,10 +140,28 @@ const resetPasswordHandler = async (req, res, next) => {
     }
 };
 
+/**
+ * get me controller function
+ * @param {express.Request} req the request object from express
+ * @param {express.Response} res the response object from express
+ * @param {Function} next the next middleware function
+ */
+const getMeHandler = async (req, res, next) => {
+    const { _id } = req.user;
+    try {
+        const user = await getMe(_id);
+        if (!user) throw new NotFoundError('User not found');
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     registerHandler,
     loginHandler,
     changePasswordHandler,
     forgetPasswordHandler,
     resetPasswordHandler,
+    getMeHandler,
 };

@@ -18,10 +18,6 @@ const emailSchema = new Schema({
         trim: true,
         required: true,
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-    },
     modifiedAt: {
         type: Schema.Types.Date,
         default: Date.now(),

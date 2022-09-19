@@ -33,7 +33,7 @@ const getHandler = async (req, res, next) => {
         // if the user is null
         if (!user)
             throw new NotFoundError(
-                'User not found with the provided username.'
+                'User not found with the provided username'
             );
         // showing the user object to the client
         res.status(200).json(user);
@@ -62,7 +62,7 @@ const putHandler = async (req, res, next) => {
         // If the updated user is null
         if (!updatedUser)
             throw new NotFoundError(
-                'User not found with the provided username.'
+                'User not found with the provided username'
             );
         // showing the updated user to the client
         res.status(200).json(updatedUser);
