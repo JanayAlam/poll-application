@@ -15,8 +15,8 @@ const setCorrelationIdMiddleware = require('./correlationMiddleware');
 // some options for configure the cors
 const corsOptions = {
     origin:
-        `http://${process.env.CROSS_ORIGIN_HOST || 'localhost'}` +
-        `:${process.env.CROSS_ORIGIN_PORT || 3000}/`,
+        `http://${process.env.CROSS_ORIGIN_HOST || '127.0.0.1'}` +
+        `:${process.env.CROSS_ORIGIN_PORT || 5173}`,
     // some legacy browsers (IE11, various SmartTVs) choke on 204
     optionsSuccessStatus: 200,
 };
