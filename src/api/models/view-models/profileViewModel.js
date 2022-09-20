@@ -2,13 +2,12 @@
 class ProfileResponse {
     /**
      * create a user response model
-     * @param {Object} user the user object
+     * @param profile
      */
     constructor(profile) {
         this.id = profile._id;
         this.firstName = profile.firstName;
-        this.profilePhoto = profile.profilePhoto;
-        this.profilePhoto = profile.profilePhoto;
+        this.profilePhoto = `http://localhost:8080/${profile.profilePhoto}`;
         this.user = profile.user;
         this.polls = profile.polls;
         this.notifications = profile.notifications;

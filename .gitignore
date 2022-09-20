@@ -3,6 +3,7 @@ node_modules/
 .env
 coverage/
 .yarn/
+.idea/
 
 /src/logger/log-files/
 
