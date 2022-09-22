@@ -24,12 +24,12 @@ const generateCode = (size) => {
  * @returns A promise to be either resolved with the encrypted
  *  data salt or rejected with an Error
  */
-const getStringHash = async (str) => {
+const getStringHash = (str) => {
     try {
         // hashing the string
-        return await bcrypt.hash(str, 10);
+        return bcrypt.hash(str, 10);
     } catch (error) {
-        // error ocurred
+        // error occurred
         throw error;
     }
 };
@@ -39,19 +39,17 @@ const getStringHash = async (str) => {
  * @param {Object} user the user object to form a payload
  * @returns {string} the generated token
  */
-const generateJWTToken = async (user) => {
+const generateJWTToken = (user) => {
     try {
-        // creating a token
-        let token = await jwt.sign(
+        // creating and returning the token
+        return jwt.sign(
             {
                 id: user._id,
                 username: user.username,
             },
             process.env.JWT_SECRET,
-            { expiresIn: '2d' }
+            {expiresIn: '2d'}
         );
-        // returning the token
-        return token;
     } catch (error) {
         // error ocurred
         throw error;

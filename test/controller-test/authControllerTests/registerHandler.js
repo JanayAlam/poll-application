@@ -3,24 +3,27 @@ const testConfig = require('../../test.config');
 const request = testConfig(); // the request instance
 
 //  setting up the mock file and increasing the timeout
-jest.mock('../../../src/api/services/userService.js');
+jest.mock('../../../src/api/services/authService.js');
 jest.setTimeout(10000);
 
 // base URI
 const BASE_URI = '/api/v1';
 
-// testing the user controllers 'postHandler' function
-describe('POST /users test suite', () => {
+// testing the user controllers 'registerHandler' function
+describe('POST /auth/register test suite', () => {
     // in success case
     it('should response with 201 status code when all things goes well', async () => {
         const model = {
+            firstName: 'Alen',
+            lastName: 'Walker',
             username: 'username01',
-            email: 'email01@gmail.com',
+            email: 'alen@gmail.com',
             password: 'password01',
+            confirmPassword: 'password01',
         };
-        const response = await request.post(`${BASE_URI}/users`).send(model);
+        const response = await request.post(`${BASE_URI}/auth/register`).send(model);
         // the user object
-        const user = response.body;
+        const user = response.body.user;
         // response status should be 201
         expect(response.status).toBe(201);
         // id of the user should be 24 characters long
@@ -32,7 +35,7 @@ describe('POST /users test suite', () => {
         expect(user.isSuperuser).not.toBeUndefined();
         // 'isSuperuser' should be false
         expect(user.isSuperuser).not.toBeTruthy();
-        // Should not return back the password
+        // Should not return the password
         expect(user.password).toBeUndefined();
         // response body should have email property
         expect(user.email).not.toBeUndefined();
