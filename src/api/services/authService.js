@@ -130,6 +130,21 @@ const forgetPassword = async (emailAddress) => {
 };
 
 /**
+ * reset password service of a user
+ * @param {ObjectId} userId the id of the user
+ * @param {string} token the token for the reset request
+ * @param {string} password the password of the user
+ * @returns {viewModels.UserResponse} the user model itself
+ */
+const resetPassword = async (userId, token, password) => {
+    try {
+        // TODO
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
  * get me service of a user
  * @param {ObjectId} userId the id of the user
  * @returns {viewModels.UserResponse} the user model itself
@@ -147,5 +162,6 @@ module.exports = {
     store,
     updatePassword,
     forgetPassword,
+    resetPassword,
     getMe,
 };
