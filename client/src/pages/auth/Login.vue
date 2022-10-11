@@ -111,7 +111,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import ForgetPasswordModal from '../../components/auth/ForgetPasswordModal.vue';
 import FormResetVue from '../../components/form/FormReset.vue';
-import allRules from './utils.js';
+import { allRules } from './utils.js';
 
 document.title = 'Login';
 const defaultFormState = {

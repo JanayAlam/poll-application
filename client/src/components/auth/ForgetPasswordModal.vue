@@ -50,7 +50,7 @@ import { Close, Eleme, Promotion } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import allRules from '../../pages/auth/utils.js';
+import { allRules } from '../../pages/auth/utils.js';
 
 export default {
     props: ['forgetPasswordDialog', 'toggleForgetPasswordDialog'],

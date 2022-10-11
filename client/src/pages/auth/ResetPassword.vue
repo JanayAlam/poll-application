@@ -7,7 +7,9 @@
                         <h1 class="display-6 fw-bold text-primary">
                             Reset Password
                         </h1>
-                        <p>Set up a new password to get access of your account</p>
+                        <p>
+                            Set up a new password to get access of your account
+                        </p>
                         <hr class="text-primary" />
                     </div>
                     <el-form
@@ -21,6 +23,7 @@
                     >
                         <el-form-item label="Password" prop="password">
                             <el-input
+                                type="password"
                                 v-model="resetPasswordState.password"
                                 placeholder="Please enter your username"
                                 clearable
@@ -31,11 +34,28 @@
                             prop="confirmPassword"
                         >
                             <el-input
+                                type="password"
                                 v-model="resetPasswordState.confirmPassword"
                                 placeholder="Please retype your password"
                                 clearable
                             />
                         </el-form-item>
+                        <template v-if="!isSubmitButtonLoading">
+                            <el-button type="primary">
+                                <el-icon :size="16">
+                                    <Select />
+                                </el-icon>
+                                <span class="ms-1">Update password</span>
+                            </el-button>
+                            <form-reset-vue :formRef="resetPasswordFormRef" />
+                        </template>
+                        <el-button
+                            v-else
+                            type="primary"
+                            :loading-icon="Eleme"
+                            loading
+                            >Processing</el-button
+                        >
                     </el-form>
                 </el-card>
             </div>
@@ -44,11 +64,13 @@
 </template>
 
 <script setup>
+import { Eleme, Select } from '@element-plus/icons-vue';
 import { ElNotification } from 'element-plus';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import allRules from './utils.js';
+import FormResetVue from '../../components/form/FormReset.vue';
+import { allRules } from './utils.js';
 
 document.title = 'Reset password';
 
@@ -65,9 +87,26 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+const validatePassword = (_rule, value, callback) => {
+    if (value === '') {
+        callback(new Error('Please input confirm password'));
+    } else if (value !== resetPasswordState.value.password) {
+        callback(new Error('Confirm password does not matched'));
+    } else {
+        callback();
+    }
+};
+
 const rules = ref({
     password: allRules.password,
-    confirmPassword: allRules.confirmPassword,
+    confirmPassword: [
+        {
+            required: true,
+            message: 'Please retype the password',
+            trigger: 'blur',
+        },
+        { validator: validatePassword, trigger: 'blur' },
+    ],
 });
 
 const submitHandler = () => {

@@ -1,4 +1,4 @@
-export default {
+export const allRules = {
     firstName: [
         {
             required: true,

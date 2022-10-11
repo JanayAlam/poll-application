@@ -124,7 +124,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import FormResetVue from '../../components/form/FormReset.vue';
-import allRules from './utils.js';
+import { allRules } from './utils.js';
 
 document.title = 'Register';
 const defaultFormState = {
