@@ -4,7 +4,7 @@ const Joi = require('joi');
 const schema = Joi.object({
     newPassword: Joi.string().min(6).required(),
     confirmPassword: Joi.any()
-        .equal(Joi.ref('password'))
+        .equal(Joi.ref('newPassword'))
         .required()
         .label('confirmPassword')
         .options({

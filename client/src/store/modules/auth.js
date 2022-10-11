@@ -87,8 +87,8 @@ const auth = {
         ) => {
             try {
                 await axios.patch(`/auth/reset-password/u/${userId}/${token}`, {
-                    password,
-                    confirmPassword,
+                    newPassword: password,
+                    confirmPassword: confirmPassword,
                 });
                 return true;
             } catch (error) {

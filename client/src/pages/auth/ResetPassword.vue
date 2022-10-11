@@ -18,7 +18,6 @@
                         :model="resetPasswordState"
                         ref="resetPasswordFormRef"
                         :rules="rules"
-                        @submit="submitHandler"
                         status-icon
                     >
                         <el-form-item label="Password" prop="password">
@@ -41,7 +40,7 @@
                             />
                         </el-form-item>
                         <template v-if="!isSubmitButtonLoading">
-                            <el-button type="primary">
+                            <el-button type="primary" @click="submitHandler">
                                 <el-icon :size="16">
                                     <Select />
                                 </el-icon>
@@ -127,7 +126,8 @@ const submitHandler = () => {
                 });
                 router.push({ name: 'login' });
             } catch (error) {
-                loginState.value.password = '';
+                resetPasswordState.value.password = '';
+                resetPasswordState.value.confirmPassword = '';
                 ElNotification.error({
                     title: 'Could not changed the password',
                     message: error.message,
