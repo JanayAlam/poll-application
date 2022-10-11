@@ -7,6 +7,7 @@
                 :model="loginState"
                 ref="loginFormRef"
                 :rules="rules"
+                @submit="submitHandler"
                 status-icon
             >
                 <div class="row" style="min-height: 333px">
@@ -75,7 +76,6 @@
                             <template v-if="!isSubmitButtonLoading">
                                 <el-button
                                     type="primary"
-                                    @click="submitHandler"
                                 >
                                     <el-icon :size="16">
                                         <Key />

@@ -68,4 +68,16 @@ export default {
             trigger: 'blur',
         },
     ],
+    confirmPassword: [
+        {
+            required: true,
+            message: 'Please input password',
+            trigger: 'blur',
+        },
+        {
+            min: 6,
+            message: 'Length should be at least 6',
+            trigger: 'blur',
+        },
+    ],
 };

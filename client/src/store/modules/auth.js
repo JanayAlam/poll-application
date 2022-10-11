@@ -70,9 +70,25 @@ const auth = {
         },
         forgetPassword: async (_, { email }) => {
             try {
-                console.log(email);
                 await axios.patch('/auth/forget-password', {
                     email,
+                });
+                return true;
+            } catch (error) {
+                if (error.response) {
+                    throw error.response.data;
+                }
+                throw error;
+            }
+        },
+        resetPassword: async (
+            _,
+            { password, confirmPassword, userId, token }
+        ) => {
+            try {
+                await axios.patch(`/auth/reset-password/u/${userId}/${token}`, {
+                    password,
+                    confirmPassword,
                 });
                 return true;
             } catch (error) {
