@@ -152,7 +152,7 @@ const resetPassword = async (userId, token, password) => {
         );
 
         if (!isValid)
-            throw new BadRequestError('Token did not matched or time expired');
+            throw new BadRequestError('Token did not matched or expired token');
 
         const hashedPassword = await getStringHash(password);
         user.password = hashedPassword;

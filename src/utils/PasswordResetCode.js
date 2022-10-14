@@ -9,12 +9,12 @@ class PasswordResetCode {
      * @param exp {Number} expire minutes (default 5)
      * returns {Array<String>} [ 'generated hashed token', 'string token' ]
      */
-    static generatePasswordResetCode = async (userId, exp=5) => {
+    static generatePasswordResetCode = async (userId, exp = 5) => {
         const createdAt = moment.now();
         const code = generateCode(12);
         let token = `e-${exp}-u-${userId}-${createdAt}-${code}`;
-        return [ await getStringHash(token), token ];
-    }
+        return [await getStringHash(token), token];
+    };
 
     /**
      * compare the string token to hashed password token
@@ -22,15 +22,19 @@ class PasswordResetCode {
      * @param hashedPasswordResetToken {string} hashed token
      * @returns {Promise<Boolean>} true or false containing the token is valid or not
      */
-    static comparePasswordResetCode = async (token, hashedPasswordResetToken) => {
+    static comparePasswordResetCode = async (
+        token,
+        hashedPasswordResetToken
+    ) => {
+        if (!hashedPasswordResetToken) return false;
         const isMatched = await bcrypt.compare(token, hashedPasswordResetToken);
-        if (!isMatched) return false
+        if (!isMatched) return false;
         const tokens = token.split('-');
         const exp = tokens[1];
         const createdAt = tokens[4];
         const threshold = moment(createdAt, 'x').add(exp, 'minutes');
         return moment().isSameOrBefore(threshold);
-    }
+    };
 }
 
 module.exports = PasswordResetCode;
