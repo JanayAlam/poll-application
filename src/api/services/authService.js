@@ -6,6 +6,7 @@ const {
     getByProperty: getByPropertyData,
 } = require('../models/data-models/common');
 const viewModels = require('../models/view-models');
+const mongoose = require('mongoose');
 const {
     checkDuplicateEmailAddress,
     checkDuplicateUsername,
@@ -13,6 +14,8 @@ const {
 const PasswordResetCode = require('../../utils/PasswordResetCode');
 const sendMail = require('../../email/sendMail');
 const EmailMessage = require('../../email/emailMessage');
+const { comparePasswordResetCode } = require('../../utils/PasswordResetCode');
+const { BadRequestError } = require('../errors/apiErrors');
 
 const MODEL_NAME_USER = 'User';
 const MODEL_NAME_EMAIL = 'Email';
@@ -88,7 +91,7 @@ const updatePassword = async (user) => {
 /**
  * forget password service of a user
  * @param {string} emailAddress the email address of the user
- * @returns {viewModels.UserResponse} the user model itself
+ * @returns {Boolean} true if succeed
  */
 const forgetPassword = async (emailAddress) => {
     try {
@@ -134,11 +137,27 @@ const forgetPassword = async (emailAddress) => {
  * @param {ObjectId} userId the id of the user
  * @param {string} token the token for the reset request
  * @param {string} password the password of the user
- * @returns {viewModels.UserResponse} the user model itself
+ * @returns {Promise} the user model itself
  */
 const resetPassword = async (userId, token, password) => {
     try {
-        // TODO
+        const result = mongoose.isValidObjectId(userId);
+        if (!result) {
+            throw new NotAcceptableError('Provided user id is not valid id');
+        }
+        const user = await getByIdData(userId, MODEL_NAME_USER);
+        const isValid = await comparePasswordResetCode(
+            token,
+            user.passwordResetToken
+        );
+
+        if (!isValid)
+            throw new BadRequestError('Token did not matched or time expired');
+
+        const hashedPassword = await getStringHash(password);
+        user.password = hashedPassword;
+        user.passwordResetToken = null;
+        return user.save();
     } catch (error) {
         throw error;
     }

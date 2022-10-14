@@ -8,7 +8,7 @@ const {
 } = require('../errors/apiErrors');
 const models = require('../models/data-models');
 const responseModels = require('../models/view-models');
-const { store, updatePassword, getMe, forgetPassword } = require('../services/authService');
+const { store, updatePassword, getMe, forgetPassword, resetPassword } = require('../services/authService');
 
 /**
  * create user controller function
@@ -133,9 +133,11 @@ const forgetPasswordHandler = async (req, res, next) => {
  * @param {Function} next the next middleware function
  */
 const resetPasswordHandler = async (req, res, next) => {
+    const { newPassword } = req.body;
+    const { userId, token } = req.params;
     try {
-        // change handler
-        res.status(200);
+        await resetPassword(userId, token, newPassword);
+        res.status(203).send();
     } catch (error) {
         next(error);
     }

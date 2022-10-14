@@ -7,7 +7,7 @@ class PasswordResetCode {
      * generate a token code for resetting password
      * @param userId {ObjectId} user id of the user
      * @param exp {Number} expire minutes (default 5)
-     * returns {string} the generated token
+     * returns {Array<String>} [ 'generated hashed token', 'string token' ]
      */
     static generatePasswordResetCode = async (userId, exp=5) => {
         const createdAt = moment.now();

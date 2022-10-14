@@ -34,7 +34,7 @@ router.patch(
 
 // PATCH: /api/v1/auth/reset-password/u/:userId/:token/
 router.patch(
-    '/reset-password/u/:userId/:token',
+    '/reset-password/u/:userId/t/:token',
     validateBody(reqModels.resetPasswordRequestModel),
     authController.resetPasswordHandler,
 )
