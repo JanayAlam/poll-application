@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-// schema of the auth request model
+// schema of the login request model
 const schema = Joi.object({
     username: Joi.string().alphanum().min(4).max(10).required(),
     password: Joi.string().min(6).required(),

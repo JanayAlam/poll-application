@@ -4,6 +4,7 @@ const { generateCode } = require('../../utils/generator');
 const { ConflictError, NotFoundError } = require('../errors/apiErrors');
 const models = require('../models/data-models');
 const viewModels = require('../models/view-models');
+const { __sendActivationCode } = require("../models/data-models/common");
 
 /**
  * save a email object into the database
@@ -47,9 +48,8 @@ const store = async (email) => {
             `Now you need to activate your account to use the application.\n`
     );
     // getting ready the response
-    const responseEmail = new viewModels.EmailResponse(model);
-    // returning the email model
-    return responseEmail;
+    // and returning the email model
+    return new viewModels.EmailResponse(model);
 };
 
 /**
@@ -71,7 +71,7 @@ const get = async (id) => {
             error: new NotFoundError('Email not found with the provided id'),
         };
     }
-    return await models.Email.findById(id);
+    return models.Email.findById(id);
 };
 
 /**
@@ -96,9 +96,8 @@ const destroy = async (id) => {
     // Updating the modifiedAt property
     deletedEmail.modifiedAt = Date.now();
     // getting ready the response
-    const responseEmail = new viewModels.EmailResponse(deletedEmail);
-    // returning the email model
-    return responseEmail;
+    // and returning the email model
+    return new viewModels.EmailResponse(deletedEmail);
 };
 
 module.exports = {

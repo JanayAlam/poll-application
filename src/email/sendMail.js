@@ -1,5 +1,4 @@
 const { InternalServerError } = require('../api/errors/apiErrors');
-const EmailMessage = require('./emailMessage');
 const transporter = require('./transporter');
 
 /**

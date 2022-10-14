@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-// schema of the auth request model
+// schema of the change password request model
 const schema = Joi.object({
     oldPassword: Joi.string().min(6).required(),
 

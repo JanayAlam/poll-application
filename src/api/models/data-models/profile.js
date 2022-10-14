@@ -20,10 +20,6 @@ const profileSchema = new Schema({
         trim: true,
         default: 'images/defaults/profilePhoto/default.png',
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-    },
     polls: [
         {
             type: Schema.Types.ObjectId,

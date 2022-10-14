@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const EmailMessage = require('../../../email/emailMessage');
 const sendMail = require('../../../email/sendMail');
 const { generateCode, getStringHash } = require('../../../utils/generator');
-const { NotFoundError } = require('../../errors/apiErrors');
+const { NotFoundError, NotAcceptableError} = require('../../errors/apiErrors');
 
 /**
  * [Private] send email to the user with a code for activating the account of a user
@@ -27,13 +27,13 @@ const __sendActivationCode = async (email, code, message) => {
 /**
  * [Private] Check the validity of mongoose id
  * @param {mongoose.Types.ObjectId} id The id which will be validated
- * @returns {Object} The object will contains error property
+ * @returns {Object} The object will contain error property
  */
 const __isIdValid = (id) => {
     const result = mongoose.isValidObjectId(id);
     if (!result) {
         return {
-            error: new NotAcceptableError(message),
+            error: new NotAcceptableError('Provided id is not a valid id'),
         };
     }
     return {
@@ -42,7 +42,7 @@ const __isIdValid = (id) => {
 };
 
 /**
- * store a object into the database
+ * store an object into the database
  * @param {Object} data the data object
  * @param {string} modelName the model name. Example: 'User'
  * @returns {Object} the stored object
@@ -51,17 +51,15 @@ const store = async (data, modelName) => {
     const model = new mongoose.models[modelName](data);
     if (modelName === 'Email') {
         const code = generateCode(6);
-        const hashedCode = await getStringHash(code);
-        model.verificationCode = hashedCode;
-        await __sendActivationCode(
+        model.verificationCode = await getStringHash(code);
+        __sendActivationCode(
             model,
             code,
             `Congratulations. Your account has been created. ` +
                 `Now you need to activate your account to use the application.\n`
         );
     }
-    const savedData = await model.save();
-    return savedData;
+    return model.save();
 };
 
 /**
@@ -71,8 +69,7 @@ const store = async (data, modelName) => {
  */
 const getAll = async (modelName) => {
     try {
-        const models = await mongoose.models[modelName].find();
-        return models;
+        return await mongoose.models[modelName].find();
     } catch (error) {
         if (error instanceof TypeError) {
             error.message = 'Wrong model name provided by the service';
@@ -82,7 +79,7 @@ const getAll = async (modelName) => {
 };
 
 /**
- * fetched a object by id
+ * fetched an object by id
  * @param {mongoose.Types.ObjectId} id the id of the schema
  * @param {string} modelName the model name. Example: 'User'
  * @returns {Object} the fetched object
@@ -98,8 +95,23 @@ const getById = async (id, modelName) => {
 };
 
 /**
- * update a object
- * @param {Object} data the data object. The object should contains '_id' property
+ * fetched an object by property
+ * @param {string} propertyName the property name
+ * @param {string} value the property's value
+ * @param {string} modelName the model name. Example: 'User'
+ * @returns {Object} the fetched object
+ */
+const getByProperty = async (propertyName, value, modelName) => {
+    const model = await mongoose.models[modelName].findOne({ [propertyName]: value });
+    if (!model) {
+        throw new NotFoundError(`${modelName} not found by the ${propertyName}: ${value}`);
+    }
+    return model;
+};
+
+/**
+ * update an object
+ * @param {Object} data the data object. The object should contain '_id' property
  * @param {string} modelName the model name. Example: 'User'
  * @returns {Object} the updated object
  */
@@ -122,7 +134,7 @@ const update = async (data, modelName) => {
 };
 
 /**
- * delete a object by id
+ * delete an object by id
  * @param {mongoose.Types.ObjectId} id the id of the schema
  * @param {string} modelName the model name. Example: 'User'
  * @returns {Object} the deleted object
@@ -132,10 +144,9 @@ const deleteById = async (id, modelName) => {
     if (error) throw error;
     let model = await mongoose.models[modelName].findById(id);
     if (model) {
-        const result = await mongoose.models[modelName].findOneAndDelete({
+        return mongoose.models[modelName].findOneAndDelete({
             _id: id,
         });
-        return result;
     }
     throw new NotFoundError(`${modelName} not found by the id: ${id}`);
 };
@@ -145,6 +156,7 @@ module.exports = {
     store,
     getAll,
     getById,
+    getByProperty,
     update,
     deleteById,
 };

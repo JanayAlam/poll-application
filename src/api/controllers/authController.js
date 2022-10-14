@@ -1,15 +1,19 @@
 const bcrypt = require('bcrypt');
-const express = require('express');
+const { Request, Response } = require('express');
 const { generateJWTToken } = require('../../utils/generator');
-const { AuthenticationError, BadRequestError } = require('../errors/apiErrors');
+const {
+    AuthenticationError,
+    BadRequestError,
+    NotFoundError,
+} = require('../errors/apiErrors');
 const models = require('../models/data-models');
 const responseModels = require('../models/view-models');
-const { store, updatePassword } = require('../services/authService');
+const { store, updatePassword, getMe, forgetPassword, resetPassword } = require('../services/authService');
 
 /**
  * create user controller function
- * @param {express.Request} req the request object from express
- * @param {express.Response} res the response object from express
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
  * @param {Function} next the next middleware function
  */
 const registerHandler = async (req, res, next) => {
@@ -42,8 +46,8 @@ const registerHandler = async (req, res, next) => {
 
 /**
  * log in to the account controller function
- * @param {express.Request} req the request object from express
- * @param {express.Response} res the response object from express
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
  * @param {Function} next the next middleware function
  */
 const loginHandler = async (req, res, next) => {
@@ -57,11 +61,11 @@ const loginHandler = async (req, res, next) => {
             })
             .populate({ path: 'profile' });
         // if the user is not found
-        if (!user) throw new AuthenticationError();
+        if (!user) next(new AuthenticationError());
         // validate the credentials
         const isMatched = await bcrypt.compare(password, user.password);
         // if the credentials are not valid
-        if (!isMatched) throw new AuthenticationError();
+        if (!isMatched) next(new AuthenticationError());
         // generate a JWT token
         const token = await generateJWTToken(user);
         // send response to the client
@@ -80,8 +84,8 @@ const loginHandler = async (req, res, next) => {
 
 /**
  * change password controller function
- * @param {express.Request} req the request object from express
- * @param {express.Response} res the response object from express
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
  * @param {Function} next the next middleware function
  */
 const changePasswordHandler = async (req, res, next) => {
@@ -93,7 +97,7 @@ const changePasswordHandler = async (req, res, next) => {
         // checking the old password
         const isMatched = await bcrypt.compare(oldPassword, user.password);
         if (!isMatched) {
-            throw new BadRequestError('Old password did not matched');
+            return next(new BadRequestError('Old password did not matched'));
         }
         // updating the password
         user.password = newPassword;
@@ -107,15 +111,16 @@ const changePasswordHandler = async (req, res, next) => {
 
 /**
  * forget password controller function
- * @param {express.Request} req the request object from express
- * @param {express.Response} res the response object from express
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
  * @param {Function} next the next middleware function
  */
 const forgetPasswordHandler = async (req, res, next) => {
+    const { email } = req.body;
     try {
         // extracting the user
-        // TODO
-        res.status(200);
+        await forgetPassword(email);
+        res.status(203).send();
     } catch (error) {
         next(error);
     }
@@ -123,14 +128,33 @@ const forgetPasswordHandler = async (req, res, next) => {
 
 /**
  * reset password controller function
- * @param {express.Request} req the request object from express
- * @param {express.Response} res the response object from express
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
  * @param {Function} next the next middleware function
  */
 const resetPasswordHandler = async (req, res, next) => {
+    const { newPassword } = req.body;
+    const { userId, token } = req.params;
     try {
-        // change handler
-        res.status(200);
+        await resetPassword(userId, token, newPassword);
+        res.status(203).send();
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * get me controller function
+ * @param {Request} req the request object from express
+ * @param {Response} res the response object from express
+ * @param {Function} next the next middleware function
+ */
+const getMeHandler = async (req, res, next) => {
+    const { _id } = req.user;
+    try {
+        const user = await getMe(_id);
+        if (!user) next(new NotFoundError('User not found'));
+        res.status(200).json(user);
     } catch (error) {
         next(error);
     }
@@ -142,4 +166,5 @@ module.exports = {
     changePasswordHandler,
     forgetPasswordHandler,
     resetPasswordHandler,
+    getMeHandler,
 };

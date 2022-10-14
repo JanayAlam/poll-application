@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-// schema of the auth request model
+// schema of the registration request model
 const schema = Joi.object({
     username: Joi.string().alphanum().min(4).max(10).required(),
     email: Joi.string()
