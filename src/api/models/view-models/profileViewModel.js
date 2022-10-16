@@ -7,6 +7,7 @@ class ProfileResponse {
     constructor(profile) {
         this.id = profile._id;
         this.firstName = profile.firstName;
+        this.lastName = profile.lastName;
         this.profilePhoto = `http://localhost:8080/${profile.profilePhoto}`;
         this.user = profile.user;
         this.polls = profile.polls;
