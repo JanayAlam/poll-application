@@ -1,40 +1,53 @@
 <template>
-    <ul class="list-items-ul">
-        <li v-for="i in items" :key="i.name" class="rounded">
-            <router-link :to="{ name: 'home' }" class="p-2">
-                <font-awesome-icon :icon="'fa-solid ' + i.icon" />
-                <span class="ms-3">{{ i.name }}</span>
+    <div>
+        <div>Explore more</div>
+        <el-divider class="my-3 mb-2" />
+        <div v-for="item in items" :key="item.name" class="rounded list-item">
+            <router-link :to="{ name: item.toComponent }" class="p-2 pe-4">
+                <font-awesome-icon :icon="'fa-solid ' + item.icon" />
+                <span class="ms-3">{{ item.name }}</span>
             </router-link>
-        </li>
-    </ul>
+        </div>
+    </div>
 </template>
 
-<script>
-export default {
-    name: 'ListItem',
-    props: ['items'],
-    setup() {},
-};
+<script setup>
+const items = [
+    {
+        name: 'Your polls',
+        toComponent: 'home',
+        icon: 'fa-bars-progress',
+        isAuthNeeded: true,
+    },
+    {
+        name: 'Trending',
+        toComponent: 'home',
+        icon: 'fa-fire',
+        isAuthNeeded: false,
+    },
+    {
+        name: 'Bookmarked',
+        toComponent: 'home',
+        icon: 'fa-bookmark',
+        isAuthNeeded: true,
+    },
+];
 </script>
 
 <style scoped>
-.list-items-ul {
-    list-style: none;
-    padding: 0;
-}
-
-.list-items-ul li {
+.list-item {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    padding: 5px;
+    padding: 5px 0;
 }
 
-.list-items-ul li a {
+.list-item a {
     color: #303133;
     cursor: pointer;
+    user-select: none;
 }
 
-.list-items-ul li a:hover {
+.list-item a:hover {
     color: #409eff;
     background-color: #e6f2fd;
     border-radius: 10px;

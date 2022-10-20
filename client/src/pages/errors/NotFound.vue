@@ -1,7 +1,6 @@
 <template>
     <div>
-        <h1 class="status-code text-danger">404</h1>
-        <p class="error-msg"><span class="text-danger">Ops!</span> Page not found. Please enter a valid url.</p>
+        <el-empty description="Ops!Page not found. Please enter a valid url." />
     </div>
 </template>
 
